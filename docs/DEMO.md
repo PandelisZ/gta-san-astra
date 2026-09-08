@@ -45,7 +45,7 @@ Run a short live attempt from the restored scene:
 ```sh
 RUN_DIR="runs/judge-demo-$(date +%Y%m%d-%H%M%S)"
 uv run python scripts/autodrive.py \
-  --model gpt-6-astra --steps 4 --frame-stride 10 \
+  --model gpt-6-astra --reasoning-effort low --service-tier fast --steps 4 --frame-stride 10 \
   --goal "Follow the road ahead and avoid collisions. Stop if the view is unsafe or unclear." \
   --scenario-state .runtime/scenarios/stationary-car/state.p2s \
   --run-dir "$RUN_DIR"

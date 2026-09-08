@@ -77,12 +77,12 @@ At NTSC 59.94 VSyncs/second, strides 1/5/10 nominally yield 59.94/11.99/5.99 obs
 
 ### Start an Astra run
 
-Start from a paused driving scene. The runner uses authenticated Codex with `gpt-6-astra`, preferring the app-bundled CLI; no separate API key is needed. `SAN_ASTRA_CODEX` overrides the executable.
+Start from a paused driving scene. The runner defaults to authenticated Codex with `gpt-6-astra`, low reasoning effort, and fast mode, preferring the app-bundled CLI; no separate API key is needed. `SAN_ASTRA_CODEX` overrides the executable.
 
 ```sh
 RUN_DIR="runs/demo-$(date +%Y%m%d-%H%M%S)"
 uv run python scripts/autodrive.py \
-  --model gpt-6-astra --steps 20 --frame-stride 10 \
+  --model gpt-6-astra --reasoning-effort low --service-tier fast --steps 20 --frame-stride 10 \
   --goal "Follow the road, stay in the lane, and avoid collisions." \
   --run-dir "$RUN_DIR"
 uv run python scripts/report.py "$RUN_DIR"

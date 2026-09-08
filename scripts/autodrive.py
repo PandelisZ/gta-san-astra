@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import subprocess
 from statistics import median
+from functools import partial
 import time
 from typing import Callable
 
@@ -41,13 +42,16 @@ def validate_decision(value: object) -> dict:
     return value
 
 
-def build_command(model: str, images: list[Path], output: Path, cwd: Path) -> list[str]:
+def build_command(model: str, images: list[Path], output: Path, cwd: Path, *,
+                  reasoning_effort: str = "low", service_tier: str = "fast") -> list[str]:
     bundled = Path("/Applications/ChatGPT.app/Contents/Resources/codex")
     executable = os.environ.get("SAN_ASTRA_CODEX") or (str(bundled) if bundled.exists() else "codex")
     command = [executable, "exec", "--ignore-user-config", "--ignore-rules", "--ephemeral",
                "--enable", "skip_host_skill_discovery",
                "--skip-git-repo-check", "--sandbox", "read-only", "--json", "--color", "never",
                "-c", 'web_search="disabled"', "-c", "project_doc_max_bytes=0",
+               "-c", "model_reasoning_effort=" + json.dumps(reasoning_effort),
+               "-c", "service_tier=" + json.dumps(service_tier),
                "--output-schema", str(SCHEMA.resolve()), "--output-last-message", str(output.resolve()),
                "--cd", str(cwd.resolve()), "-m", model]
     for feature in DISABLED_FEATURES:
@@ -81,7 +85,8 @@ def make_prompt(goal: str, history: list[dict], image_count: int) -> str:
 
 
 def decide(model: str, images: list[Path], history: list[dict], goal: str,
-           directory: Path, index: int, timeout: float, runner: Callable = subprocess.run) -> tuple[dict, float]:
+           directory: Path, index: int, timeout: float, runner: Callable = subprocess.run, *,
+           reasoning_effort: str = "low", service_tier: str = "fast") -> tuple[dict, float]:
     output = directory / f"decision-{index:04d}.json"
     output.unlink(missing_ok=True)  # A failed run must never reuse a prior decision.
     # No project instructions or unrelated files in the model's working directory.
@@ -89,7 +94,8 @@ def decide(model: str, images: list[Path], history: list[dict], goal: str,
     model_cwd.mkdir(exist_ok=True)
     started = time.monotonic()
     try:
-        result = runner(build_command(model, images, output, model_cwd),
+        result = runner(build_command(model, images, output, model_cwd,
+                                      reasoning_effort=reasoning_effort, service_tier=service_tier),
                         input=make_prompt(goal, history, min(2, len(images))),
                         text=True, capture_output=True, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
@@ -109,14 +115,17 @@ def decide(model: str, images: list[Path], history: list[dict], goal: str,
 
 def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         timeout: float = 120, frame_stride: int = 5, emulator_fps: float = 59.94,
-        decision_fn: Callable = decide, scenario_state: str | None = None) -> list[dict]:
+        decision_fn: Callable = decide, scenario_state: str | None = None,
+        reasoning_effort: str = "low", service_tier: str = "fast") -> list[dict]:
     if type(frame_stride) is not int or not 1 <= frame_stride <= 120:
         raise ValueError("frame_stride must be an integer between 1 and 120")
     if not 0 < emulator_fps < float("inf"):
         raise ValueError("emulator_fps must be finite and positive")
+    if decision_fn is decide:
+        decision_fn = partial(decide, reasoning_effort=reasoning_effort, service_tier=service_tier)
     directory.mkdir(parents=True, exist_ok=True)
     started_at, started_clock = time.time(), time.monotonic()
-    manifest = {"model": model, "goal": goal, "frame_stride": frame_stride,
+    manifest = {"model": model, "reasoning_effort": reasoning_effort, "service_tier": service_tier, "goal": goal, "frame_stride": frame_stride,
                 "emulator_fps": emulator_fps, "steps_limit": steps, "scenario_state": scenario_state,
                 "scenario_state_note": "Provenance label only; runner does not load this state",
                 "started_at": started_at, "status": "running"}
@@ -186,6 +195,8 @@ def main():
     parser.add_argument("--steps", type=int, default=20)
     parser.add_argument("--goal", default="Drive safely along the road, avoiding collisions.")
     parser.add_argument("--model", default="gpt-6-astra")
+    parser.add_argument("--reasoning-effort", default="low", help="Codex reasoning effort (default: low)")
+    parser.add_argument("--service-tier", default="fast", help="Codex service tier (default: fast)")
     parser.add_argument("--run-dir", type=Path, default=Path("runs") / time.strftime("autodrive-%Y%m%d-%H%M%S"))
     parser.add_argument("--scenario-state", help="Optional state path provenance label; does not load a save state")
     parser.add_argument("--timeout", type=float, default=120)
@@ -197,7 +208,8 @@ def main():
     from san_astra.control import Controller
     run(Controller(run_dir=args.run_dir), steps=args.steps, goal=args.goal, model=args.model,
         directory=args.run_dir.resolve(), timeout=args.timeout, frame_stride=args.frame_stride,
-        emulator_fps=args.emulator_fps, scenario_state=args.scenario_state)
+        emulator_fps=args.emulator_fps, scenario_state=args.scenario_state,
+        reasoning_effort=args.reasoning_effort, service_tier=args.service_tier)
 
 
 if __name__ == "__main__":
