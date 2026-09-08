@@ -198,10 +198,25 @@ class Controller:
         if self.window_id is not None:
             args.extend(["--window-id", str(self.window_id)])
         started = time.monotonic()
-        native = self.call(*args)
-        if not output.is_file():
-            raise ControlError(f"Bridge did not create screenshot: {output}")
-        data = {"type": "observation", "image_path": str(output), "capture_ms": round((time.monotonic() - started) * 1000, 2), "native": native}
+        capture_errors = []
+        for attempt in range(1, 4):
+            try:
+                native = self.call(*args)
+                if not output.is_file():
+                    raise ControlError(f"Bridge did not create screenshot: {output}")
+                break
+            except ControlError as exc:
+                capture_errors.append(str(exc))
+                self.record({"type": "capture_error", "capture_attempt": attempt,
+                             "error": str(exc), "retrying": attempt < 3})
+                if attempt == 3:
+                    raise
+                # Retry only observation; never replay the preceding game action.
+                time.sleep((0.1, 0.25)[attempt - 1])
+                output = directory / f"frame-{time.time_ns()}.png"
+                args[args.index("--output") + 1] = str(output)
+        data = {"type": "observation", "image_path": str(output), "capture_ms": round((time.monotonic() - started) * 1000, 2), "native": native,
+                "capture_attempts": attempt, "capture_errors": capture_errors}
         self.record(data)
         return data
 
