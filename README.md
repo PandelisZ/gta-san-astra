@@ -55,7 +55,15 @@ The MP4s and metadata also remain versioned under [docs/videos](docs/videos). [U
 
 *Actual captured road baseline: the red Blista Compact at 16:56. The [snapshot evidence](docs/evidence/stationary-car.json) records its checksum and the visual replay check.*
 
-## Preferred quiet starting snapshot
+## Current right-lane starting snapshot
+
+`right-lane-junction` is the current baseline: the blue Tahoma stopped in the right lane before a junction, with yellow hillside buildings ahead-left and a red-orange corner building on the right. Astra prepared the stop autonomously; a fresh emulator restored the same visible car position and heading. Neutral redraw advanced the clock by one second, so this is a visual reset verification.
+
+![Current right-lane baseline](docs/evidence/right-lane-junction.png)
+
+[Snapshot and restore evidence](docs/evidence/right-lane-junction.json). The optional starting reference remains in the policy context during the next block attempt.
+
+## Earlier quiet starting snapshot
 
 `quiet-tahoma` is the new local baseline: a blue Tahoma stopped beside a garden wall opposite Jefferson Motel, with the immediate area clear. Astra recovered from a carjacking, drove here, and verified no visible motion after handbrake bursts. The old `stationary-car` snapshot remains available. A fresh emulator process reloaded this snapshot and redrew the same car/location after 60 neutral frame requests; the displayed clock advanced one second.
 

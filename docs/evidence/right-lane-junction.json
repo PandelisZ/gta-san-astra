@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "name": "right-lane-junction",
+  "created_at": 1788902680.267332,
+  "state_file": "state.p2s",
+  "state_sha256": "c4a8ed54b666481f70f29546dfabfc04a68a224bd4a3dfdc189d04fec17ba01f",
+  "state_bytes": 18842771,
+  "source_slot_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/sstates/SLUS-20946 (2C6BE434).01.p2s",
+  "frame_file": "frame.png",
+  "config_filename": "PCSX2.ini",
+  "config_sha256": "dd524016594491a797ae54c8efe024e6fdc65f259360e7d14aa828a954877c1a",
+  "game_filename": "Grand Theft Auto - San Andreas (USA) (v3.00).iso",
+  "capture_precondition": "Caller paused emulation and visually positioned the scene; no paused state or stationary speed inferred from memory.",
+  "pixel_only_invariant": "Savestate is an opaque reset artifact. Never parse its contents or provide it to the driving policy. Policy observations are game screenshots only.",
+  "visual_restore_verified": true,
+  "restore_pid": 68968,
+  "restored_frame": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-restore/20260908-142531-dc99234f/frame-1788902754282370000.png",
+  "restore_note": "Root visually compared captured and fresh-process restored screenshots: same car, right-lane position, heading, poles and yellow hillside/red-orange corner landmarks. Initial black view redrawn with60 neutral350ms requests; clock18:25 to18:26, not bit-exact replay."
+}

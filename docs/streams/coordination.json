@@ -1,5 +1,5 @@
 {
-  "status": "User requested one game at a time. Only route PID69729 remains; lane/junction/recovery processes closed after finalized recordings. Full block unproven.",
+  "status": "Single-minute-03 authorized on sole emulator68968 after visual restore of right-lane-junction.30frame decisions/350ms pulse interval; fullblockunproven.",
   "streams": [
     {
       "name": "lane",
@@ -35,11 +35,11 @@
       "name": "route",
       "worktree": "/Users/pz/.codex/worktrees/4ed4/oaihackathon",
       "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2",
-      "pid": 69729,
+      "pid": 68968,
       "task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
       "neutral_probe_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
       "neutral_probe_actual_frames": 0,
-      "process_state": "live paused/model preparation"
+      "process_state": "single-minute-03 driver starting"
     }
   ],
   "qualification": "Warm-daemon stop for junction returned a stale application-identity error; fresh CLI finalized its0-frame capture. Use CLI fallback for next wave. No root driving controls; all probe controls neutral.",
@@ -76,7 +76,7 @@
       "decisions": 83
     }
   },
-  "next_step": "Route task owns69729 and is preparing a visually stopped right-lane baseline using screenshot-only Astra low/Fast,350ms pulse interval and30-frame decisions. Root must review baseline before fullminute.",
+  "next_step": "Route task runs one fullminute, records allframes, then reviews and pauses before another attempt.",
   "execution_mode": "single",
   "active_task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
   "timing": {
@@ -84,5 +84,6 @@
     "frame_stride": 30,
     "evidence": "calibration-wave02.md",
     "qualification": "60/60 recorded neutral pulses in single focused scene; verify actual increments during driving."
-  }
+  },
+  "active_baseline": "right-lane-junction"
 }
