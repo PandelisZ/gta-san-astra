@@ -29,6 +29,7 @@ let keyMap: [String: CGKeyCode] = ["a":0,"s":1,"d":2,"f":3,"h":4,"g":5,"z":6,"x"
 func event(_ key: CGKeyCode, down: Bool, pid: pid_t) throws {
     guard let e = CGEvent(keyboardEventSource: CGEventSource(stateID: .hidSystemState), virtualKey: key, keyDown: down) else { throw BridgeError("Could not create keyboard event") }
     e.flags = []
+    e.setIntegerValueField(.keyboardEventAutorepeat, value: 0)
     e.postToPid(pid)
 }
 func release(_ keys: [CGKeyCode], pid: pid_t) { for key in keys.reversed() { try? event(key, down: false, pid: pid) } }
@@ -105,15 +106,22 @@ func run() async throws {
         }
         defer { active.clear(); sources.forEach { $0.cancel() } }
         let started = DispatchTime.now().uptimeNanoseconds
-        for key in keys { try active.set(key, down:true) }
         if command == "step" {
-            for _ in 0..<frameCount {
+            for frame in 0..<frameCount {
+                // Qt refocuses the display on resume and may clear keyboard binds.
+                // Refresh controller downs between paused frames, before each advance.
+                // Key-up occurs while paused; the next simulated frame sees them held.
+                if frame > 0 { for key in keys { try active.set(key, down:false) } }
+                for key in keys { try active.set(key, down:true) }
                 try active.set(frameKey, down:true)
                 try await Task.sleep(for:.milliseconds(5))
                 try active.set(frameKey, down:false)
                 try await Task.sleep(for:.milliseconds(frameInterval))
             }
-        } else { try await Task.sleep(for:.milliseconds(duration)) }
+        } else {
+            for key in keys { try active.set(key, down:true) }
+            try await Task.sleep(for:.milliseconds(duration))
+        }
         active.clear()
         let elapsedMs = Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000
         let requestedMs = command == "step" ? frameCount * (frameInterval + 5) : duration
