@@ -1,0 +1,22 @@
+{
+  "time_utc": "2026-09-08T22:55:26Z",
+  "operation": "Codex task archive followed by automatic archive-cleanup",
+  "task": "01a082b3-1c6f-7460-b6e5-f403458982fe",
+  "removed_worktree": "/Users/pz/.codex/worktrees/4ed4/oaihackathon",
+  "git_archive_snapshot": "05fa0201a67be69481dc988dc13f1c3f95dbecc6",
+  "ignored_runs_and_runtime_in_snapshot": false,
+  "recovery_checks": [
+    "Unarchiving did not restore the worktree",
+    "Archive snapshot contains tracked and untracked project files, but no runs/ or .runtime/",
+    "No matching Trash recovery directory found",
+    "No current Time Machine local data snapshot found"
+  ],
+  "unavailable": "Raw MOV, native capture and decoded PNG files that existed only under the removed route worktree, including flow02 through04. Historical source paths in evidence no longer resolve.",
+  "preserved": [
+    "Committed share videos, reviews, decisions and selected evidence images copied to main",
+    "Flow01 exact RGB/timestamp archive under main .runtime/archives/flow-01",
+    "Original baseline and game assets outside the removed worktree",
+    "Other unarchived stream worktrees"
+  ],
+  "new_recording_location": "Main checkout runs/ and .runtime/main-flow/; no delegated worktree dependency"
+}

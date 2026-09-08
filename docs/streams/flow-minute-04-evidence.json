@@ -1,0 +1,2562 @@
+{
+  "source_main_commit": "ff72fda",
+  "summary": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "low",
+    "service_tier": "fast",
+    "goal": "Drive on the RIGHT around a connected compact street block and visibly return to THIS starting intersection with yellow hillside buildings ahead-LEFT and red-orange corner building RIGHT, with the same heading. Use the attached starting reference to verify return. Choose every control solely from screenshots; verify actual completed turns, avoid curbs, collisions, traffic and pedestrians. Do not count seeing the landmark from another heading as completion.",
+    "frame_stride": 60,
+    "target_pid": 86602,
+    "frame_interval_ms": 350,
+    "emulator_fps": 59.94,
+    "steer_pulse_frames": 12,
+    "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
+    "steps_limit": 240,
+    "scenario_state": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/state.p2s",
+    "scenario_state_note": "Provenance label only; runner does not load this state",
+    "resume_from": null,
+    "resume_decision_count": 0,
+    "resume_image_path": null,
+    "start_reference": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+    "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
+    "recording_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908154754.mkv",
+    "target_recorded_frames": 3597,
+    "recording_budget_note": "Live stored-frame count is a buffered lower bound. Final bursts are at least15 requests where possible; stopped recording can exceed the target.",
+    "started_at": 1788907675.275261,
+    "status": "recording_target_reached",
+    "mode": "flow",
+    "hold_ms": null,
+    "policy_transport": "app-server",
+    "bridge_transport": "cli",
+    "vision_max_edge": 640,
+    "vision_quality": 65,
+    "vision_colormode": "rgb",
+    "ended_at": 1788907791.5486898,
+    "elapsed_wall_seconds": 116.273,
+    "decision_count": 10,
+    "action_count": 9,
+    "actions_requested": 9,
+    "game_frames_requested": 540,
+    "frames_in_completed_actions": 540,
+    "recorded_frames_lower_bound": 3719,
+    "recording_target_reached": true,
+    "realtime_hold_ms_requested": null,
+    "frames_note": "Nominal frame budgets for timed bursts, not delivered frames; recording count measures actual output",
+    "decision_latency_median_ms": 9590.55,
+    "capture_latency_median_ms": 270.33,
+    "action_and_capture_median_ms": 1396.0916250944138,
+    "measured_decisions_per_wall_second": 0.08600437990008258,
+    "error": null,
+    "release_error": null
+  },
+  "capture": {
+    "name": "flow-minute-04",
+    "goal": "Drive on the RIGHT around a connected compact street block and visibly return to THIS starting intersection with yellow hillside buildings ahead-LEFT and red-orange corner building RIGHT, with the same heading. Use the attached starting reference to verify return. Choose every control solely from screenshots; verify actual completed turns, avoid curbs, collisions, traffic and pedestrians. Do not count seeing the landmark from another heading as completion.",
+    "scenario": "right-lane-junction",
+    "target_pid": 86602,
+    "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2",
+    "autonomy": "Astra chooses every driving control phase. Wrapper only handles reset, recording and export.",
+    "requested_vsync_budget": 14400,
+    "nominal_seconds_budget": 240.24,
+    "decoded_frame_count": 3731,
+    "target_recorded_frames": 3597,
+    "recorded_target_reached": true,
+    "full_recording_duration_seconds": 62.25,
+    "clip_seconds_limit": null,
+    "git_video_frame_count": 3502,
+    "logic_sha256": {
+      "scripts/autodrive.py": "e1a19971126b5535df78950bcdd2dac1968b1e2a6e4ad7d09ba682d7707b0959",
+      "src/san_astra/policy.py": "01ace33393e8e6d3c831e685dd8bc5661e026f322b68781c08fe671d45432c19"
+    },
+    "measured_video_duration_seconds": 116.73,
+    "measured_duration_source": "MP4 container duration reported by FFmpeg",
+    "duration_note": "Full window recording preserves real elapsed time: 100% during actions and 50% during inference. Native GS capture separately preserves all emulator frames; its fixed-rate playback does not preserve slow motion.",
+    "video_sha256": "6a7ee1a36dc93d0cd35fc46dbf5f1188e650324f4f91b5c39af9560231e4cb4a",
+    "status": "completed",
+    "video_bytes": 7178250,
+    "share_encoding": "Full MOV ->1024wide30fpsCRF24; original CRF22 and MOV retained"
+  },
+  "wall_clock_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/wall-clock.mov",
+  "outcome": {
+    "verified_turns": 0,
+    "loop_completed": false,
+    "notes": "Entered junction and nearly achieved first-right heading, but lane recovery incomplete. Pole collision confirmed visually."
+  },
+  "capability_checks": {
+    "compact_lengths_valid": true,
+    "four_images_after_first": true,
+    "budget_prompt": "ae6d49d retained; ff72fda adds evidence-qualified continuation lesson",
+    "final_read_only_checks": [
+      {
+        "type": "observation",
+        "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04-final-check/20260908-155014-29f41a92/frame-1788907814726458000.png",
+        "capture_ms": 262.3,
+        "native": {
+          "cropTop": 32,
+          "height": 670,
+          "ok": true,
+          "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04-final-check/20260908-155014-29f41a92/frame-1788907814726458000.png",
+          "pid": 86602,
+          "timestamp": "2026-09-08T22:50:14Z",
+          "title": "Grand Theft Auto - San Andreas",
+          "width": 901,
+          "windowId": 130994
+        },
+        "capture_attempts": 1,
+        "capture_errors": []
+      },
+      {
+        "type": "observation",
+        "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04-final-check/20260908-155047-ae7e468a/frame-1788907847472736000.png",
+        "capture_ms": 221.84,
+        "native": {
+          "cropTop": 32,
+          "height": 670,
+          "ok": true,
+          "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04-final-check/20260908-155047-ae7e468a/frame-1788907847472736000.png",
+          "pid": 86602,
+          "timestamp": "2026-09-08T22:50:47Z",
+          "title": "Grand Theft Auto - San Andreas",
+          "width": 901,
+          "windowId": 130994
+        },
+        "capture_attempts": 1,
+        "capture_errors": []
+      }
+    ]
+  },
+  "decisions": [
+    {
+      "step": 0,
+      "timestamp": 1788907684.190495,
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "Near right curb, parallel to lane edges; no established motion. Clear junction mouth ahead; approach before turning.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 30
+          },
+          {
+            "buttons": [],
+            "frames": 30
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. Initial approach, 0 turns; next right at visible junction ahead.",
+        "dynamics_note": "Motion uncalibrated; reference is not a motion sample. Front remains before junction mouth. Short acceleration then coast tests travel before committing to right turn.",
+        "thinking_buttons": []
+      },
+      "decision_latency_ms": 8389.59,
+      "decision_started_at": 1788907675.8005052,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 0,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 30
+        },
+        {
+          "buttons": [],
+          "frames": 30
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907675536521000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907675536521000-1788907675776551932-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907675536521000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907675536521000-1788907675776551932-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 948775,
+          "bytes": 29534,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.84,
+          "observation_phase": "initial",
+          "observed_at_unix": 1788907675.7805262
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "current"
+      ]
+    },
+    {
+      "step": 1,
+      "timestamp": 1788907694.7672262,
+      "decision": {
+        "buttons": [
+          "square"
+        ],
+        "rationale": "Right-lane curb edge, nose angled toward sidewalk; advanced toward pole. Crossing cars block the junction ahead.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "square"
+            ],
+            "frames": 20
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 40
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. Approach at curb, 0 turns; next right at junction ahead after traffic clears.",
+        "dynamics_note": "30 throttle +30 coast moved forward toward corner, with rightward drift despite no steering. Crossing traffic and curb constrain advance; brake then hold, verify stop and front clearance.",
+        "thinking_buttons": [
+          "r1"
+        ]
+      },
+      "decision_latency_ms": 8557.03,
+      "decision_started_at": 1788907686.209897,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 335,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 20
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 40
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907675536521000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907684355521000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907685752440000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907675536521000-1788907675776551932-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907684355521000-1788907684605495626-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907685752440000-1788907686002212050-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907675536521000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907675536521000-1788907675776551932-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 948775,
+          "bytes": 29534,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.84,
+          "observation_phase": "initial",
+          "observed_at_unix": 1788907675.7805262
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907684355521000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907684355521000-1788907684605495626-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 971082,
+          "bytes": 28125,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.63,
+          "observation_phase": "before_action",
+          "observed_at_unix": 1788907684.6097689
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907685752440000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907685752440000-1788907686002212050-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 972569,
+          "bytes": 28073,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.59,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907686.005635
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "before previous inference",
+        "after previous inference, before action",
+        "after action, current"
+      ]
+    },
+    {
+      "step": 2,
+      "timestamp": 1788907706.086915,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_left"
+        ],
+        "rationale": "At right curb, angled into sidewalk; little pole-relative progress. Rear car close; ease left away from pedestrian.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_left"
+            ],
+            "frames": 22
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 18
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 20
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. Still approach, 0 turns; recover curb clearance before right at junction ahead.",
+        "dynamics_note": "20 brake +40 handbrake left car at curb; rear traffic now close, reverse unsafe. Small forward-left correction seeks road clearance; stop before crossing traffic, yaw response still uncalibrated.",
+        "thinking_buttons": [
+          "r1"
+        ]
+      },
+      "decision_latency_ms": 9375.73,
+      "decision_started_at": 1788907696.7107148,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 683,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 22
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 18
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 20
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907685752440000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907694816434000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907696213488000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907685752440000-1788907686002212050-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907694816434000-1788907695082327037-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907696213488000-1788907696486122647-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907685752440000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907685752440000-1788907686002212050-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 972569,
+          "bytes": 28073,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.59,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907686.005635
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907694816434000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907694816434000-1788907695082327037-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 968865,
+          "bytes": 27943,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.09,
+          "observation_phase": "before_action",
+          "observed_at_unix": 1788907695.0867379
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907696213488000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907696213488000-1788907696486122647-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 976542,
+          "bytes": 28380,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.93,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907696.489911
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "before previous inference",
+        "after previous inference, before action",
+        "after action, current"
+      ]
+    },
+    {
+      "step": 3,
+      "timestamp": 1788907717.982361,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_left"
+        ],
+        "rationale": "Right wheels at curb, nose still right of road heading; advanced into pole. Open door; pedestrian ahead-right.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_left"
+            ],
+            "frames": 35
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 25
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. 0 turns; curb/pole recovery on approach, then right at junction still ahead.",
+        "dynamics_note": "22 left+40 total throttle advanced into pole with insufficient left yaw; pole fell, door open. Rear car prevents reverse. Extend moving left correction, brake before crossing lane and pedestrian.",
+        "thinking_buttons": [
+          "r1"
+        ]
+      },
+      "decision_latency_ms": 9919.81,
+      "decision_started_at": 1788907708.062158,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 1043,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 35
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 25
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907696213488000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907706144492000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907707572889000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907696213488000-1788907696486122647-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907706144492000-1788907706432300313-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907707572889000-1788907707825906436-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907696213488000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907696213488000-1788907696486122647-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 976542,
+          "bytes": 28380,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.93,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907696.489911
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907706144492000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907706144492000-1788907706432300313-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 975421,
+          "bytes": 28341,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.58,
+          "observation_phase": "before_action",
+          "observed_at_unix": 1788907706.438118
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907707572889000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907707572889000-1788907707825906436-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 989467,
+          "bytes": 28528,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.51,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907707.83009
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "before previous inference",
+        "after previous inference, before action",
+        "after action, current"
+      ]
+    },
+    {
+      "step": 4,
+      "timestamp": 1788907732.7195652,
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "Right-lane edge, nose angled left away from curb; advanced and yawed left. Junction ahead; pedestrian at right corner.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 25
+          },
+          {
+            "buttons": [
+              "square"
+            ],
+            "frames": 10
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 25
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. 0 turns; moved off curb on approach. Next right at junction ahead, yielding to corner pedestrian.",
+        "dynamics_note": "35 throttle-left produced clear forward travel and substantial left yaw; door closed. Front now points off curb. Brief straight advance seeks corner clearance; brake for pedestrian and crossing traffic.",
+        "thinking_buttons": [
+          "r1"
+        ]
+      },
+      "decision_latency_ms": 12724.98,
+      "decision_started_at": 1788907719.994223,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 1439,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 25
+        },
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 10
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 25
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907707572889000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907718051260000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907719462009000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907707572889000-1788907707825906436-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907718051260000-1788907718319914101-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907719462009000-1788907719743220346-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907707572889000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907707572889000-1788907707825906436-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 989467,
+          "bytes": 28528,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.51,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907707.83009
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907718051260000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907718051260000-1788907718319914101-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 985934,
+          "bytes": 28424,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.94,
+          "observation_phase": "before_action",
+          "observed_at_unix": 1788907718.3243132
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907719462009000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907719462009000-1788907719743220346-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 1007085,
+          "bytes": 30005,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.58,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907719.746939
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "before previous inference",
+        "after previous inference, before action",
+        "after action, current"
+      ]
+    },
+    {
+      "step": 5,
+      "timestamp": 1788907744.658196,
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "At right-lane edge, nose left of road heading; advanced past curb tip. Right street mouth ahead; pedestrian clear left.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 18
+          },
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 32
+          },
+          {
+            "buttons": [
+              "square"
+            ],
+            "frames": 10
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. 0 completed turns; at junction mouth, initiating right into near lane after pedestrian cleared left.",
+        "dynamics_note": "25 throttle then braking advanced modestly toward curb end, no blockage established. Leftward heading persists. Advance before 32-frame right arc; brake to limit unverified corner trajectory.",
+        "thinking_buttons": [
+          "r1"
+        ]
+      },
+      "decision_latency_ms": 9805.37,
+      "decision_started_at": 1788907734.8524349,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 1907,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 18
+        },
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 32
+        },
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 10
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907719462009000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907732866159000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907734318347000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907719462009000-1788907719743220346-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907732866159000-1788907733162094041-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907734318347000-1788907734569553368-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907719462009000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907719462009000-1788907719743220346-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 1007085,
+          "bytes": 30005,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.58,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907719.746939
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907732866159000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907732866159000-1788907733162094041-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 998371,
+          "bytes": 29306,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.87,
+          "observation_phase": "before_action",
+          "observed_at_unix": 1788907733.167982
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907734318347000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907734318347000-1788907734569553368-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 1001562,
+          "bytes": 28963,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 21.08,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907734.5829408
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "before previous inference",
+        "after previous inference, before action",
+        "after action, current"
+      ]
+    },
+    {
+      "step": 6,
+      "timestamp": 1788907756.807456,
+      "decision": {
+        "buttons": [
+          "r1"
+        ],
+        "rationale": "Inside junction near right-lane mouth, angled right but not aligned; advanced beyond curb tip. Taxi crosses from left.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 60
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. 0 completed turns; partial right at mouth alongside. Yield crossing traffic, then finish right.",
+        "dynamics_note": "18 straight+32 right throttle moved beyond curb end with moderate right yaw; 10 brake left lights on, stop unconfirmed. Crossing taxi constrains arc; hold brake until near lane clears.",
+        "thinking_buttons": [
+          "r1"
+        ]
+      },
+      "decision_latency_ms": 10089.57,
+      "decision_started_at": 1788907746.71732,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 2291,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 60
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907734318347000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907744761019000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907746163740000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907734318347000-1788907734569553368-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907744761019000-1788907745019296666-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907746163740000-1788907746434862556-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907734318347000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907734318347000-1788907734569553368-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 1001562,
+          "bytes": 28963,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 21.08,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907734.5829408
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907744761019000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907744761019000-1788907745019296666-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 997387,
+          "bytes": 29222,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.2,
+          "observation_phase": "before_action",
+          "observed_at_unix": 1788907745.0242078
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907746163740000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907746163740000-1788907746434862556-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 997783,
+          "bytes": 30298,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.79,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907746.438872
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "before previous inference",
+        "after previous inference, before action",
+        "after action, current"
+      ]
+    },
+    {
+      "step": 7,
+      "timestamp": 1788907767.426317,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Across destination centerline, nose toward far curb; drifted forward then held. Right corridor alongside is clear.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 45
+          },
+          {
+            "buttons": [
+              "square"
+            ],
+            "frames": 15
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. 0 completed turns; partial right overshot toward cross-street centerline. Finish right, recover near lane.",
+        "dynamics_note": "Despite held handbrake, inference showed forward displacement; last 60 handbrake then held position. Far curb limits nose clearance. Extend right arc to 45 frames from rest, then brake; alignment unverified.",
+        "thinking_buttons": [
+          "r1"
+        ]
+      },
+      "decision_latency_ms": 8550.54,
+      "decision_started_at": 1788907758.875377,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 2687,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 45
+        },
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 15
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907746163740000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907756919891000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907758330230000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907746163740000-1788907746434862556-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907756919891000-1788907757182055562-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907758330230000-1788907758581067533-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907746163740000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907746163740000-1788907746434862556-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 997783,
+          "bytes": 30298,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.79,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907746.438872
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907756919891000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907756919891000-1788907757182055562-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 967763,
+          "bytes": 27571,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.26,
+          "observation_phase": "before_action",
+          "observed_at_unix": 1788907757.186398
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907758330230000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907758330230000-1788907758581067533-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 971644,
+          "bytes": 27989,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.1,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907758.5854888
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "before previous inference",
+        "after previous inference, before action",
+        "after action, current"
+      ]
+    },
+    {
+      "step": 8,
+      "timestamp": 1788907779.668523,
+      "decision": {
+        "buttons": [
+          "square",
+          "steer_left"
+        ],
+        "rationale": "Outside right lane, nose diagonal toward far curb/pole; advanced with right yaw but front clearance is tight.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "square",
+              "steer_left"
+            ],
+            "frames": 45
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 15
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. 0 completed turns; partial right across centerline near far curb. Recover clearance, finish right into near lane.",
+        "dynamics_note": "45 throttle-right+15 brake advanced toward far pole with substantial right yaw, still diagonal. Reverse-left seeks nose clearance and road alignment; rear roadway visible. Hold brake after recovery; result unverified.",
+        "thinking_buttons": [
+          "r1"
+        ]
+      },
+      "decision_latency_ms": 10098.11,
+      "decision_started_at": 1788907769.56997,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 3035,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "square",
+            "steer_left"
+          ],
+          "frames": 45
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 15
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907758330230000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907767559213000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907768989043000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907758330230000-1788907758581067533-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907767559213000-1788907767839149744-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907768989043000-1788907769266307457-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907758330230000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907758330230000-1788907758581067533-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 971644,
+          "bytes": 27989,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.1,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907758.5854888
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907767559213000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907767559213000-1788907767839149744-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 968823,
+          "bytes": 27818,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.29,
+          "observation_phase": "before_action",
+          "observed_at_unix": 1788907767.843204
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907768989043000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907768989043000-1788907769266307457-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 950376,
+          "bytes": 26530,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.46,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907769.2717812
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "before previous inference",
+        "after previous inference, before action",
+        "after action, current"
+      ]
+    },
+    {
+      "step": 9,
+      "timestamp": 1788907791.054927,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Near centerline, nearly parallel to road after reversing away from pole; taxi close behind-left, rightward path open.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 25
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 20
+          },
+          {
+            "buttons": [
+              "square"
+            ],
+            "frames": 15
+          }
+        ],
+        "route_note": "Start: yellow hillside ahead-left, red-orange corner right. First right heading nearly achieved; lane recovery incomplete. Move into right lane, then seek next right.",
+        "dynamics_note": "45 reverse-left gave substantial backward travel and clockwise yaw, clearing nose from curb; taxi now limits rear. Short forward-right correction targets near lane; brake before unverified diagonal drift.",
+        "thinking_buttons": [
+          "r1"
+        ]
+      },
+      "decision_latency_ms": 9235.44,
+      "decision_started_at": 1788907781.819156,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 3431,
+      "nominal_observations_per_game_second": null,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 25
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 20
+        },
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 15
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907768989043000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907779818014000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907781236965000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907768989043000-1788907769266307457-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907779818014000-1788907780085121527-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907781236965000-1788907781504175260-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.8,
+          "observation_phase": "reference",
+          "observed_at_unix": null
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907768989043000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907768989043000-1788907769266307457-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 950376,
+          "bytes": 26530,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.46,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907769.2717812
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907779818014000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907779818014000-1788907780085121527-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 971019,
+          "bytes": 27908,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.76,
+          "observation_phase": "before_action",
+          "observed_at_unix": 1788907780.088703
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907781236965000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/model-frames/frame-1788907781236965000-1788907781504175260-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 1009346,
+          "bytes": 31664,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.34,
+          "observation_phase": "after_action",
+          "observed_at_unix": 1788907781.508723
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "before previous inference",
+        "after previous inference, before action",
+        "after action, current"
+      ]
+    }
+  ],
+  "native_control_events": [
+    {
+      "timestamp": 1788907675.487419,
+      "type": "flow_started",
+      "inference_speed": 0.5
+    },
+    {
+      "timestamp": 1788907675.780413,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907675536521000.png",
+      "capture_ms": 243.73,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907675536521000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:47:55Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907684.609282,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907684355521000.png",
+      "capture_ms": 253.4,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907684355521000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:04Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907685.7522728,
+      "type": "burst",
+      "segments": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 30
+        },
+        {
+          "buttons": [],
+          "frames": 30
+        }
+      ],
+      "native_segments": [
+        {
+          "keys": [
+            "k"
+          ],
+          "frames": 30
+        },
+        {
+          "keys": [],
+          "frames": 30
+        }
+      ],
+      "thinking_buttons": [],
+      "thinking_keys": [],
+      "frames": 60,
+      "fps": 59.94,
+      "nominal_duration_ms": 1001.001,
+      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+      "native": {
+        "elapsedMs": 1018.562958,
+        "fps": 59.94,
+        "frames": 60,
+        "ok": true,
+        "pauseToggleSent": false,
+        "pid": 86602,
+        "requestedDurationMs": 1001.0010010010011,
+        "requestedFrames": 60,
+        "runningElapsedMs": 1005.747416,
+        "segments": 2,
+        "slowMotionToggleSent": true,
+        "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+      },
+      "elapsed_ms": 1121.43
+    },
+    {
+      "timestamp": 1788907686.0055108,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907685752440000.png",
+      "capture_ms": 252.88,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907685752440000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:06Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907695.0863628,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907694816434000.png",
+      "capture_ms": 269.73,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907694816434000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:15Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907696.213234,
+      "type": "burst",
+      "segments": [
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 20
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 40
+        }
+      ],
+      "native_segments": [
+        {
+          "keys": [
+            "j"
+          ],
+          "frames": 20
+        },
+        {
+          "keys": [
+            "e"
+          ],
+          "frames": 40
+        }
+      ],
+      "thinking_buttons": [
+        "r1"
+      ],
+      "thinking_keys": [
+        "e"
+      ],
+      "frames": 60,
+      "fps": 59.94,
+      "nominal_duration_ms": 1001.001,
+      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+      "native": {
+        "elapsedMs": 1014.728833,
+        "fps": 59.94,
+        "frames": 60,
+        "ok": true,
+        "pauseToggleSent": false,
+        "pid": 86602,
+        "requestedDurationMs": 1001.0010010010011,
+        "requestedFrames": 60,
+        "runningElapsedMs": 1001.919417,
+        "segments": 2,
+        "slowMotionToggleSent": true,
+        "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+      },
+      "elapsed_ms": 1105.85
+    },
+    {
+      "timestamp": 1788907696.489708,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907696213488000.png",
+      "capture_ms": 276.03,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907696213488000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:16Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907706.438004,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907706144492000.png",
+      "capture_ms": 293.31,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907706144492000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:26Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907707.572562,
+      "type": "burst",
+      "segments": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 22
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 18
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 20
+        }
+      ],
+      "native_segments": [
+        {
+          "keys": [
+            "k",
+            "a"
+          ],
+          "frames": 22
+        },
+        {
+          "keys": [
+            "k"
+          ],
+          "frames": 18
+        },
+        {
+          "keys": [
+            "e"
+          ],
+          "frames": 20
+        }
+      ],
+      "thinking_buttons": [
+        "r1"
+      ],
+      "thinking_keys": [
+        "e"
+      ],
+      "frames": 60,
+      "fps": 59.94,
+      "nominal_duration_ms": 1001.001,
+      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+      "native": {
+        "elapsedMs": 1014.146625,
+        "fps": 59.94,
+        "frames": 60,
+        "ok": true,
+        "pauseToggleSent": false,
+        "pid": 86602,
+        "requestedDurationMs": 1001.0010010010011,
+        "requestedFrames": 60,
+        "runningElapsedMs": 1001.567,
+        "segments": 3,
+        "slowMotionToggleSent": true,
+        "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+      },
+      "elapsed_ms": 1114.03
+    },
+    {
+      "timestamp": 1788907707.829921,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907707572889000.png",
+      "capture_ms": 256.79,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907707572889000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:27Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907718.324162,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907718051260000.png",
+      "capture_ms": 272.7,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907718051260000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:38Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907719.461823,
+      "type": "burst",
+      "segments": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 35
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 25
+        }
+      ],
+      "native_segments": [
+        {
+          "keys": [
+            "k",
+            "a"
+          ],
+          "frames": 35
+        },
+        {
+          "keys": [
+            "e"
+          ],
+          "frames": 25
+        }
+      ],
+      "thinking_buttons": [
+        "r1"
+      ],
+      "thinking_keys": [
+        "e"
+      ],
+      "frames": 60,
+      "fps": 59.94,
+      "nominal_duration_ms": 1001.001,
+      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+      "native": {
+        "elapsedMs": 1024.86,
+        "fps": 59.94,
+        "frames": 60,
+        "ok": true,
+        "pauseToggleSent": false,
+        "pid": 86602,
+        "requestedDurationMs": 1001.0010010010011,
+        "requestedFrames": 60,
+        "runningElapsedMs": 1011.976,
+        "segments": 2,
+        "slowMotionToggleSent": true,
+        "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+      },
+      "elapsed_ms": 1116.73
+    },
+    {
+      "timestamp": 1788907719.746733,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907719462009000.png",
+      "capture_ms": 284.53,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907719462009000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:39Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907733.167658,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907732866159000.png",
+      "capture_ms": 301.21,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907732866159000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:53Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907734.31819,
+      "type": "burst",
+      "segments": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 25
+        },
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 10
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 25
+        }
+      ],
+      "native_segments": [
+        {
+          "keys": [
+            "k"
+          ],
+          "frames": 25
+        },
+        {
+          "keys": [
+            "j"
+          ],
+          "frames": 10
+        },
+        {
+          "keys": [
+            "e"
+          ],
+          "frames": 25
+        }
+      ],
+      "thinking_buttons": [
+        "r1"
+      ],
+      "thinking_keys": [
+        "e"
+      ],
+      "frames": 60,
+      "fps": 59.94,
+      "nominal_duration_ms": 1001.001,
+      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+      "native": {
+        "elapsedMs": 1027.878625,
+        "fps": 59.94,
+        "frames": 60,
+        "ok": true,
+        "pauseToggleSent": false,
+        "pid": 86602,
+        "requestedDurationMs": 1001.0010010010011,
+        "requestedFrames": 60,
+        "runningElapsedMs": 1015.478292,
+        "segments": 3,
+        "slowMotionToggleSent": true,
+        "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+      },
+      "elapsed_ms": 1128.98
+    },
+    {
+      "timestamp": 1788907734.582782,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907734318347000.png",
+      "capture_ms": 263.56,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907734318347000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:48:54Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907745.024083,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907744761019000.png",
+      "capture_ms": 262.85,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907744761019000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:49:05Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907746.163572,
+      "type": "burst",
+      "segments": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 18
+        },
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 32
+        },
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 10
+        }
+      ],
+      "native_segments": [
+        {
+          "keys": [
+            "k"
+          ],
+          "frames": 18
+        },
+        {
+          "keys": [
+            "k",
+            "d"
+          ],
+          "frames": 32
+        },
+        {
+          "keys": [
+            "j"
+          ],
+          "frames": 10
+        }
+      ],
+      "thinking_buttons": [
+        "r1"
+      ],
+      "thinking_keys": [
+        "e"
+      ],
+      "frames": 60,
+      "fps": 59.94,
+      "nominal_duration_ms": 1001.001,
+      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+      "native": {
+        "elapsedMs": 1020.359875,
+        "fps": 59.94,
+        "frames": 60,
+        "ok": true,
+        "pauseToggleSent": false,
+        "pid": 86602,
+        "requestedDurationMs": 1001.0010010010011,
+        "requestedFrames": 60,
+        "runningElapsedMs": 1007.35525,
+        "segments": 3,
+        "slowMotionToggleSent": true,
+        "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+      },
+      "elapsed_ms": 1118.14
+    },
+    {
+      "timestamp": 1788907746.4386072,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907746163740000.png",
+      "capture_ms": 274.67,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907746163740000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:49:06Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907757.186264,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907756919891000.png",
+      "capture_ms": 266.18,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907756919891000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:49:17Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907758.330003,
+      "type": "burst",
+      "segments": [
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 60
+        }
+      ],
+      "native_segments": [
+        {
+          "keys": [
+            "e"
+          ],
+          "frames": 60
+        }
+      ],
+      "thinking_buttons": [
+        "r1"
+      ],
+      "thinking_keys": [
+        "e"
+      ],
+      "frames": 60,
+      "fps": 59.94,
+      "nominal_duration_ms": 1001.001,
+      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+      "native": {
+        "elapsedMs": 1020.07425,
+        "fps": 59.94,
+        "frames": 60,
+        "ok": true,
+        "pauseToggleSent": false,
+        "pid": 86602,
+        "requestedDurationMs": 1001.0010010010011,
+        "requestedFrames": 60,
+        "runningElapsedMs": 1007.212958,
+        "segments": 1,
+        "slowMotionToggleSent": true,
+        "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+      },
+      "elapsed_ms": 1122.47
+    },
+    {
+      "timestamp": 1788907758.585323,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907758330230000.png",
+      "capture_ms": 254.91,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907758330230000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:49:18Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907767.843076,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907767559213000.png",
+      "capture_ms": 283.68,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907767559213000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:49:27Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907768.988835,
+      "type": "burst",
+      "segments": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 45
+        },
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 15
+        }
+      ],
+      "native_segments": [
+        {
+          "keys": [
+            "k",
+            "d"
+          ],
+          "frames": 45
+        },
+        {
+          "keys": [
+            "j"
+          ],
+          "frames": 15
+        }
+      ],
+      "thinking_buttons": [
+        "r1"
+      ],
+      "thinking_keys": [
+        "e"
+      ],
+      "frames": 60,
+      "fps": 59.94,
+      "nominal_duration_ms": 1001.001,
+      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+      "native": {
+        "elapsedMs": 1021.550958,
+        "fps": 59.94,
+        "frames": 60,
+        "ok": true,
+        "pauseToggleSent": false,
+        "pid": 86602,
+        "requestedDurationMs": 1001.0010010010011,
+        "requestedFrames": 60,
+        "runningElapsedMs": 1008.759208,
+        "segments": 2,
+        "slowMotionToggleSent": true,
+        "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+      },
+      "elapsed_ms": 1124.47
+    },
+    {
+      "timestamp": 1788907769.271612,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907768989043000.png",
+      "capture_ms": 282.36,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907768989043000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:49:29Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907780.088535,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907779818014000.png",
+      "capture_ms": 270.33,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907779818014000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:49:40Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907781.236688,
+      "type": "burst",
+      "segments": [
+        {
+          "buttons": [
+            "square",
+            "steer_left"
+          ],
+          "frames": 45
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 15
+        }
+      ],
+      "native_segments": [
+        {
+          "keys": [
+            "j",
+            "a"
+          ],
+          "frames": 45
+        },
+        {
+          "keys": [
+            "e"
+          ],
+          "frames": 15
+        }
+      ],
+      "thinking_buttons": [
+        "r1"
+      ],
+      "thinking_keys": [
+        "e"
+      ],
+      "frames": 60,
+      "fps": 59.94,
+      "nominal_duration_ms": 1001.001,
+      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+      "native": {
+        "elapsedMs": 1019.31175,
+        "fps": 59.94,
+        "frames": 60,
+        "ok": true,
+        "pauseToggleSent": false,
+        "pid": 86602,
+        "requestedDurationMs": 1001.0010010010011,
+        "requestedFrames": 60,
+        "runningElapsedMs": 1006.686291,
+        "segments": 2,
+        "slowMotionToggleSent": true,
+        "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+      },
+      "elapsed_ms": 1127.63
+    },
+    {
+      "timestamp": 1788907781.508547,
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907781236965000.png",
+      "capture_ms": 271.38,
+      "native": {
+        "cropTop": 32,
+        "height": 670,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-04/20260908-154755-29fb6c33/frame-1788907781236965000.png",
+        "pid": 86602,
+        "timestamp": "2026-09-08T22:49:41Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 901,
+        "windowId": 130994
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    },
+    {
+      "timestamp": 1788907791.467606,
+      "type": "flow_stopped"
+    }
+  ]
+}

@@ -39,3 +39,5 @@ This confirms the host can carry model-selected controls through inference and p
 Before another trial, review the geometry around the front corner and rear vehicle and whether the model is choosing sufficiently useful, visually justified clearance maneuvers. Keep the next change narrow and fixed for its trial. No further prompt changes, manual driving, baseline relocation, or reset were made here.
 
 ![Read-only final paused verification](flow-minute-02-final.png)
+
+**Current raw-media availability:** Later task-archive cleanup removed the route worktree and its ignored raw files. Share videos and copied evidence remain; flow01 also has a separately verified lossless archive in the main checkout. See the [retention incident](../evidence/route-worktree-retention-incident.json).

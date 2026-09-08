@@ -28,3 +28,5 @@ This supports testing the lesson that an observation boundary alone should not e
 The native MKV,3647 PNGs, full MOV and original CRF22 MP4 remain intact. The shared CRF26 derivative preserves the complete elapsed timeline at30fps with no retiming. The final read-only screenshot confirms paused PID85270; recording stop was sent and the capture finalized. No further reset was performed before this report was committed.
 
 ![Final paused scene](flow-minute-03-final.png)
+
+**Current raw-media availability:** Later task-archive cleanup removed the route worktree and its ignored raw files. Share videos and copied evidence remain; flow01 also has a separately verified lossless archive in the main checkout. See the [retention incident](../evidence/route-worktree-retention-incident.json).

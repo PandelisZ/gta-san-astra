@@ -183,6 +183,11 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         "into the destination roadway; do not aim through the inside sidewalk or pole. Use the visible "
         "curb opening and vehicle's front corners to judge clearance. Ease steering as the car aligns "
         "with the destination road rather than repeating a tight turn into its inside curb. "
+        "Distinguish the near corner you are clearing from the far sidewalk across the junction. "
+        "Crossing the destination centerline without enough yaw is an overshoot, not proof of a completed turn. "
+        "The visible minimap and N marker can cross-check street orientation, but cannot establish lane clearance. "
+        "If images show continued travel under a requested handbrake hold, use that observed stopping "
+        "distance for the next plan; do not assume the vehicle was stationary during inference. "
         "Example 60-frame burst: square for8, coast for12, cross+steer_left for40. "
         "Use segments=null in realtime mode, or for a stop decision. "
         "For menu confirmations/one-shot actions, follow a press with one empty-buttons decision so "
@@ -445,7 +450,8 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                     durations = [f"{samples[i - 1][0]} to {samples[i][0]}: {samples[i][1] - samples[i - 1][1]:.2f} wall seconds"
                                  for i in range(1, len(samples))]
                     duration_context += ("Observed image intervals: " + "; ".join(durations) + ". "
-                        "The first pair separates motion during inference; the last pair brackets the action. "
+                        "The images labelled before previous inference and after previous inference bracket that inference; "
+                        "the last two images bracket the action. The baseline is excluded from motion comparisons. "
                         "Do not attribute all displacement to the short action or treat released controls as braking. ")
             decision_started = time.time()
             if target_recorded_frames is not None:

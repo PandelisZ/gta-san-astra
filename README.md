@@ -24,7 +24,7 @@ https://github.com/user-attachments/assets/00848160-b974-4c03-a24c-a454d153272a
 
 [Driving review](docs/streams/flow-minute-01-review.md) · [Upload provenance](docs/evidence/flow-minute-01-upload.json)
 
-Recent flow trials preserve both the complete simulation recording and a video of real elapsed time:
+Recent flow trials recorded the complete simulation and a video of real elapsed time. Later task-archive cleanup removed raw files held only in the old route worktree; the share videos below remain. See the [retention incident](docs/evidence/route-worktree-retention-incident.json). New runs store raw media in the main checkout.
 
 | Trial | Simulation / elapsed time | Observed result |
 | --- | --- | --- |

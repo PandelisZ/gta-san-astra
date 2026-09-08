@@ -48,3 +48,5 @@ First make image timestamps, observation interval, prior inference duration and 
 An explicit model-selected `thinking_buttons` field with default `[]` is a reasonable additional control capability. It would allow a deliberate brake/handbrake, coast or throttle choice during inference, instead of compulsory neutral controls. This run does not prove that it solves the curb restriction. Any choice must be forecast over several game seconds, including variable latency; sustained steering/throttle can turn a small error into a collision. Keep the choice model-owned, retain validation/release-on-failure, and record exactly what was held. Do not hardcode a driving choice or claim improvement without a new fixed-policy comparison.
 
 No code for that proposal was implemented here. Reset remains held for coordinator review.
+
+**Current raw-media availability:** Later task-archive cleanup removed the route worktree and its ignored raw files. Share videos and copied evidence remain; flow01 also has a separately verified lossless archive in the main checkout. See the [retention incident](../evidence/route-worktree-retention-incident.json).
