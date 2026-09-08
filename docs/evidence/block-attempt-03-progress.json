@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "assessment": "ongoing run progress, not a final outcome",
+  "source_run": "runs/block-attempt-03",
+  "assembled_at_unix": 1788894861.029783,
+  "run_status_at_read": "running",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "service_tier": "fast",
+  "burst_frames_requested": 60,
+  "control_plan": "model-selected sequential phases",
+  "images_copied_unchanged": [
+    {
+      "artifact": "block-attempt-03-before-turn.png",
+      "source_frame": "runs/block-attempt-03/20260908-120958-227268ea/frame-1788894741120314000.png",
+      "sha256": "fb6718c8a88e055c7852363f3bda1e91718b273f9b8f63c6b054927b1cbc76f9",
+      "game_clock_visible": "17:31",
+      "visual_observation": "Car approaches the right-hand junction beside the near curb; the yellow storefront is ahead/right and pedestrians stand near the corner."
+    },
+    {
+      "artifact": "block-attempt-03-after-turn.png",
+      "source_frame": "runs/block-attempt-03/20260908-120958-227268ea/frame-1788894768201519000.png",
+      "sha256": "c3ccb858fb2f8798ed2e395b836f0a3c13bd5e20eac2b43f899414324e34e1d0",
+      "game_clock_visible": "17:33",
+      "visual_observation": "Car has crossed onto the intersecting road. The yellow storefront and low pale wall are now on its left, with the hillside and different road alignment ahead."
+    }
+  ],
+  "visually_supported_progress": [
+    "The viewed sequence shows one right-hand junction traversal: approach at 17:31, car angled through the turn at 17:32, and entry onto the side road at 17:33.",
+    "A later reviewed frame at 17:35 shows the car farther along that road, beside the long orange building."
+  ],
+  "additional_reviewed_frames": [
+    {
+      "source_frame": "runs/block-attempt-03/20260908-120958-227268ea/frame-1788894755705792000.png",
+      "game_clock_visible": "17:32",
+      "observation": "Car is angled right across the junction; this intermediate view connects the before and after views."
+    },
+    {
+      "source_frame": "runs/block-attempt-03/20260908-120958-227268ea/frame-1788894793100958000.png",
+      "game_clock_visible": "17:35",
+      "observation": "Car is traveling along the new road but its right side is close to or straddling the curb. A front door is visibly open; the inspected images do not establish when or why."
+    }
+  ],
+  "model_report_separate_from_visual_assessment": {
+    "decision_index": 14,
+    "route_note": "Start: garden wall/hedges left, orange Jefferson Motel right, gantry ahead. First right visibly completed; 1 turn. Now on side road with yellow storefront and pale wall left, hillside ahead. Release steering to settle heading; next seek a right junction around motel block. Additional 40 right-steering frames produced most of remaining corner.",
+    "note": "This is model-authored navigation memory. It was not treated as proof of the turn or route completion."
+  },
+  "limitations": [
+    "This is a checkpoint from a still-running attempt, not the final run result.",
+    "The selected images do not show return to the starting motel/garden landmark and original heading. Full-block completion remains unproven.",
+    "Curb clearance remains a visible problem in a subsequent frame.",
+    "No collision count, speed, distance, position telemetry, or objective driving score was measured.",
+    "The screenshots do not establish collision-free driving.",
+    "Requested burst counts do not independently establish the number of stored video frames."
+  ],
+  "full_block_completion_claimed": false,
+  "collision_free_claimed": false,
+  "emulator_inputs_during_assessment": false
+}
