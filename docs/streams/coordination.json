@@ -1,5 +1,5 @@
 {
-  "status": "Four minute02 trials running on CLI transport with nofocus and serialized capture; root supervisor monitors every5minutes.",
+  "status": "Minute02 wave remains active. Lane has visually completed one right turn; junction and route are turning; recovery continues part3 after transport failures. Full block return unproven.",
   "streams": [
     {
       "name": "lane",
@@ -38,5 +38,16 @@
       "neutral_probe_actual_frames": 0
     }
   ],
-  "qualification": "Warm-daemon stop for junction returned a stale application-identity error; fresh CLI finalized its0-frame capture. Use CLI fallback for next wave. No root driving controls; all probe controls neutral."
+  "qualification": "Warm-daemon stop for junction returned a stale application-identity error; fresh CLI finalized its0-frame capture. Use CLI fallback for next wave. No root driving controls; all probe controls neutral.",
+  "latest_shared_fixes": {
+    "raw_pid_without_app_metadata": "ad9075d",
+    "capture_only_retries": "eed2273",
+    "continuation_wrapper": "b95ec06"
+  },
+  "recovery_continuation": {
+    "prior_recorded_frames": 456,
+    "part3_target_frames": 3141,
+    "run": "stream-recovery-minute-02-part3",
+    "note": "Same game, unchanged policy, no controls replayed."
+  }
 }
