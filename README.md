@@ -2,11 +2,11 @@
 
 **Give GPT-6 Astra a controller, a screenshot, and the next few frames.**
 
-GTA San Astra is a visual driving experiment inside the PlayStation 2 version of *Grand Theft Auto: San Andreas*. Astra looks at the game, chooses controls, and sees what happens next. A native macOS bridge turns those decisions into PCSX2 input. The emulator pauses between decisions, making model latency independent of how much game time passes.
+GTA San Astra is a visual driving experiment inside the PlayStation 2 version of *Grand Theft Auto: San Andreas*. Astra looks at the game, chooses controls, and sees what happens next. A native macOS bridge turns those decisions into PCSX2 input. The current demo runs actions at normal speed and keeps the world moving at 50% speed while Astra decides. Earlier experiments paused during inference.
 
 Astra builds the experiment and becomes its driving policy. The question is concrete: **can a visual model follow a road when pixels are its only sensor?**
 
-[Two-minute demo guide](docs/DEMO.md) · [Recorded evidence](docs/EVIDENCE.md) · [Live validation](docs/TESTING.md) · [Private repository](https://github.com/PandelisZ/gta-san-astra)
+[Two-minute demo guide](docs/DEMO.md) · [Recorded evidence](docs/EVIDENCE.md) · [Live validation](docs/TESTING.md) · [Repository](https://github.com/PandelisZ/gta-san-astra)
 
 ## What works today
 
@@ -16,7 +16,13 @@ The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, a
 
 ## Video proofs
 
-Uploaded recordings and provenance are collected in [GitHub issue #1](https://github.com/PandelisZ/gta-san-astra/issues/1). These are autonomous attempts, with collisions and recovery failures; none proves a completed loop. Playback follows actual simulation time, excluding paused inference gaps.
+Uploaded recordings and provenance are collected in [GitHub issue #1](https://github.com/PandelisZ/gta-san-astra/issues/1). These are autonomous attempts, with collisions and recovery failures; none proves a completed loop. The current flow demo preserves real elapsed time, including half-speed thinking. Earlier clips show simulation time and exclude paused inference gaps.
+
+**Half-speed thinking demo 01 — 109.68 seconds of real elapsed time, 60.36 simulation seconds, no completed turn or block return.**
+
+https://github.com/user-attachments/assets/00848160-b974-4c03-a24c-a454d153272a
+
+[Driving review](docs/streams/flow-minute-01-review.md) · [Upload provenance](docs/evidence/flow-minute-01-upload.json)
 
 **Single-game attempt 03 — interrupted at30.03seconds by Astra usage limits, one rightturn with pole collision and recovery, incomplete loop.**
 
@@ -71,7 +77,7 @@ The MP4s and metadata also remain versioned under [docs/videos](docs/videos). [U
 
 ## Earlier quiet starting snapshot
 
-`quiet-tahoma` is the new local baseline: a blue Tahoma stopped beside a garden wall opposite Jefferson Motel, with the immediate area clear. Astra recovered from a carjacking, drove here, and verified no visible motion after handbrake bursts. The old `stationary-car` snapshot remains available. A fresh emulator process reloaded this snapshot and redrew the same car/location after 60 neutral frame requests; the displayed clock advanced one second.
+`quiet-tahoma` is an earlier baseline: a blue Tahoma stopped beside a garden wall opposite Jefferson Motel, with the immediate area clear. Astra recovered from a carjacking, drove here, and verified no visible motion after handbrake bursts. The old `stationary-car` snapshot remains available. A fresh emulator process reloaded this snapshot and redrew the same car/location after 60 neutral frame requests; the displayed clock advanced one second.
 
 ![Quiet Tahoma starting scene](docs/evidence/quiet-tahoma.png)
 
@@ -183,7 +189,7 @@ The demonstrated configuration uses warm native-daemon and Codex app-server tran
 
 When a controller targets a PID (`SAN_ASTRA_PID` or its `pid` argument), input and frame stepping use `--no-focus` in both native transports, including recording hotkeys. This overrides an input caller's `--focus` flag and avoids changing application focus between emulator instances. The shared actuation mutex still serializes input; an explicit `focus` command remains available when activation is intentional.
 
-For visual route comparison, optionally pass `--start-reference /absolute/path/to/original-start.png` to the driving runner. Each decision receives the labeled baseline followed by the previous/current screenshots, at most three images; an identical starting file is attached only once. This is screenshot context only. Continuations inherit the original reference path from the prior run manifest unless explicitly overridden. Keep that original file available; a continuation screenshot should not replace the route baseline. The option is off by default.
+For visual route comparison, optionally pass `--start-reference /absolute/path/to/original-start.png` to the driving runner. Each decision receives the labeled baseline followed by the previous/current screenshots, up to four images in flow mode (the reference plus three motion phases), or three in paused modes; an identical starting file is attached only once. This is screenshot context only. Continuations inherit the original reference path from the prior run manifest unless explicitly overridden. Keep that original file available; a continuation screenshot should not replace the route baseline. The option is off by default.
 
 The earlier recorded run used the fixed 12-frame steering / 48-frame continuation policy; it is not retroactive evidence for the new model-selected phases. That completed 20-decision run requested 1,200 emulated frames and took 273.18 wall-clock seconds. Median model-decision latency was 7.48 seconds, with variable multi-second calls. This is a paused simulation experiment, not realtime wall-clock autonomous driving. See [the measured run summary](docs/TESTING.md).
 
@@ -215,7 +221,7 @@ uv run san-astra step --frames 5 --buttons triangle
 SAN_ASTRA_FRAME_STRIDE=5 uv run san-astra mcp
 ```
 
-MCP exposes `observe`, `step`, `action`, `release`, and `doctor`; observation tools return PNG image content. `.codex/config.toml` registers the server for a trusted session in this checkout. Update its absolute paths if the repository moves. `action` provides timed realtime input; the autonomous runner uses paused `step` instead.
+MCP exposes `observe`, `step`, `action`, `release`, and `doctor`; observation tools return PNG image content. `.codex/config.toml` registers the server for a trusted session in this checkout. Update its absolute paths if the repository moves. `action` provides timed realtime input; the autonomous runner also supports paused stepping, paused decision bursts, and half-speed inference through flow mode.
 
 | Driving action | PS2 control | Keyboard binding |
 | --- | --- | --- |

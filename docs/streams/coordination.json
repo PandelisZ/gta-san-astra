@@ -1,5 +1,5 @@
 {
-  "status": "flow-minute-01 is live in sole emulator79892, driver80130, window recorder80128. Actions run at100%; inference at50%. First two60frame action plans completed without pause toggles. Fullblock remains unproven.",
+  "status": "flow-minute-02 finished3683nativeframes,13decisions/12actions,zero turns. Sole82617pausednormal, recorders finalized. Route reviewing; root improving latency/budget context before another reset.",
   "streams": [
     {
       "name": "lane",
@@ -35,11 +35,11 @@
       "name": "route",
       "worktree": "/Users/pz/.codex/worktrees/4ed4/oaihackathon",
       "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2",
-      "pid": 79892,
+      "pid": 82617,
       "task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
       "neutral_probe_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
       "neutral_probe_actual_frames": 0,
-      "process_state": "flow driver and wall-clock recording active"
+      "process_state": "paused after completed flow-minute-02"
     }
   ],
   "qualification": "Warm-daemon stop for junction returned a stale application-identity error; fresh CLI finalized its0-frame capture. Use CLI fallback for next wave. No root driving controls; all probe controls neutral.",
@@ -76,7 +76,7 @@
       "decisions": 83
     }
   },
-  "next_step": "Finish oneactualminute ofnormal-speedbursts, preserveallframes/video, reviewbeforeanotherattempt.",
+  "next_step": "Reviewflow02 andtestlatency/budget guidance before nextone-minute trial; noautomaticreset while coordinatorpreparing.",
   "execution_mode": "single",
   "active_task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
   "timing": {
@@ -87,7 +87,8 @@
     "evidence": "../evidence/flow-speed-check.json",
     "qualification": "Live OSD verified50%,100%,50%. Full wall-clock window recording preserves timing; native GS master preserves emulator frames.",
     "inference_speed": 0.5,
-    "action_speed": 1.0
+    "action_speed": 1.0,
+    "thinking_controls": "Explicit model-selected thinking_buttons held during50% inference; empty releases. Four labeled images separate inference and action motion."
   },
   "active_baseline": "right-lane-junction",
   "interrupted_attempt": {
@@ -104,8 +105,8 @@
     "state_sha256": "d77ae12e068c4b62880a9f538a43caf548040b44a4eac87946b206e40622d83f",
     "note": "Opaque F1backup only, notloaded; no frameadvance during capture. Original right-lane-junction still route reference."
   },
-  "active_run": "flow-minute-01",
-  "driver_pid": 80130,
+  "active_run": "flow-minute-02",
+  "driver_pid": null,
   "previous_burst_partial": {
     "runs": [
       "burst-minute-01",
@@ -115,5 +116,5 @@
     "completed_turns": 0,
     "end_state": "Carjacked; player on foot. Separate from fresh flow demo."
   },
-  "screen_recorder_pid": 80128
+  "screen_recorder_pid": null
 }
