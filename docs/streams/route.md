@@ -114,3 +114,7 @@ Latest scene: player on foot beside the sedan and an attacker after a carjacking
 One fresh `flow-minute-01` completed from the verified right-lane baseline using shared main 1fa50c4. It recorded 3618 native frames (60.36 simulation seconds) and a 109.68-second real-time window movie, with 12 low/fast screenshot decisions. Actual 50% inference and 100% action targets were visually verified in the movie. Zero turns; curb/pole clearance remained unresolved. PID 79892 paused at normal speed; no reset or additional trial.
 
 The [flow review](flow-minute-01-review.md) records the causal limits and next experiment. The [8.55 MB sharing video](../videos/flow-minute-01-share.mp4) preserves original timestamps and full 109.68-second timing. Full-resolution MP4/MOV, lossless native MKV and all 3618 PNGs are retained unchanged.
+
+## Flow minute 02 completed
+
+Fresh baseline trial on sole PID 82617 used shared main 25d84d0: four labeled motion images, measured interval context and model-selected inference controls. Recorded 3683 native frames (61.44 simulation seconds),13 decisions/12 applied actions, and 111.83 seconds of wall-clock video. The target crossed during the final inference; final candidate action was not applied. Handbrake thinking control was selected and transmitted to native e-key holds after the initial neutral choice. Still zero turns, curb/traffic constraints and visible rear damage. [Review and capability evidence](flow-minute-02-review.md). PID remains paused; no reset.

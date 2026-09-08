@@ -73,6 +73,7 @@ struct BurstPlan {
     let segments: [BurstSegment]
     let codes: [[CGKeyCode]]
     let fps: Double
+    let thinkingCodes: [CGKeyCode]
     var frames: Int { segments.reduce(0) { $0 + $1.frames } }
     init() throws {
         guard let raw = option("--segments"), let data = raw.data(using: .utf8),
@@ -85,12 +86,20 @@ struct BurstPlan {
         // Only controller bindings are allowed; emulator pause/step/save/load and
         // operating-system shortcuts must never be held as gameplay controls.
         let allowed = Set("w,a,s,d,i,j,k,l,q,e,1,2,3,4,up,down,left,right,enter,return,backspace,t,f,g,h".split(separator: ",").map(String.init))
-        self.codes = try segments.map { segment in
-            try segment.keys.map { name in
+        let resolve: ([String]) throws -> [CGKeyCode] = { names in
+            try names.map { name in
                 guard let code = keyMap[name.lowercased()], allowed.contains(name.lowercased()) else { throw BridgeError("burst key is unknown or not a controller binding: \(name)") }
                 return code
             }
         }
+        self.codes = try segments.map { try resolve($0.keys) }
+        let thinkingJSON = option("--thinking-keys") ?? "[]"
+        guard let thinkingData = thinkingJSON.data(using: .utf8),
+              let thinkingNames = try? JSONDecoder().decode([String].self, from: thinkingData),
+              thinkingNames.isEmpty || argv.contains("--continuous") else {
+            throw BridgeError("thinking keys must be a JSON string array and require --continuous")
+        }
+        self.thinkingCodes = try resolve(thinkingNames)
         self.segments = segments; self.fps = fps
     }
 }
@@ -101,7 +110,10 @@ final class BurstSession: @unchecked Sendable {
     var running = false
     var finished = false
     let continuous: Bool
-    init(pid: pid_t, continuous: Bool = false) { self.pid = pid; self.continuous = continuous }
+    let thinkingCodes: [CGKeyCode]
+    init(pid: pid_t, continuous: Bool = false, thinkingCodes: [CGKeyCode] = []) {
+        self.pid = pid; self.continuous = continuous; self.thinkingCodes = thinkingCodes
+    }
     func toggleActionSpeed() throws {
         let key: CGKeyCode = continuous ? 48 : 49
         try event(key, down: true, pid: pid)
@@ -111,6 +123,11 @@ final class BurstSession: @unchecked Sendable {
     func start(_ keys: [CGKeyCode]) throws -> UInt64 {
         lock.lock(); defer { lock.unlock() }
         guard !finished else { throw BridgeError("Burst interrupted") }
+        if continuous {
+            // Prior process may have left model-selected thinking controls held.
+            let controllerNames = "w,a,s,d,i,j,k,l,q,e,1,2,3,4,up,down,left,right,enter,return,backspace,t,f,g,h".split(separator: ",")
+            release(Array(Set(controllerNames.compactMap { keyMap[String($0)] })), pid: pid)
+        }
         for key in keys { held.append(key); try event(key, down: true, pid: pid) }
         // Set before posting so cleanup also covers a partially issued toggle.
         running = true
@@ -125,7 +142,7 @@ final class BurstSession: @unchecked Sendable {
         held = held.filter { keys.contains($0) }
         for key in keys where !held.contains(key) { held.append(key); try event(key, down: true, pid: pid) }
     }
-    func finish() {
+    func finish(persistThinking: Bool = false) {
         lock.lock(); defer { lock.unlock() }
         guard !finished else { return }
         finished = true
@@ -135,7 +152,13 @@ final class BurstSession: @unchecked Sendable {
             // Paused bursts wait for pause processing; continuous mode releases immediately.
             if !continuous { usleep(80_000) }
         }
-        release(held, pid: pid); held = []
+        if persistThinking && continuous {
+            release(held.filter { !thinkingCodes.contains($0) }, pid: pid)
+            for key in thinkingCodes where !held.contains(key) { try? event(key, down: true, pid: pid) }
+        } else {
+            release(held, pid: pid)
+        }
+        held = []
         try? event(49, down: false, pid: pid)
     }
 }
@@ -178,7 +201,7 @@ func run() async throws {
     case "burst":
         guard AXIsProcessTrusted() else { throw BridgeError("Accessibility permission is required for burst input") }
         guard let plan = burstPlan else { throw BridgeError("Missing burst plan") }
-        let burst = BurstSession(pid: app.processIdentifier, continuous: argv.contains("--continuous"))
+        let burst = BurstSession(pid: app.processIdentifier, continuous: argv.contains("--continuous"), thinkingCodes: plan.thinkingCodes)
         signal(SIGINT, SIG_IGN); signal(SIGTERM, SIG_IGN)
         let sources = [SIGINT, SIGTERM].map { sig -> DispatchSourceSignal in
             let source = DispatchSource.makeSignalSource(signal: sig, queue: .global())
@@ -196,7 +219,7 @@ func run() async throws {
             if now < deadline { try await Task.sleep(nanoseconds: deadline - now) }
         }
         let runningElapsedMs = Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000
-        burst.finish()
+        burst.finish(persistThinking: argv.contains("--continuous"))
         output(["ok":true,"pid":app.processIdentifier,"frames":plan.frames,"requestedFrames":plan.frames,"fps":plan.fps,"requestedDurationMs":Double(plan.frames) / plan.fps * 1000,"runningElapsedMs":runningElapsedMs,"elapsedMs":Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000,"segments":plan.segments.count,"timing":"Approximate wall-time burst; requested frames are not measured emulator frames","pauseToggleSent":!argv.contains("--continuous"),"slowMotionToggleSent":argv.contains("--continuous")])
     case "input", "step":
         guard AXIsProcessTrusted() else { throw BridgeError("Accessibility permission is required for keyboard input. Enable your terminal/Codex app in System Settings > Privacy & Security > Accessibility.") }

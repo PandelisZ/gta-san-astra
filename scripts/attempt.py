@@ -255,9 +255,11 @@ def attempt(args) -> dict:
             replay = directory / ("recording/wall-clock.mp4" if args.mode == "flow" else "recording/first-minute.mp4")
             replay_source = screen_movie if args.mode == "flow" else playback
             clip_limit = [] if args.mode == "flow" else ["-t", "60"]
+            video_filter = (r"scale=trunc(min(1024\,iw)/2)*2:-2,fps=30" if args.mode == "flow"
+                            else "scale=trunc(iw/2)*2:trunc(ih/2)*2")
             clip = subprocess.run([recording.ffmpeg_path(), "-hide_banner", "-nostdin", "-n", "-i", str(replay_source),
-                                   "-map", "0:v:0", *clip_limit, "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2", "-c:v", "libx264", "-preset", "fast",
-                                   "-crf", "18", "-pix_fmt", "yuv420p", "-fps_mode", "passthrough",
+                                   "-map", "0:v:0", *clip_limit, "-vf", video_filter, "-c:v", "libx264", "-preset", "fast",
+                                   "-crf", "22" if args.mode == "flow" else "18", "-pix_fmt", "yuv420p", "-fps_mode", "passthrough",
                                    "-movflags", "+faststart", str(replay)], text=True, capture_output=True)
             (directory / "recording/clip.stderr").write_text(clip.stderr)
             if clip.returncode:
