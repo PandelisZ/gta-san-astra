@@ -221,7 +221,8 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         mode: str = "stepped", hold_ms: int = 150, vision_max_edge: int | None = None,
         vision_quality: int = 65, vision_colormode: str = "rgb",
         policy_transport: str = "cli", bridge_transport: str = "cli",
-        steer_pulse_frames: int = 12, resume_from: Path | None = None) -> list[dict]:
+        steer_pulse_frames: int = 12, resume_from: Path | None = None,
+        recording_master: Path | None = None, target_recorded_frames: int | None = None) -> list[dict]:
     if type(frame_stride) is not int or not 1 <= frame_stride <= 120:
         raise ValueError("frame_stride must be an integer between 1 and 120")
     if type(steer_pulse_frames) is not int or not 0 <= steer_pulse_frames <= 120:
@@ -230,6 +231,10 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         raise ValueError("emulator_fps must be finite and positive")
     if mode not in ("stepped", "realtime") or type(hold_ms) is not int or not 50 <= hold_ms <= 2000:
         raise ValueError("mode must be stepped or realtime; hold_ms must be 50..2000")
+    if (recording_master is None) != (target_recorded_frames is None):
+        raise ValueError("recording_master and target_recorded_frames must be provided together")
+    if target_recorded_frames is not None and (type(target_recorded_frames) is not int or target_recorded_frames < 1 or mode != "stepped"):
+        raise ValueError("Recorded-frame target must be positive and use stepped mode")
     if decision_fn is decide:
         decision_fn = partial(decide, reasoning_effort=reasoning_effort, service_tier=service_tier, mode=mode)
     resume_history, resume_image = [], None
@@ -251,6 +256,9 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                 "resume_decision_count": len(resume_history),
                 "resume_image_path": str(resume_image) if resume_image else None,
                 "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
+                "recording_master": str(recording_master) if recording_master else None,
+                "target_recorded_frames": target_recorded_frames,
+                "recording_budget_note": "Live stored-frame count is a buffered lower bound. Final bursts are at least15 requests where possible; stopped recording can exceed the target.",
                 "started_at": started_at, "status": "running", "mode": mode,
                 "hold_ms": hold_ms if mode == "realtime" else None,
                 "policy_transport": policy_transport, "bridge_transport": bridge_transport,
@@ -260,6 +268,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
     outcome, error, release_error = "completed", None, None
     actions_requested, actions_completed = 0, 0
     frames_requested, frames_completed = 0, 0
+    recorded_frames = 0
     latencies = []
     history: list[dict] = list(resume_history)
     images: list[Path] = []
@@ -292,9 +301,17 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         if resume_image is not None:
             add_observation({"image_path": str(resume_image)})
         add_observation(controller.observe())
+        if recording_master is not None:
+            from recording import count_frames
+            recorded_frames = count_frames(recording_master)
         for index in range(steps):
+            if target_recorded_frames is not None and recorded_frames >= target_recorded_frames:
+                outcome = "recording_target_reached"
+                break
+            current_stride = (min(frame_stride, max(min(15, frame_stride), target_recorded_frames - recorded_frames))
+                              if target_recorded_frames is not None else frame_stride)
             decision, latency = decision_fn(model, images[-2:], history,
-                goal + (f" Each action lasts exactly {frame_stride} requested VSyncs ({frame_stride / emulator_fps:.3f} nominal game seconds)."
+                goal + (f" Each action lasts exactly {current_stride} requested VSyncs ({current_stride / emulator_fps:.3f} nominal game seconds)."
                         " Select control segments whose frame counts sum exactly to that total. "
                         "Controls in each segment remain held for its chosen frames, including steering; "
                         "there is no automatic short steering cap on explicit segments. "
@@ -305,12 +322,13 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
             segments = []
             if not decision["stop"]:
                 if mode == "stepped":
-                    segments = action_plan(decision, frame_stride, steer_pulse_frames)
+                    segments = action_plan(decision, current_stride, steer_pulse_frames)
                 else:
                     segments = [{"buttons": list(decision["buttons"]), "duration_ms": hold_ms}]
             event = {"step": index, "timestamp": time.time(), "decision": decision,
-                     "decision_latency_ms": latency, "frame_stride": frame_stride,
-                     "nominal_observations_per_game_second": emulator_fps / frame_stride if mode == "stepped" else None,
+                     "decision_latency_ms": latency, "frame_stride": current_stride,
+                     "recorded_frames_before": recorded_frames if recording_master else None,
+                     "nominal_observations_per_game_second": emulator_fps / current_stride if mode == "stepped" else None,
                      "mode": mode, "action_plan": segments, "images": [str(p) for p in raw_images[-2:]],
                      "model_images": [str(p) for p in images[-2:]], "model_frame_metadata": list(prepared)}
             record(event)
@@ -332,6 +350,13 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
             action_latencies.append((time.monotonic() - action_started) * 1000)
             actions_completed += 1
             add_observation(result["observation"])
+            if recording_master is not None:
+                time.sleep(0.15)
+                recorded_frames = max(recorded_frames, count_frames(recording_master))
+                record({"type": "recording_progress", "step": index, "recorded_frames_lower_bound": recorded_frames,
+                        "target_recorded_frames": target_recorded_frames, "requested_frames_so_far": frames_requested})
+        if target_recorded_frames is not None and recorded_frames >= target_recorded_frames:
+            outcome = "recording_target_reached"
     except BaseException as exc:
         outcome, error = "error", str(exc)
         record({"type": "error", "timestamp": time.time(), "error": error})
@@ -349,6 +374,8 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                    "actions_requested": actions_requested,
                    "game_frames_requested": frames_requested if mode == "stepped" else None,
                    "frames_in_completed_actions": frames_completed if mode == "stepped" else None,
+                   "recorded_frames_lower_bound": recorded_frames if recording_master else None,
+                   "recording_target_reached": recorded_frames >= target_recorded_frames if target_recorded_frames else None,
                    "realtime_hold_ms_requested": actions_requested * hold_ms if mode == "realtime" else None,
                    "frames_note": "Requested VSync counts, not independent game-state measurements",
                    "decision_latency_median_ms": median(latencies) if latencies else None,
@@ -382,6 +409,8 @@ def main():
     parser.add_argument("--run-dir", type=Path, default=Path("runs") / time.strftime("autodrive-%Y%m%d-%H%M%S"))
     parser.add_argument("--resume-from", type=Path, help="Carry prior decisions/visual route note and last frame into a NEW run; does not reset or load the game")
     parser.add_argument("--scenario-state", help="Optional state path provenance label; does not load a save state")
+    parser.add_argument("--recording-master", type=Path, help="Live native MKV to count after each burst")
+    parser.add_argument("--target-recorded-frames", type=int, help="Stop at this stored-frame lower bound, subject to --steps safety cap")
     parser.add_argument("--timeout", type=float, default=120)
     parser.add_argument("--frame-stride", type=int, default=60, help="Observe every N emulated VSyncs (1..120); game pauses during model latency")
     parser.add_argument("--steer-pulse-frames", type=int, default=12, help="Steering frames per driving burst; 0 holds steering for the full stride")
@@ -415,7 +444,8 @@ def main():
             mode=args.mode, hold_ms=args.hold_ms, vision_max_edge=args.vision_max_edge,
             vision_quality=args.vision_quality, vision_colormode=args.vision_colormode,
             policy_transport=args.policy_transport, bridge_transport=args.bridge_transport,
-            decision_fn=decision_fn, steer_pulse_frames=args.steer_pulse_frames, resume_from=args.resume_from)
+            decision_fn=decision_fn, steer_pulse_frames=args.steer_pulse_frames, resume_from=args.resume_from,
+            recording_master=args.recording_master, target_recorded_frames=args.target_recorded_frames)
 
 
 

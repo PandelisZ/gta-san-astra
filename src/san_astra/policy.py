@@ -20,7 +20,33 @@ DISABLED = ("shell_tool", "unified_exec", "apps", "plugins", "remote_plugin", "b
 
 
 class PolicyError(RuntimeError):
-    pass
+    def __init__(self, message, *, details=None):
+        super().__init__(message)
+        self.details = details
+
+
+def _transient_connection_failure(error: PolicyError) -> bool:
+    """Retry transport loss only; never retry policy/account/permission failures."""
+    details = error.details
+    text = (str(error) + " " + json.dumps(details)).lower()
+    if any(marker in text for marker in (
+        "usage limit", "usage_limit", "usagelimit", "rate limit", "rate_limit", "ratelimit",
+        "quota", "unauthorized", "forbidden", "authentication", "authorization",
+        "refusal", "model refused", "invalid_request", "model_not_found",
+    )):
+        return False
+    if not isinstance(details, dict):
+        return False
+    info = details.get("codexErrorInfo", {})
+    if not isinstance(info, dict):
+        return False
+    # These errors describe the model HTTP/stream transport, not local app-server EOF.
+    for name in ("httpConnectionFailed", "responseStreamConnectionFailed", "responseStreamDisconnected"):
+        if name in info:
+            data = info[name]
+            status = data.get("httpStatusCode") if isinstance(data, dict) else None
+            return status in (None, 408, 500, 502, 503, 504)
+    return False
 
 
 class CodexPolicy:
@@ -113,11 +139,45 @@ class CodexPolicy:
             message = self._next(deadline)
             if message.get("id") == request_id:
                 if "error" in message:
-                    raise PolicyError(f"{method}: {message['error']}")
+                    raise PolicyError(f"{method}: {message['error']}", details=message["error"])
                 return message.get("result", {})
             self.pending.append(message)
 
     def decide(self, images: list[Path], prompt: str, output_schema: dict):
+        # Retry the same observation and instruction; this class never applies controls.
+        images = [Path(image) for image in images[-2:]]
+        started = time.monotonic()
+        for retry in range(3):
+            try:
+                decision, attempt_latency = self._decide_once(images, prompt, output_schema)
+            except PolicyError as error:
+                if retry >= 2 or not _transient_connection_failure(error):
+                    raise
+                failed_thread = self.thread_id
+                # Do not reuse a thread whose streamed turn failed.
+                self.thread_id = None
+                self.last_turn_id = None
+                self.pending.clear()
+                delay = 0.25 * (retry + 1)
+                with (self.directory / "policy-retries.jsonl").open("a") as handle:
+                    handle.write(json.dumps({"type": "connection_retry", "timestamp": time.time(),
+                        "retry": retry + 1, "maximum_retries": 2, "next_attempt_index": self.index,
+                        "discarded_thread_id": failed_thread, "error": str(error),
+                        "delay_seconds": delay, "same_images": [str(image) for image in images],
+                        "controls_applied": False}) + "\n")
+                time.sleep(delay)
+                continue
+            elapsed = round((time.monotonic() - started) * 1000, 2)
+            if retry:
+                path = self.directory / f"policy-{self.index - 1:04d}.json"
+                data = json.loads(path.read_text())
+                data.update(retry_count=retry, latency_ms=elapsed,
+                            successful_attempt_latency_ms=attempt_latency)
+                path.write_text(json.dumps(data, indent=2) + "\n")
+            return decision, elapsed
+        raise AssertionError("Unreachable retry state")
+
+    def _decide_once(self, images: list[Path], prompt: str, output_schema: dict):
         if not images or any(not Path(image).is_file() for image in images[-2:]):
             raise ValueError("Policy requires one or two existing game screenshots")
         started = time.monotonic()
@@ -168,7 +228,8 @@ class CodexPolicy:
                 if method == "turn/completed":
                     completed = params.get("turn", {})
                     if completed.get("status") != "completed":
-                        raise PolicyError(f"Codex turn failed: {completed.get('error') or completed.get('status')}")
+                        raise PolicyError(f"Codex turn failed: {completed.get('error') or completed.get('status')}",
+                                          details=completed.get("error"))
                     self.last_turn_id = None
                     break
             result = json.loads(final if final is not None else "".join(chunks))

@@ -15,6 +15,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import time
+from functools import lru_cache
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PROFILE = ROOT / ".runtime/pcsx2"
@@ -35,6 +36,7 @@ def status(profile: Path = DEFAULT_PROFILE) -> dict:
             "note": "Files/settings only; this does not query whether capture is currently active."}
 
 
+@lru_cache(maxsize=1)
 def ffmpeg_path() -> str:
     override = os.environ.get("SAN_ASTRA_FFMPEG")
     candidate = override or shutil.which("ffmpeg")
@@ -49,6 +51,24 @@ def ffmpeg_path() -> str:
                              "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"],
                             text=True, capture_output=True, check=True)
     return result.stdout.strip().splitlines()[-1]
+
+
+def count_frames(source: Path) -> int:
+    """Count stored video packets without decoding; a live MKV yields a lower bound.
+
+    An empty/new header can legitimately expose no packets yet. Encoder and mux
+    buffers mean this is not an acknowledgment of individual advance requests.
+    """
+    source = Path(source).expanduser().resolve()
+    if not source.is_file() or source.stat().st_size == 0:
+        return 0
+    result = subprocess.run([ffmpeg_path(), "-hide_banner", "-nostdin", "-i", str(source),
+                             "-map", "0:v:0", "-c", "copy", "-f", "null", "-",
+                             "-progress", "pipe:1", "-nostats"],
+                            text=True, capture_output=True, timeout=15)
+    values = [int(line.split("=", 1)[1].strip()) for line in result.stdout.splitlines()
+              if line.startswith("frame=") and line.split("=", 1)[1].strip().isdigit()]
+    return max(values, default=0)
 
 
 def toggle(profile: Path = DEFAULT_PROFILE) -> dict:
@@ -113,11 +133,15 @@ def main():
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("status", help="Read configured capture settings and existing files")
     commands.add_parser("toggle", help="Send F12 to start/stop capture; coordinate with the active driver")
+    count = commands.add_parser("count", help="Count stored video frames without decoding; live count is a lower bound")
+    count.add_argument("source", type=Path)
     convert = commands.add_parser("export", help="After stopping capture, retain master and decode all frames plus MP4")
     convert.add_argument("source", type=Path)
     convert.add_argument("--output", type=Path)
     args = parser.parse_args()
-    result = status(args.profile) if args.command == "status" else toggle(args.profile) if args.command == "toggle" else export(args.source, args.output)
+    result = (status(args.profile) if args.command == "status" else toggle(args.profile) if args.command == "toggle"
+              else {"frames": count_frames(args.source), "note": "Live count is a buffered lower bound"} if args.command == "count"
+              else export(args.source, args.output))
     print(json.dumps(result, indent=2))
 
 
