@@ -44,3 +44,31 @@ The unchanged recovery prompt ran on CLI transport with Astra low/fast:
 Part2 visibly backed away from the motel curb across toward the garden curb. The model explicitly retained pending recovery and worked on heading alignment. Screenshot `runs/stream-recovery-minute-02-part2/20260908-133955-ca6e1abc/frame-1788900098673600000.png` confirms the car transverse to the road with its rear near the garden sidewalk. Effective reverse travel is demonstrated; a right-lane recovery and block completion are not yet proven.
 
 Both errors occurred in capture after successful input, so no prior control is safe to replay. Every native action and PNG is retained. PID69719 remained alive. Root is coordinating a transport fix before the next same-game continuation. Policy/model unchanged.
+
+## Completed minute02 evidence
+
+**The recorded-minute requirement is complete; the block route is not.** After root's `ad9075d` removed the remaining `NSRunningApplication` dependency from explicit PID validation, part3 continued the same game with the same driving prompt, model, reasoning effort, and service tier. No controls were replayed and no reset occurred between these three parts.
+
+| Segment | Flushed recorded frames | Requested advances | New decisions |
+| --- | ---: | ---: | ---: |
+| minute02 | 96 | 96 | 2 |
+| part2 | 360 | 360 | 6 |
+| part3 | 3148 | 4427 | 75 |
+| Total | **3604** | **4883** | **83** |
+
+Part3's live lower bound was3143 before finalization; flushing added5frames. The combined replay contains **3597 actual frames**, first60seconds without padding. All3604 source frames and all three lossless masters remain preserved. The1279-frame difference from requested advances is an observed delivery gap, not a demonstrated encoder-drop cause. No cadence was changed during this trial.
+
+- [Complete minute replay](../videos/stream-recovery-minute-02-complete.mp4)
+- [Combined provenance and per-master checksums](../videos/stream-recovery-minute-02-complete.json)
+- Final observation: `runs/stream-recovery-minute-02-part3/20260908-134550-59b8df4c/frame-1788902098656988000.png`
+- Decision evidence: each segment's `decisions.jsonl`, `policy-*.json`, and native session `events.jsonl` under its `runs/` directory.
+
+### Driving result and lesson
+
+Early reversing visibly cleared the motel curb, but overreached to the opposite garden curb, leaving the car transverse to the road. Subsequent alignment eventually established the right lane. Part3 decisions19–20 show the first right turn completed into the destination street; sparks at the corner preclude a clean-turn claim. No second completed turn or return to the original landmark was established.
+
+Part3 decision46 explicitly recognized fresh front-right sparks as evidence against clearance and increased correction duration. This supports the hypothesis that a persistent visual clearance requirement prevents premature recovery claims, but it did not prevent repeated curb contact. Later traffic contacted the rear; an armed attack and ejection followed while the car waited at a red signal. Decisions64–71 attempted and visually checked re-entry;72–74 returned to driving. The final screenshot shows the Tahoma near the next junction, attackers nearby, emulator paused.
+
+Next driving improvement to test after root's timing calibration: bound reverse travel with a visible escape waypoint inside the roadway, reassess after observed clearance, and explicitly account for opposite-curb distance. This addresses the demonstrated over-reverse without claiming a fixed duration will behave consistently while requested frame delivery remains variable. The current prompt was not altered to add this lesson midtrial.
+
+**PID69719 is left paused, recording OFF. No new attempt, reset, or stationary-baseline preparation has been started.** Root owns coordination of the next neutral timing calibration. Work is local and committed only; nothing pushed or merged.

@@ -1,0 +1,25 @@
+{
+  "name": "stream-recovery-minute-02-part3",
+  "goal": "Drive on the RIGHT around a compact city street block and return visibly to the starting garden wall opposite orange Jefferson Motel with the same heading. Avoid obstacles and pedestrians; recover when necessary. Choose every driving action from screenshots.",
+  "scenario": "quiet-tahoma",
+  "target_pid": 69719,
+  "profile": "/Users/pz/.codex/worktrees/a761/oaihackathon/.runtime/stream-recovery/pcsx2",
+  "autonomy": "Astra chooses every driving control phase. Wrapper only handles reset, recording and export.",
+  "requested_vsync_budget": 7200,
+  "nominal_seconds_budget": 120.12,
+  "decoded_frame_count": 3148,
+  "target_recorded_frames": 3141,
+  "recorded_target_reached": true,
+  "full_recording_duration_seconds": 52.52,
+  "clip_seconds_limit": 60,
+  "git_video_frame_count": 3148,
+  "logic_sha256": {
+    "scripts/autodrive.py": "e76d3c8b46d0619bdaceb93320b823a11089780def6e4f3153b07d88b372f5a9",
+    "src/san_astra/policy.py": "2c1463a9f12d736eeb5f77dd36c06519d77ba8419d3811dc7bd5a25d788bf033"
+  },
+  "measured_video_duration_seconds": 52.52,
+  "measured_duration_source": "MP4 container duration reported by FFmpeg",
+  "duration_note": "Stop after a whole burst crosses the configured stored-frame target, with a decision safety cap. Live count is buffered, so full recording can exceed the target. Git replay contains up to its first60 real seconds with no padding; actual frame count and duration are measured.",
+  "video_sha256": "048a65e72028632c9534078c3eefb96fffa10d1b580d021b75f4dbddcdcc2b42",
+  "status": "completed"
+}
