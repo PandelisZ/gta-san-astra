@@ -85,6 +85,11 @@ class Controller:
 
     def call(self, *args: str) -> dict:
         args = self.target_args(args)
+        if args and args[0] == "capture":
+            # Match the native daemon's lock without locking its RPC path twice.
+            # ScreenCaptureKit helpers must run one at a time across transports.
+            with self._file_lock(Path.home() / ".san-astra/capture.lock"):
+                return self._call_native(*args)
         with self.actuation_lock(args):
             return self._call_native(*args)
 

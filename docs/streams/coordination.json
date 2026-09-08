@@ -1,0 +1,42 @@
+{
+  "status": "Neutral isolation passed:60 frames in lane,zero in three untouched games; captures finalized. Four trials awaiting shared CLI serialization patch.",
+  "streams": [
+    {
+      "name": "lane",
+      "worktree": "/Users/pz/.codex/worktrees/7cd5/oaihackathon",
+      "profile": "/Users/pz/.codex/worktrees/7cd5/oaihackathon/.runtime/stream-lane/pcsx2",
+      "pid": 69702,
+      "task_id": "01a082b2-fde7-7b20-b878-a1f2c6daf193",
+      "neutral_probe_master": "/Users/pz/.codex/worktrees/7cd5/oaihackathon/.runtime/stream-lane/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133446.mkv",
+      "neutral_probe_actual_frames": 60
+    },
+    {
+      "name": "junction",
+      "worktree": "/Users/pz/.codex/worktrees/9143/oaihackathon",
+      "profile": "/Users/pz/.codex/worktrees/9143/oaihackathon/.runtime/stream-junction/pcsx2",
+      "pid": 69942,
+      "task_id": "01a082b3-083c-7471-9f4a-0c9bba095ece",
+      "neutral_probe_master": "/Users/pz/.codex/worktrees/9143/oaihackathon/.runtime/stream-junction/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
+      "neutral_probe_actual_frames": 0
+    },
+    {
+      "name": "recovery",
+      "worktree": "/Users/pz/.codex/worktrees/a761/oaihackathon",
+      "profile": "/Users/pz/.codex/worktrees/a761/oaihackathon/.runtime/stream-recovery/pcsx2",
+      "pid": 69719,
+      "task_id": "01a082b3-11ff-7bd0-a763-158b407294d2",
+      "neutral_probe_master": "/Users/pz/.codex/worktrees/a761/oaihackathon/.runtime/stream-recovery/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
+      "neutral_probe_actual_frames": 0
+    },
+    {
+      "name": "route",
+      "worktree": "/Users/pz/.codex/worktrees/4ed4/oaihackathon",
+      "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2",
+      "pid": 69729,
+      "task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
+      "neutral_probe_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
+      "neutral_probe_actual_frames": 0
+    }
+  ],
+  "qualification": "Warm-daemon stop for junction returned a stale application-identity error; fresh CLI finalized its0-frame capture. Use CLI fallback for next wave. No root driving controls; all probe controls neutral."
+}
