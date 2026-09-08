@@ -1,5 +1,5 @@
 {
-  "status": "flow-minute-05-main running directly in main task; previous route task stopped by user request.",
+  "status": "flow-minute-05-main completed directly in main task; sole88779 paused. First right heading achieved, lane recovery incomplete; full block unproven.",
   "streams": [
     {
       "name": "lane",
@@ -122,6 +122,7 @@
     "pid": 88779,
     "profile": "/Users/pz/w/oaihackathon/.runtime/main-flow/pcsx2",
     "run": "runs/flow-minute-05-main",
-    "no_delegation": true
+    "no_delegation": true,
+    "run_state": "paused after completed one-minute trial"
   }
 }

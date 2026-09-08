@@ -31,6 +31,8 @@ Recent flow trials recorded the complete simulation and a video of real elapsed 
 | [Flow 01](docs/streams/flow-minute-01-review.md) | 60.36 / 109.68 seconds | Zero turns; curb and traffic constraints |
 | [Flow 02](docs/streams/flow-minute-02-review.md) | 61.44 / 111.83 seconds | Zero turns; inference controls and four-image context verified |
 | [Flow 03](docs/streams/flow-minute-03-review.md) | 60.84 / 110.70 seconds | Zero turns; shorter responses and trial budget context, apparent carjacking |
+| [Flow 04](docs/streams/flow-minute-04-review.md) | 62.25 / 116.73 seconds | Partial right; lane recovery incomplete |
+| [Main-task run](docs/streams/flow-minute-05-main-review.md) | 61.81 / 112.90 seconds | First right heading achieved; lane recovery and block return incomplete |
 
 The [paired response comparison](docs/streams/flow-policy-latency.md) measured lower offline latency with shorter outputs. The live driving result remains incomplete.
 
