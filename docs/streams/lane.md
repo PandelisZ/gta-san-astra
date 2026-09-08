@@ -17,3 +17,22 @@ Outcome: **incomplete**, 125 actual decoded frames (2.09 seconds), 2 model decis
 Decision 0 identified the left-curb position and selected 12 frames of right steering with throttle, 18 throttle, and 30 coast. Decision 1 observed little lateral movement and selected 25 right+throttle and 35 coast. These controls were chosen exclusively by the screenshot policy. The last screenshot still places the car left of the road centerline; the policy had not reached the heading-correction stage. Input images during the continuation were 471x335 due to the window size, despite a configured maximum edge of 640.
 
 Lesson: this short interrupted sample cannot evaluate the alignment improvement. Before another trial, resolve the coordinator's pause/input isolation concern and prove stable frame accounting across concurrent instances. Proposed next driving improvement, once a valid full trial exists: require explicit current versus desired road-relative heading in the route note so lateral progress cannot silently substitute for alignment. No policy changes were made during gameplay. Do not restart until coordinated.
+
+## Corrected isolation trial: minute 02
+
+Coordinator supplied reset PID `69702` and handed ownership back after a four-instance neutral isolation proof. It reported exactly 60 lane frames and zero frames in the other instances, with capture OFF afterward. The root performed initial neutral60 and an additional neutral60 for the proof. Shared control files restored from main `90149e5`: serialized CLI captures and explicit PID input without focus changes. Lane driving prompt unchanged. One `stream-lane-minute-02` trial launched with `--no-reset`, own PID/profile, CLI bridge, Astra low/fast and maximum image edge 640. Outcome recorded below.
+
+
+### Minute 02 outcome
+
+**Simulation minute completed; driving goal incomplete.** Final flushed capture contains **3,608 frames / 60.19 seconds**, versus **4,838 requested advances** across 83 model decisions (1,230 fewer stored frames than requests). The Git first-minute video has **3,597 frames / 60.01 seconds** with no padding. Live stopping count was 3,599; finalization added nine buffered frames. These counts establish the stored result, not the cause of the request/delivery gap. Wall time: 1,981.676 seconds. No driver or release errors.
+
+[Minute video](../videos/stream-lane-minute-02.mp4) · [Video provenance](../videos/stream-lane-minute-02.json) · [Selected policy decisions](lane-minute-02-decisions.json)
+
+The car entered the right side from the initial left curb, made one visibly confirmed right turn alongside the orange motel, drifted close to the right curb, then recovered toward the inner right lane. It waited at a red signal for much of the latter portion and began a second right turn into Los Colinas near the end. Final screenshot shows a diagonal position during that turn. No return to the starting garden wall/motel orientation is visible. This is one uncontrolled qualitative trial; no comparative improvement or collision-free claim.
+
+The lane-entry prompt was followed in decision 2 with explicit countersteering, but stable alignment remained inconsistent. Decisions 15–23 repeatedly corrected curbward heading while coasting; decision 18 recognized near-zero motion and added powered correction. Decision 31 identified centerline overlap after recovery. Decision 49 onward recorded a stationary red-light wait, and decision 83 still recorded the second turn as underway. Indices here are one-based; evidence JSON uses zero-based steps.
+
+Lesson: road-relative language made the correction intention explicit but did not ensure a stable lane trajectory. The next proposed prompt experiment should connect steering effectiveness to observed displacement and preserve a compact current/desired heading note, so near-stationary coasting corrections do not repeat. This is proposed only; no midtrial or subsequent policy change was made.
+
+All 3,608 source PNGs are retained in `runs/stream-lane-minute-02/recording/frames`, with the original MKV under `.runtime/stream-lane/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133709.mkv`. Full decision history and raw/model screenshots remain in the run directory. PID **69702** is left paused with recording stopped. No new trial, reset, or cadence adjustment performed. Coordinator owns the next timing-calibration decision.

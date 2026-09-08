@@ -1,0 +1,407 @@
+{
+  "run": "stream-lane-minute-02",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "service_tier": "fast",
+  "decision_count": 83,
+  "requested_frames": 4838,
+  "actual_flushed_frames": 3608,
+  "selected_decisions": [
+    {
+      "step": 0,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Car straddles the left curb, outside the right lane, roughly parallel to the road; motion is unknown. Its current path follows the curb. Begin a slow rightward lane recovery, then countersteer; no street mouth is confirmed.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 24
+          },
+          {
+            "buttons": [
+              "steer_left"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [],
+            "frames": 12
+          }
+        ],
+        "route_note": "Start: garden wall on left, orange Jefferson Motel on right; initial heading toward distant signals. Car begins at left curb, not right lane. 0 completed turns. First recover toward right lane, verify alignment, then seek a right street junction. Initial gentle right steering/countersteer; response unobserved."
+      },
+      "recorded_frames_before": 0,
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 24
+        },
+        {
+          "buttons": [
+            "steer_left"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [],
+          "frames": 12
+        }
+      ]
+    },
+    {
+      "step": 2,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Car has advanced past the wall pole but still straddles the left edge. Heading now angles right across the road toward the centerline; the right lane remains farther over. Continue gentle lane entry, then reduce that diagonal. No nearby street mouth is visible.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 10
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 20
+          },
+          {
+            "buttons": [
+              "steer_left"
+            ],
+            "frames": 8
+          },
+          {
+            "buttons": [],
+            "frames": 22
+          }
+        ],
+        "route_note": "Start: left garden wall/right orange Jefferson Motel, toward signals. Initial leg; 0 turns. Next: attain right lane, then find right junction. Last 24 right+throttle/36 coast advanced past wall pole and yawed right, but rear still at left curb. Add 10 right/20 straight throttle, then 8 left to reduce diagonal; verify position and heading."
+      },
+      "recorded_frames_before": 107,
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 10
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 20
+        },
+        {
+          "buttons": [
+            "steer_left"
+          ],
+          "frames": 8
+        },
+        {
+          "buttons": [],
+          "frames": 22
+        }
+      ]
+    },
+    {
+      "step": 14,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_left"
+        ],
+        "rationale": "Car advanced around the corner pole into the destination street, but remains diagonal across its right lane. Its nose points toward the right curb rather than parallel to the converging road edges. Countersteer left gently at low speed, then coast to verify alignment.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_left"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [],
+            "frames": 36
+          }
+        ],
+        "route_note": "Start: garden wall left/orange Jefferson Motel right, toward signals. First right entered, alignment unfinished; 0 confirmed completed turns. Right40/coast plus brake10 produced large yaw and forward movement past corner pole. Nose now angles toward destination right curb. Left12/throttle24/coast36 to align; verify before counting turn or cruising."
+      },
+      "recorded_frames_before": 827,
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [],
+          "frames": 36
+        }
+      ]
+    },
+    {
+      "step": 16,
+      "decision": {
+        "buttons": [
+          "steer_left"
+        ],
+        "rationale": "Car advanced beside the orange wall into the outer right lane. Left correction reduced its angle, but the nose still points toward the right curb rather than along the centerline. Correct further without throttle; no right street opening is visible.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "steer_left"
+            ],
+            "frames": 18
+          },
+          {
+            "buttons": [],
+            "frames": 42
+          }
+        ],
+        "route_note": "Start: garden wall left/orange Jefferson Motel right, toward signals. Second street; 1 right turn visibly completed. Next right junction not visible. Left16/coast44 advanced beside orange wall and reduced curbward yaw, but outer-right-lane heading still approaches curb. Try left18/coast42 without throttle; verify alignment before accelerating."
+      },
+      "recorded_frames_before": 947,
+      "action_plan": [
+        {
+          "buttons": [
+            "steer_left"
+          ],
+          "frames": 18
+        },
+        {
+          "buttons": [],
+          "frames": 42
+        }
+      ]
+    },
+    {
+      "step": 20,
+      "decision": {
+        "buttons": [
+          "steer_left"
+        ],
+        "rationale": "Car advanced past wall features but is now at the right curb, angled slightly curbward relative to the road edges. Its projected path clips the curb; correct left gently without throttle. The continuous right sidewalk has no street mouth.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "steer_left"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [],
+            "frames": 48
+          }
+        ],
+        "route_note": "Start: garden wall left/orange Jefferson Motel right, toward signals. Second street; 1 right turn completed. Next right junction not visible beyond continuous orange wall/curb. Throttle30/coast30 advanced but narrowed curb clearance; right wheels now at edge, slight curbward heading. Left12/coast48 to regain clearance; verify alignment."
+      },
+      "recorded_frames_before": 1187,
+      "action_plan": [
+        {
+          "buttons": [
+            "steer_left"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [],
+          "frames": 48
+        }
+      ]
+    },
+    {
+      "step": 30,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Car advanced toward the gantry but its left side now overlaps the centerline, indicating slight inward heading relative to the road edges. Gently steer right to keep the projected path in the right lane, then coast to verify alignment. No right street mouth is confirmed.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 8
+          },
+          {
+            "buttons": [],
+            "frames": 52
+          }
+        ],
+        "route_note": "Start: garden wall left/orange Jefferson Motel right, toward signals. Second street; 1 right turn completed. Next right junction unconfirmed beyond orange wall. Throttle25/coast35 advanced toward gantry but left side overlaps centerline: inward drift persists. Powered right8/coast52 to regain lane clearance; verify heading before accelerating."
+      },
+      "recorded_frames_before": 1775,
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 8
+        },
+        {
+          "buttons": [],
+          "frames": 52
+        }
+      ]
+    },
+    {
+      "step": 48,
+      "decision": {
+        "buttons": [],
+        "rationale": "Stationary relative to the right pole, the car is in the inner right lane, aligned with the centerline and curb; its projected path stays within the lane. The light remains red with pedestrians crossing. The possible right mouth is ahead but obscured; wait.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [],
+            "frames": 60
+          }
+        ],
+        "route_note": "Start: garden wall left/orange Jefferson Motel right, toward signals. Second street; 1 right turn confirmed. Next right mouth ahead obscured by wall/poles. Coast60 left car stationary without yaw; inner right lane aligned, no physical blockage visible. Red light and crossing pedestrians persist; wait60, advance when clear."
+      },
+      "recorded_frames_before": 2579,
+      "action_plan": [
+        {
+          "buttons": [],
+          "frames": 60
+        }
+      ]
+    },
+    {
+      "step": 75,
+      "decision": {
+        "buttons": [],
+        "rationale": "The car moved forward past the pole approach, aligned in the right lane but close to its curb. The right street mouth is now just ahead, with roadway extending beyond the curb end. Coast forward for clearance, then begin a low-speed right arc without throttle to avoid cutting across the sidewalk.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [],
+            "frames": 20
+          },
+          {
+            "buttons": [
+              "steer_right"
+            ],
+            "frames": 40
+          }
+        ],
+        "route_note": "Start: garden wall left/orange Jefferson Motel right, toward signals. Second street; 1 right turn confirmed. Right mouth now just ahead, cross-street corridor visible beyond curb end. Coast60 gave substantial forward travel without yaw; near right curb. Coast20 then right40 without throttle to begin corner after clearance; verify destination-lane heading next."
+      },
+      "recorded_frames_before": 3443,
+      "action_plan": [
+        {
+          "buttons": [],
+          "frames": 20
+        },
+        {
+          "buttons": [
+            "steer_right"
+          ],
+          "frames": 40
+        }
+      ]
+    },
+    {
+      "step": 82,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "The car crept past the signal pole with little additional yaw. It remains in the right lane, angled toward the centerline rather than along the curb. With the front clear, a brief powered right arc should improve alignment without reaching either boundary.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 10
+          },
+          {
+            "buttons": [
+              "steer_right"
+            ],
+            "frames": 5
+          }
+        ],
+        "route_note": "Start: garden wall left/orange Jefferson Motel right, toward signals. Second right underway at Los Colinas; 1 turn confirmed. Right15 gave diminishing travel past pole and little yaw; no visible blockage, still angled toward centerline. Try cross+right10/right5 to maintain slow arc; verify alignment. Return not visible."
+      },
+      "recorded_frames_before": 3587,
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 10
+        },
+        {
+          "buttons": [
+            "steer_right"
+          ],
+          "frames": 5
+        }
+      ]
+    }
+  ]
+}
