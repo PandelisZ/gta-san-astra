@@ -25,8 +25,8 @@ DISABLED_FEATURES = (
 
 def validate_decision(value: object) -> dict:
     required = {"buttons", "rationale", "scene", "stop"}
-    if not isinstance(value, dict) or not required <= set(value) or set(value) - required - {"segments", "route_note"}:
-        raise ValueError("Decision needs buttons, rationale, scene, stop, and optional segments/route_note")
+    if not isinstance(value, dict) or not required <= set(value) or set(value) - required - {"segments", "route_note", "dynamics_note"}:
+        raise ValueError("Decision needs buttons, rationale, scene, stop, and optional segments/route_note/dynamics_note")
     buttons = value["buttons"]
     if not isinstance(buttons, list) or any(not isinstance(b, str) or b not in BUTTONS for b in buttons):
         raise ValueError("Decision contains invalid buttons")
@@ -42,6 +42,8 @@ def validate_decision(value: object) -> dict:
         raise ValueError("Decision stop must be boolean")
     if "route_note" in value and (not isinstance(value["route_note"], str) or not 1 <= len(value["route_note"].strip()) <= 400):
         raise ValueError("route_note must be a short nonempty string of at most 400 characters")
+    if "dynamics_note" in value and (not isinstance(value["dynamics_note"], str) or not 1 <= len(value["dynamics_note"].strip()) <= 400):
+        raise ValueError("dynamics_note must be a short nonempty string of at most 400 characters")
     segments = value.get("segments")
     if segments is not None:
         if not isinstance(segments, list) or not 1 <= len(segments) <= 6:
@@ -130,6 +132,8 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
               "Do not assume the world stopped at the screenshot. Favor simple conservative controls. ")
     route_note = next((decision["route_note"] for decision in reversed(history) if decision.get("route_note")),
                       "No prior route state: identify visible starting landmarks and intended first turn.")
+    dynamics_note = next((decision["dynamics_note"] for decision in reversed(history) if decision.get("dynamics_note")),
+                         "Uncalibrated: infer motion from screenshots before assuming a stopping or steering response.")
     return (
         "You are Astra driving GTA San Andreas in a PS2 emulator for a visual autonomy evaluation. "
         "Use ONLY the attached game screenshots and your own prior actions below. Do not call tools, "
@@ -142,8 +146,9 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         "In stepped mode, choose segments: 1..6 sequential {buttons,frames} phases whose frame counts "
         "sum exactly to the requested burst. Each phase releases the prior phase's controls. Set top-level "
         "buttons to the first phase's buttons. You choose each throttle, brake and steering duration. "
-        "A gentle correction may need 4..12 steering frames; an actual corner may need 25..60 frames "
-        "at low speed. Do not blindly reuse the short correction duration for a right-angle turn. "
+        "Choose steering duration from the yaw and travel observed after your previous action. "
+        "A short correction and a full corner require different rotation; do not reuse a duration "
+        "when the last images show it was insufficient. Steering needs vehicle movement to change heading. "
         "Square first brakes forward motion, then reverses after stopping; a brief pulse may only brake "
         "and create almost no backward travel. Distinguish slowing from intentional reversing. "
         "For reversing, choose duration from the movement actually observed after your previous pulse, "
@@ -184,20 +189,31 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         "shorten it when pedestrians or traffic constrain the path. Compare displacement against "
         "fixed poles and curb edges, not camera rotation alone. Before changing back to forward drive, "
         "confirm the front corner has cleared the obstruction; the rear reaching the roadway is not "
-        "enough. Preserve the last attempted duration, observed effect and next adjustment in route_note. "
+        "enough. Preserve the last attempted duration, observed effect and next adjustment in dynamics_note. "
+        "Near a boundary, compare travel during the last burst with the remaining clearance along "
+        "the car's actual forward or reverse path. Budget for continuing motion throughout coasting "
+        "and while braking. A clear immediate rear gap does not establish clearance for the whole reverse. "
+        "If travel consumed clearance faster than steering changed heading, revise that expectation "
+        "before another similar burst. Slow, short, and braked describe intentions until images verify them. "
+        "Infer own movement using fixed road features; a changing gap to moving traffic alone is ambiguous. "
         "Learn steering and throttle strength from your own observed displacement. Wait for traffic "
         "when necessary, but use a visibly clear route "
         "when one opens. Set stop=true only when the route goal is visibly complete or the situation "
         "is truly unrecoverable; ordinary uncertainty or traffic is not completion. No buttons are "
         "applied on a stop decision. "
         "Update route_note in at most400characters: starting landmark, current leg, visually completed "
-        "turn count, next turn/landmark, and observed steering/braking response. Carry forward still-relevant "
+        "turn count and next turn/landmark. Carry forward still-relevant "
         "facts from the previous note. Count a completed turn only after the images show it happened, "
         "never because a turn was commanded. Mark uncertain facts uncertain. For an around-the-block goal, "
         "success requires visibly returning to the starting landmark/road orientation; turn count alone "
         "does not prove completion. This note is your own visual navigation memory, never telemetry. "
+        "Update dynamics_note in at most400characters: observed direction or standstill/uncertainty, "
+        "last action effect versus expectation, remaining clearance, and the next control expectation. "
+        "Keep requested braking/countersteering separate from observed stopping/alignment. Carry "
+        "forward useful response estimates instead of erasing them with each maneuver. This is "
+        "qualitative visual evidence, not exact speed telemetry. "
         "Rationale must be a short visible-scene explanation, not hidden reasoning.\n"
-        f"Goal: {goal}\nPrevious visual route note: {route_note}\nOwn previous decisions: {json.dumps(history[-5:])}\n"
+        f"Goal: {goal}\nPrevious visual route note: {route_note}\nPrevious visual dynamics note: {dynamics_note}\nOwn previous decisions: {json.dumps(history[-5:])}\n"
     )
 
 

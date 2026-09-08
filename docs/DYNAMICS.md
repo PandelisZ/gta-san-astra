@@ -21,3 +21,9 @@ The next attempt uses a 640-pixel longest image edge instead of 512 to provide m
 ## Road-relative heading
 
 Minute attempt 05 confused a screen-upright car with alignment to the road. The chase camera follows the car while curbs and the centerline reveal a diagonal trajectory. Releasing steering does not cancel that heading. The next policy explicitly describes lane position, heading relative to road edges, and movement relative to fixed landmarks before choosing controls. This improvement remains to be evaluated in the parallel streams.
+
+## Next-wave motion memory (prepared after early wave 02 review)
+
+The policy now has a separate `dynamics_note` for visually observed motion, response to previous controls, and prediction errors. Navigation landmarks and turn counts remain in `route_note`. This addresses recovery's underestimated reverse travel and lane correction that consumed curb clearance without enough heading change. The prompt compares recent displacement with remaining clearance and distinguishes requested braking from observed standstill. Fixed example ranges for correction duration were removed so the model must use its observed response. Every control phase remains model-selected.
+
+This revision is prepared for the next trial wave; it was not injected into ongoing minute-02 policies. Its driving benefit is unproven until those subsequent recordings are reviewed. See [the image-grounded review](streams/early-wave02-review.md).

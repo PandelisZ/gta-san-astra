@@ -8,7 +8,8 @@
     "scene",
     "stop",
     "segments",
-    "route_note"
+    "route_note",
+    "dynamics_note"
   ],
   "properties": {
     "buttons": {
@@ -128,7 +129,13 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 400,
-      "description": "Carry forward visual navigation state: starting landmark, current leg, observed completed turns, next turn, observed dynamics. Do not infer progress from commands alone."
+      "description": "Carry forward visual navigation state: starting landmark and heading, current leg, observed completed turns, next turn. Do not infer progress from commands alone."
+    },
+    "dynamics_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400,
+      "description": "Visual motion memory: observed forward/reverse/standstill or uncertainty, last input duration and observed displacement relative to fixed road features, prediction error, and resulting control expectation. Never claim a requested stop or heading correction happened without image evidence."
     }
   }
 }
