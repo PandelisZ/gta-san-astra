@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+.runtime/
+runs/
+native/astra-bridge
+native/test-frame.png
+*.iso
+*.bin
+*.ps2
+*.p2s

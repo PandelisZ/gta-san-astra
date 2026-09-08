@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "buttons",
+    "rationale",
+    "scene",
+    "stop"
+  ],
+  "properties": {
+    "buttons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "cross",
+          "square",
+          "triangle",
+          "circle",
+          "left",
+          "right",
+          "up",
+          "down",
+          "l1",
+          "r1",
+          "l2",
+          "r2",
+          "start",
+          "select",
+          "steer_left",
+          "steer_right",
+          "move_forward",
+          "move_backward",
+          "l_up",
+          "l_down",
+          "l3",
+          "r3",
+          "look_up",
+          "look_down",
+          "look_left",
+          "look_right"
+        ]
+      }
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 800
+    },
+    "scene": {
+      "type": "string",
+      "enum": [
+        "driving",
+        "menu",
+        "on_foot",
+        "uncertain"
+      ]
+    },
+    "stop": {
+      "type": "boolean"
+    }
+  }
+}
