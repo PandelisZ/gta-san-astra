@@ -1,5 +1,5 @@
 {
-  "status": "User confirmed Astra usage reset. Route task resuming single-minute-03-part2 from same paused68968; first1800frames preserved. Noreset/inputreplay; fullblockunproven.",
+  "status": "Fresh burst-minute-01 LIVE in soleemulator76989, driver77281/wrapper77270. Userrequestednormal-speedbursts; priorsteppedpartialstoppedandpreserved. Fullblockunproven.",
   "streams": [
     {
       "name": "lane",
@@ -35,11 +35,11 @@
       "name": "route",
       "worktree": "/Users/pz/.codex/worktrees/4ed4/oaihackathon",
       "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2",
-      "pid": 68968,
+      "pid": 76989,
       "task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
       "neutral_probe_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
       "neutral_probe_actual_frames": 0,
-      "process_state": "continuation starting after user-confirmed quota reset"
+      "process_state": "normal-speedburstdriveractive"
     }
   ],
   "qualification": "Warm-daemon stop for junction returned a stale application-identity error; fresh CLI finalized its0-frame capture. Use CLI fallback for next wave. No root driving controls; all probe controls neutral.",
@@ -76,14 +76,16 @@
       "decisions": 83
     }
   },
-  "next_step": "Finish remaining1797recordedframes with unchangedworktreepolicy, then finalize combinedone-minute video and review beforeanotherattempt.",
+  "next_step": "Finish oneactualminute ofnormal-speedbursts, preserveallframes/video, reviewbeforeanotherattempt.",
   "execution_mode": "single",
   "active_task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
   "timing": {
-    "frame_interval_ms": 350,
+    "mode": "burst",
     "frame_stride": 30,
-    "evidence": "calibration-wave02.md",
-    "qualification": "60/60 recorded neutral pulses in single focused scene; verify actual increments during driving."
+    "nominal_fps": 59.94,
+    "nominal_burst_seconds": 0.5005005005005005,
+    "evidence": "../evidence/burst-neutral-check.json",
+    "qualification": "Approximatewalltime. Neutralcheck30recordedframes/0.596sectotal andvisuallypaused; actualdrivingframecountsmonitored."
   },
   "active_baseline": "right-lane-junction",
   "interrupted_attempt": {
@@ -99,5 +101,7 @@
     "scenario": "single03-interrupted",
     "state_sha256": "d77ae12e068c4b62880a9f538a43caf548040b44a4eac87946b206e40622d83f",
     "note": "Opaque F1backup only, notloaded; no frameadvance during capture. Original right-lane-junction still route reference."
-  }
+  },
+  "active_run": "burst-minute-01",
+  "driver_pid": 77281
 }
