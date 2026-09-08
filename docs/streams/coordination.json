@@ -1,5 +1,5 @@
 {
-  "status": "Fresh burst-minute-01 LIVE in soleemulator76989, driver77281/wrapper77270. Userrequestednormal-speedbursts; priorsteppedpartialstoppedandpreserved. Fullblockunproven.",
+  "status": "burst-minute-01-part2 is live in sole emulator 76989, driver 77718. Continued the same game with 60-frame normal-speed bursts after the user requested the interval change. Full block return remains unproven.",
   "streams": [
     {
       "name": "lane",
@@ -81,9 +81,9 @@
   "active_task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
   "timing": {
     "mode": "burst",
-    "frame_stride": 30,
+    "frame_stride": 60,
     "nominal_fps": 59.94,
-    "nominal_burst_seconds": 0.5005005005005005,
+    "nominal_burst_seconds": 1.001001001001001,
     "evidence": "../evidence/burst-neutral-check.json",
     "qualification": "Approximatewalltime. Neutralcheck30recordedframes/0.596sectotal andvisuallypaused; actualdrivingframecountsmonitored."
   },
@@ -102,6 +102,13 @@
     "state_sha256": "d77ae12e068c4b62880a9f538a43caf548040b44a4eac87946b206e40622d83f",
     "note": "Opaque F1backup only, notloaded; no frameadvance during capture. Original right-lane-junction still route reference."
   },
-  "active_run": "burst-minute-01",
-  "driver_pid": 77281
+  "active_run": "burst-minute-01-part2",
+  "driver_pid": 77718,
+  "active_continuation": {
+    "prior_run": "burst-minute-01",
+    "prior_recorded_frames": 256,
+    "prior_decisions": 9,
+    "remaining_target_recorded_frames": 3341,
+    "same_game": true
+  }
 }

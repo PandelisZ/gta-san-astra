@@ -140,7 +140,7 @@ uv run san-astra --frame-stride 10 step --throttle  # request every tenth frame
 
 Any stride from 1 to 120 is supported; the driving runner defaults to 60. `step --frames N` overrides it for one action. The autonomous runner fixes the total stride throughout a run, across all model-selected phases. The older four-field decision format remains supported: only that fallback uses `--steer-pulse-frames` (12 by default; 0 holds steering throughout).
 
-The current single-game experiment uses `--frame-stride 30` for roughly half a simulated second between decisions. This increases opportunities to correct a turn, but approximately doubles policy calls per simulated minute compared with 60-frame decisions. Driving improvement is still being evaluated.
+The current single-game experiment uses `--mode burst --frame-stride 60` for roughly one second of normal-speed gameplay between decisions. The game pauses while Astra evaluates the next screenshot. Driving improvement is still being evaluated.
 
 Set `SAN_ASTRA_FRAME_INTERVAL_MS=350` for the pulse spacing validated in the current setup. Faster 90 ms and 180 ms spacing produced fewer recorded frames than requested, even with one foreground emulator. The 350 ms neutral check recorded 60 frames from 60 requests; recorded increments during driving remain the relevant verification. See [calibration evidence](docs/streams/calibration-wave02.md).
 
@@ -148,7 +148,7 @@ At NTSC 59.94 VSyncs/second, strides 1/5/10 nominally yield 59.94/11.99/5.99 obs
 
 ### Normal-speed demo bursts
 
-Use `--mode burst --bridge-transport cli --frame-stride 30` with the attempt wrapper. The game runs at normal speed for roughly half a second, executes Astra's chosen control phases, then pauses for the next screenshot and decision. A local neutral check took0.596seconds including pause cleanup and recorded30VSync samples; the final screenshot visibly showed Paused. Timing is approximate and recordings measure the actual output.
+Use `--mode burst --bridge-transport cli --frame-stride 60` with the attempt wrapper. The game runs at normal speed for roughly one second, executes Astra's chosen control phases, then pauses for the next screenshot and decision. A local neutral check took0.596seconds including pause cleanup and recorded30VSync samples; the final screenshot visibly showed Paused. Timing is approximate and recordings measure the actual output.
 
 The NTSC emulator timing is59.94VSyncs/second. Our half-second sample contained16distinct successive game images, consistent with roughly30 rendered gameFPS. VSync samples and newly rendered game images are different counts. [Live check](docs/evidence/burst-neutral-check.json) · [PCSX2 timing documentation](https://wiki.pcsx2.net/Setting_up_Windows_version)
 
