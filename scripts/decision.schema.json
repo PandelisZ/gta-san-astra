@@ -6,7 +6,9 @@
     "buttons",
     "rationale",
     "scene",
-    "stop"
+    "stop",
+    "segments",
+    "route_note"
   ],
   "properties": {
     "buttons": {
@@ -59,6 +61,74 @@
     },
     "stop": {
       "type": "boolean"
+    },
+    "segments": {
+      "description": "Stepped mode: sequential control phases, total frames exactly the requested burst. Top-level buttons mirror the first phase. Null for realtime or stop.",
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "buttons",
+              "frames"
+            ],
+            "properties": {
+              "buttons": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "cross",
+                    "square",
+                    "triangle",
+                    "circle",
+                    "left",
+                    "right",
+                    "up",
+                    "down",
+                    "l1",
+                    "r1",
+                    "l2",
+                    "r2",
+                    "start",
+                    "select",
+                    "steer_left",
+                    "steer_right",
+                    "move_forward",
+                    "move_backward",
+                    "l_up",
+                    "l_down",
+                    "l3",
+                    "r3",
+                    "look_up",
+                    "look_down",
+                    "look_left",
+                    "look_right"
+                  ]
+                }
+              },
+              "frames": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 120
+              }
+            }
+          }
+        }
+      ]
+    },
+    "route_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400,
+      "description": "Carry forward visual navigation state: starting landmark, current leg, observed completed turns, next turn, observed dynamics. Do not infer progress from commands alone."
     }
   }
 }

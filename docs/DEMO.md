@@ -45,7 +45,7 @@ Run a short live attempt from the restored scene:
 ```sh
 RUN_DIR="runs/judge-demo-$(date +%Y%m%d-%H%M%S)"
 uv run python scripts/autodrive.py \
-  --model gpt-6-astra --reasoning-effort low --service-tier fast --steps 4 --frame-stride 60 --steer-pulse-frames 12 \
+  --model gpt-6-astra --reasoning-effort low --service-tier fast --steps 4 --frame-stride 60 \
   --bridge-transport daemon --policy-transport app-server --vision-max-edge 512 \
   --goal "Follow the road ahead and avoid collisions. Stop if the view is unsafe or unclear." \
   --scenario-state .runtime/scenarios/stationary-car/state.p2s \
@@ -102,10 +102,25 @@ uv run python scripts/autodrive.py \
 
 Each realtime action holds controls for the bounded duration, then releases them. The world continues and the vehicle can coast during inference. A model stop decision releases controls; it does not pause the emulator. Pause with Space when ending the demo. This mode is not a claim of a particular model FPS. The summary reports measured decision, capture, and wall-clock timing. It leaves requested game-frame counts unset because this mode does not frame-step.
 
-Model inputs default to JPEG quality 65 with a 512-pixel longest edge. RGB preserves useful color information such as traffic lights. `--vision-colormode gray` removes color; `contrast` applies optional color autocontrast. Raw PNG screenshots remain the judge-facing evidence, and each processed image records original/output dimensions, bytes, and processing time. JPEG compression reduces transport bytes; it does not by itself guarantee fewer vision tokens. Image dimensions and the model's detail treatment affect token usage.
+The recorded driving configuration uses JPEG quality 65 with a 512-pixel longest edge. RGB preserves useful color information such as traffic lights. `--vision-colormode gray` removes color; `contrast` applies optional color autocontrast. Raw PNG screenshots remain the judge-facing evidence, and each processed image records original/output dimensions, bytes, and processing time. JPEG compression reduces transport bytes; it does not by itself guarantee fewer vision tokens. Image dimensions and the model's detail treatment affect token usage.
 
 Use `--mode stepped` with a paused emulator for the fixed-stride experiment. The CLI transports remain available with `--bridge-transport cli --policy-transport cli`.
 
 ## One-second predictive bursts
 
-The stepped runner now defaults to 60 frame-advance requests between decisions, approximately one nominal NTSC game second. Driving decisions that steer apply that direction for 12 frames, then hold the remaining controls for 48 frames with steering released. Astra is told this plan before deciding. `--steer-pulse-frames 0` holds steering across the full stride. Every segment is recorded before execution; only the final observation of the burst is sent to the next policy decision. Intermediate raw captures remain available as evidence.
+The stepped runner defaults to 60 frame-advance requests between decisions, approximately one nominal NTSC game second. Astra now chooses 1–6 sequential phases with an exact total of 60 frames. It can brake briefly, coast, and then steer within a single burst. This lets the model choose longer steering for a corner and shorter corrections on a straight road. The validator rejects invalid controls, acceleration plus braking in the same phase, or a total that differs from the requested stride.
+
+Every plan is recorded before execution. Only its final observation feeds the next policy decision; intermediate raw captures remain evidence. The top-level `buttons` field mirrors the first phase by prompt/schema contract. `segments` is null for realtime or stop decisions. Old four-field decisions retain the 12-frame steering fallback; the earlier recorded 20-decision attempt used that policy and must not be presented as a run of the new controller.
+
+The `route_note` field carries up to 400 characters of visual navigation memory: starting landmark, current road segment, observed turns, next turn, and learned steering/braking response. Show this note while explaining the route attempt. It does not use coordinates or map telemetry. Count a turn only once the images show it completed. A full-block success requires visibly returning to the starting landmark and orientation; that outcome is still unproven.
+
+An illustrative 60-frame plan is brake for 8 frames, coast for 12, then accelerate and steer left for 40. This example explains the interface; it is not a recorded successful maneuver.
+
+
+## Preserve every frame without filling the disk
+
+Keep the original FFV1 master and existing PNG exports unchanged. The master already stores every successfully captured display frame, including repeated frames, so PNG decoding can wait until a run finishes. Do not export an actively written master.
+
+Before each longer run, check free space and reserve room for both recording and the all-frame export. The latest inspection showed about 18 GiB free on the local volume. A conservative planning allowance of roughly 3 GiB for a two-minute lossless master plus 5 GiB for PNGs leaves room for one such attempt, but not repeated exports without reviewing space. Those are workload estimates, not a measured constant: scene content and resolution change compression.
+
+Prefer one canonical PNG export per completed master, with separate small playback derivatives. If a dedicated external volume is available, use it for future full-frame archives after explicitly configuring the export destination; the current exporter restricts destinations to this repository’s ignored `runs/` or `.runtime/` folders. Do not delete or downsample existing evidence to free space. While storage is tight, preserve the lossless master and defer PNG extraction rather than risk losing an active recording.

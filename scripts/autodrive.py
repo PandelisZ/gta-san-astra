@@ -24,8 +24,9 @@ DISABLED_FEATURES = (
 
 
 def validate_decision(value: object) -> dict:
-    if not isinstance(value, dict) or set(value) != {"buttons", "rationale", "scene", "stop"}:
-        raise ValueError("Decision must contain exactly buttons, rationale, scene, stop")
+    required = {"buttons", "rationale", "scene", "stop"}
+    if not isinstance(value, dict) or not required <= set(value) or set(value) - required - {"segments", "route_note"}:
+        raise ValueError("Decision needs buttons, rationale, scene, stop, and optional segments/route_note")
     buttons = value["buttons"]
     if not isinstance(buttons, list) or any(not isinstance(b, str) or b not in BUTTONS for b in buttons):
         raise ValueError("Decision contains invalid buttons")
@@ -39,7 +40,37 @@ def validate_decision(value: object) -> dict:
         raise ValueError("Decision scene is invalid")
     if type(value["stop"]) is not bool:
         raise ValueError("Decision stop must be boolean")
+    if "route_note" in value and (not isinstance(value["route_note"], str) or not 1 <= len(value["route_note"].strip()) <= 400):
+        raise ValueError("route_note must be a short nonempty string of at most 400 characters")
+    segments = value.get("segments")
+    if segments is not None:
+        if not isinstance(segments, list) or not 1 <= len(segments) <= 6:
+            raise ValueError("segments must be null or contain 1..6 control phases")
+        for segment in segments:
+            if not isinstance(segment, dict) or set(segment) != {"buttons", "frames"}:
+                raise ValueError("Each segment needs exactly buttons and frames")
+            if type(segment["frames"]) is not int or not 1 <= segment["frames"] <= 120:
+                raise ValueError("Segment frames must be an integer from 1 to 120")
+            validate_decision({"buttons": segment["buttons"], "rationale": "segment", "scene": value["scene"], "stop": False})
+            if {"cross", "square"} <= set(segment["buttons"]):
+                raise ValueError("A segment cannot accelerate and brake simultaneously")
     return value
+
+
+def action_plan(decision: dict, frame_stride: int, steer_pulse_frames: int = 12) -> list[dict]:
+    """Compile explicit phases, or retain legacy four-field decision behavior."""
+    if decision["stop"]:
+        return []
+    if decision.get("segments") is not None:
+        if sum(segment["frames"] for segment in decision["segments"]) != frame_stride:
+            raise ValueError(f"Segment frame counts must sum to the fixed burst of {frame_stride}")
+        return [{"buttons": list(segment["buttons"]), "frames": segment["frames"]} for segment in decision["segments"]]
+    buttons = list(decision["buttons"])
+    pulse = min(steer_pulse_frames, frame_stride)
+    if decision["scene"] == "driving" and 0 < pulse < frame_stride and any(b in buttons for b in ("steer_left", "steer_right")):
+        return [{"buttons": buttons, "frames": pulse},
+                {"buttons": [b for b in buttons if b not in ("steer_left", "steer_right")], "frames": frame_stride - pulse}]
+    return [{"buttons": buttons, "frames": frame_stride}]
 
 
 def build_command(model: str, images: list[Path], output: Path, cwd: Path, *,
@@ -68,6 +99,8 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
               "The emulator runs continuously, including while you decide. Your screenshot becomes older "
               "during inference. Controls are held briefly, then released, and the vehicle coasts during inference. "
               "Do not assume the world stopped at the screenshot. Favor simple conservative controls. ")
+    route_note = next((decision["route_note"] for decision in reversed(history) if decision.get("route_note")),
+                      "No prior route state: identify visible starting landmarks and intended first turn.")
     return (
         "You are Astra driving GTA San Andreas in a PS2 emulator for a visual autonomy evaluation. "
         "Use ONLY the attached game screenshots and your own prior actions below. Do not call tools, "
@@ -76,16 +109,38 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         + timing +
         "Controls: cross accelerates; square brakes/reverses; steer_left/steer_right steer; r1 is "
         "handbrake; move_forward/move_backward move on foot; triangle enters/exits a vehicle; start pauses the game; d-pad navigates menus; "
-        "cross confirms. Empty buttons coasts. The caller controls the action duration. "
+        "cross confirms. Empty buttons coasts. The caller controls the total action duration. "
+        "In stepped mode, choose segments: 1..6 sequential {buttons,frames} phases whose frame counts "
+        "sum exactly to the requested burst. Each phase releases the prior phase's controls. Set top-level "
+        "buttons to the first phase's buttons. You choose each throttle, brake and steering duration. "
+        "A gentle correction may need 4..12 steering frames; an actual corner may need 25..60 frames "
+        "at low speed. Do not blindly reuse the short correction duration for a right-angle turn. "
+        "Square becomes reverse once stopped: use a short 4..12-frame braking pulse and then coast "
+        "unless you intentionally want to reverse. Never hold cross and square together. "
+        "Example 60-frame burst: square for8, coast for12, cross+steer_left for40. "
+        "Use segments=null in realtime mode, or for a stop decision. "
         "For menu confirmations/one-shot actions, follow a press with one empty-buttons decision so "
         "the game samples release before pressing the same button again. Driving continuous held "
         "controls do not need neutral gaps. Host key release between paused steps is only sampled "
         "when the next emulated frame advances. Stay on roads, "
         "avoid collisions and pedestrians, and drive conservatively. Do not use cheat sequences. "
-        "If the view is ambiguous, use a brief observation action or stop. Set stop=true when the "
-        "goal is achieved or safe progress is impossible; no buttons are applied on a stop decision. "
+        "If the view is ambiguous, choose low-motion/coasting phases and inspect the next view. "
+        "If commanded motion produces little visible displacement across two observations, diagnose "
+        "the blockage and change the plan instead of repeating it indefinitely. When space is visibly "
+        "clear, try a short8..15-frame reverse/reposition pulse followed by coast, then reassess; never "
+        "blindly reverse for the entire60-frame burst. Learn steering and throttle strength from your "
+        "own observed displacement. Wait for traffic when necessary, but use a visibly clear route "
+        "when one opens. Set stop=true only when the route goal is visibly complete or the situation "
+        "is truly unrecoverable; ordinary uncertainty or traffic is not completion. No buttons are "
+        "applied on a stop decision. "
+        "Update route_note in at most400characters: starting landmark, current leg, visually completed "
+        "turn count, next turn/landmark, and observed steering/braking response. Carry forward still-relevant "
+        "facts from the previous note. Count a completed turn only after the images show it happened, "
+        "never because a turn was commanded. Mark uncertain facts uncertain. For an around-the-block goal, "
+        "success requires visibly returning to the starting landmark/road orientation; turn count alone "
+        "does not prove completion. This note is your own visual navigation memory, never telemetry. "
         "Rationale must be a short visible-scene explanation, not hidden reasoning.\n"
-        f"Goal: {goal}\nOwn previous decisions: {json.dumps(history[-12:])}\n"
+        f"Goal: {goal}\nPrevious visual route note: {route_note}\nOwn previous decisions: {json.dumps(history[-5:])}\n"
     )
 
 
@@ -139,7 +194,9 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
     directory.mkdir(parents=True, exist_ok=True)
     started_at, started_clock = time.time(), time.monotonic()
     manifest = {"model": model, "reasoning_effort": reasoning_effort, "service_tier": service_tier, "goal": goal, "frame_stride": frame_stride,
-                "emulator_fps": emulator_fps, "steer_pulse_frames": steer_pulse_frames, "steps_limit": steps, "scenario_state": scenario_state,
+                "emulator_fps": emulator_fps, "steer_pulse_frames": steer_pulse_frames,
+                "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
+                "steps_limit": steps, "scenario_state": scenario_state,
                 "scenario_state_note": "Provenance label only; runner does not load this state",
                 "started_at": started_at, "status": "running", "mode": mode,
                 "hold_ms": hold_ms if mode == "realtime" else None,
@@ -180,24 +237,18 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         add_observation(controller.observe())
         for index in range(steps):
             decision, latency = decision_fn(model, images[-2:], history,
-                goal + (f" Each action lasts {frame_stride} VSyncs ({frame_stride / emulator_fps:.3f} game seconds)."
-                        + (f" For driving decisions, left/right steering is applied only for the first {min(steer_pulse_frames, frame_stride)} frames, "
-                           f"then released for the remaining {max(0, frame_stride-steer_pulse_frames)} frames; all other buttons remain held. "
-                           "Predict the vehicle path across this entire burst before choosing controls."
-                           if steer_pulse_frames else " Steering remains held for the entire burst.")
+                goal + (f" Each action lasts exactly {frame_stride} requested VSyncs ({frame_stride / emulator_fps:.3f} nominal game seconds)."
+                        " Select control segments whose frame counts sum exactly to that total. "
+                        "Controls in each segment remain held for its chosen frames, including steering; "
+                        "there is no automatic short steering cap on explicit segments. "
+                        "Predict the vehicle path across the entire burst."
                         if mode == "stepped" else f" Each action holds for {hold_ms} milliseconds, then releases."),
                 directory, index, timeout)
             validate_decision(decision)  # Validate even when a custom decision function is supplied.
             segments = []
             if not decision["stop"]:
                 if mode == "stepped":
-                    buttons = list(decision["buttons"])
-                    pulse = min(steer_pulse_frames, frame_stride)
-                    if decision["scene"] == "driving" and 0 < pulse < frame_stride and any(b in buttons for b in ("steer_left", "steer_right")):
-                        segments = [{"buttons": buttons, "frames": pulse},
-                                    {"buttons": [b for b in buttons if b not in ("steer_left", "steer_right")], "frames": frame_stride - pulse}]
-                    else:
-                        segments = [{"buttons": buttons, "frames": frame_stride}]
+                    segments = action_plan(decision, frame_stride, steer_pulse_frames)
                 else:
                     segments = [{"buttons": list(decision["buttons"]), "duration_ms": hold_ms}]
             event = {"step": index, "timestamp": time.time(), "decision": decision,

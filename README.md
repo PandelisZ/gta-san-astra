@@ -12,7 +12,7 @@ Astra builds the experiment and becomes its driving policy. The question is conc
 
 The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, and evidence recorder are implemented. Astra low has navigated the playable San Andreas world, entered a Blista Compact, and prepared a stationary-car snapshot. Live checks also cover screenshot capture, paused stepping at strides 1/5/10, and Astra's screenshot-to-control decisions.
 
-**The road baseline has been captured and visually restored, and a 20-decision driving run has completed.** Restoration needed 66 neutral frame-advance requests to redraw an initially black screen; the displayed game clock advanced from 16:56 to 16:57, so this is not a bit-exact replay claim. The repository keeps recorded observations separate from driving-quality judgments. No benchmark score is claimed. The first attempt includes collisions and waiting in traffic. Its native recorder captured 898 frames (14.965 seconds), exported to individual PNGs and a game-speed MP4; see [recording instructions](docs/RECORDING.md).
+**The road baseline has been captured and visually restored, and a 20-decision driving run has completed.** Restoration needed 66 neutral frame-advance requests to redraw an initially black screen; the displayed game clock advanced from 16:56 to 16:57, so this is not a bit-exact replay claim. The repository keeps recorded observations separate from driving-quality judgments. No benchmark score is claimed. The first attempt includes collisions and waiting in traffic. Its native recorder captured 898 frames (14.965 seconds), exported to individual PNGs and a game-speed MP4; see [recording instructions](docs/RECORDING.md). Completing a full block and visually returning to the starting road is the current goal; that route has not yet been proven.
 
 ![Astra entered a Blista Compact and prepared a stationary starting scene](docs/evidence/gta-stationary-car.png)
 
@@ -24,7 +24,7 @@ The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, a
 flowchart LR
     G[PCSX2 / San Andreas] -->|Rendered window pixels| S[ScreenCaptureKit screenshot]
     S -->|Latest two images + own action history| A[GPT-6 Astra]
-    A -->|Buttons + scene + concise rationale + stop| V[Validate decision]
+    A -->|Control phases + visual route note + stop| V[Validate decision]
     V -->|Allowed controls, fixed frame stride| B[Native macOS input bridge]
     B -->|Hold controls, advance N VSyncs, release| G
     G -.->|Paused between decisions| G
@@ -34,7 +34,9 @@ flowchart LR
 
 The policy receives no game memory, vehicle coordinates, speed, collision counters, or emulator debug telemetry. Save states are opaque reset artifacts; their contents never enter the policy prompt. The decision process has shell, browser, MCP/app, and web capabilities disabled.
 
-The default driving burst requests 60 frames. Steering, when selected, is applied for the first 12 frames, then released for the remaining 48 while other controls continue. Astra is told this schedule so it can predict the full burst. The bridge releases host keys afterward and supplies the final observation. For a repeated menu confirmation, an empty-controls step lets the game sample the release before the next press. Consecutive driving actions can continue holding acceleration or steering.
+The default driving burst requests 60 frames. Astra now chooses 1–6 sequential control phases whose frame counts must add up to that burst: for example, brake for 8 frames, coast for 12, then accelerate and steer for 40. Each phase selects its own buttons and duration. The validator rejects invalid controls, simultaneous acceleration/braking within a phase, and totals that differ from the fixed burst. The bridge supplies the final observation to the next decision. For a repeated menu confirmation, an empty-controls step lets the game sample the release before the next press. Consecutive driving actions can continue holding acceleration or steering.
+
+Astra also maintains a short `route_note`: starting landmark, current leg, visually completed turns, next landmark, and observed vehicle response. The note is carried into later decisions alongside recent action history. It is the model’s own visual memory, not telemetry. A commanded turn does not count as a completed turn; an around-the-block success requires seeing the starting landmark and road orientation again.
 
 ## Four judging criteria, one inspectable experiment
 
@@ -71,7 +73,7 @@ uv run san-astra --frame-stride 5 step --throttle   # request every fifth frame
 uv run san-astra --frame-stride 10 step --throttle  # request every tenth frame
 ```
 
-Any stride from 1 to 120 is supported; the driving runner defaults to 60. `step --frames N` overrides it for one action. The autonomous runner fixes the total stride throughout a run, including both steering segments. `--steer-pulse-frames 0` holds steering for the full burst.
+Any stride from 1 to 120 is supported; the driving runner defaults to 60. `step --frames N` overrides it for one action. The autonomous runner fixes the total stride throughout a run, across all model-selected phases. The older four-field decision format remains supported: only that fallback uses `--steer-pulse-frames` (12 by default; 0 holds steering throughout).
 
 At NTSC 59.94 VSyncs/second, strides 1/5/10 nominally yield 59.94/11.99/5.99 observations per **game second**. Wall-clock cadence includes model and bridge latency. Requested VSyncs are not independent proof of delivered frames, and consecutive screenshots may contain the same rendered game image.
 
@@ -85,7 +87,7 @@ RUN_DIR="runs/demo-$(date +%Y%m%d-%H%M%S)"
 uv run python scripts/autodrive.py \
   --model gpt-6-astra --reasoning-effort low --service-tier fast \
   --policy-transport app-server --bridge-transport daemon \
-  --steps 20 --frame-stride 60 --steer-pulse-frames 12 \
+  --steps 20 --frame-stride 60 \
   --vision-max-edge 512 --vision-quality 65 --vision-colormode rgb \
   --goal "Follow the road, stay in the lane, and avoid collisions." \
   --run-dir "$RUN_DIR"
@@ -94,7 +96,7 @@ uv run python scripts/report.py "$RUN_DIR"
 
 The demonstrated configuration uses warm native-daemon and Codex app-server transports with 512-pixel RGB JPEG inputs. JPEG reduces bytes sent; fewer bytes alone do not establish lower vision-token usage. Raw PNGs remain available as evidence. The portable fallbacks are `--bridge-transport cli --policy-transport cli`.
 
-The completed 20-decision run requested 1,200 emulated frames and took 273.18 wall-clock seconds. Median model-decision latency was 7.48 seconds, with variable multi-second calls. This is a paused simulation experiment, not realtime wall-clock autonomous driving. See [the measured run summary](docs/TESTING.md).
+The earlier recorded run used the fixed 12-frame steering / 48-frame continuation policy; it is not retroactive evidence for the new model-selected phases. That completed 20-decision run requested 1,200 emulated frames and took 273.18 wall-clock seconds. Median model-decision latency was 7.48 seconds, with variable multi-second calls. This is a paused simulation experiment, not realtime wall-clock autonomous driving. See [the measured run summary](docs/TESTING.md).
 
 The runner stops at the decision limit, on a model stop decision, or on failure. Controls are released on exit, including Ctrl-C. Explicit release is also available:
 
