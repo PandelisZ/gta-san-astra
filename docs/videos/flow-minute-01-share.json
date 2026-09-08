@@ -1,0 +1,18 @@
+{
+  "name": "flow-minute-01-share",
+  "source_full_resolution_mp4": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/recording/wall-clock.mp4",
+  "source_sha256": "0b7b1db7b0466fc5095dcc65047b1140c09479cd4320d03cd605769f5c670979",
+  "share_sha256": "930a169b0492aa312bfa2b8c7cc713076d159c26ad0d130bcaaf3fc0838844f8",
+  "share_bytes": 8554712,
+  "resolution": [
+    1024,
+    822
+  ],
+  "duration_seconds": 109.68,
+  "frames": 2393,
+  "average_fps": 21.82,
+  "encoding": "H264 CRF22; selected original timestamped frames at approximately <=30fps plus final frame; no setpts or speed change; scaled1024wide. Variable frame rate retained.",
+  "native_frame_count": 3618,
+  "native_simulation_duration_seconds": 60.36,
+  "validation": "Complete decode passed; representative20s/95s/final109.5s images visually checked against full movie; action8.6s shows target100%/actual103%, inference20s/95s show target50%/actual50%; same109.68s duration. FullMP4,MOV,MKV,all3618PNGs retained unchanged."
+}

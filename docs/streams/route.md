@@ -108,3 +108,9 @@ Latest scene: player on foot beside the sedan and an attacker after a carjacking
 [First burst segment](../videos/burst-minute-01.mp4) · [60-frame continuation](../videos/burst-minute-01-part2.mp4) · [Decision and capture evidence](burst-minute-01-partial-evidence.json)
 
 ![Final paused carjacking scene](burst-minute-01-part2-final.png)
+
+## Flow minute completed and reviewed
+
+One fresh `flow-minute-01` completed from the verified right-lane baseline using shared main 1fa50c4. It recorded 3618 native frames (60.36 simulation seconds) and a 109.68-second real-time window movie, with 12 low/fast screenshot decisions. Actual 50% inference and 100% action targets were visually verified in the movie. Zero turns; curb/pole clearance remained unresolved. PID 79892 paused at normal speed; no reset or additional trial.
+
+The [flow review](flow-minute-01-review.md) records the causal limits and next experiment. The [8.55 MB sharing video](../videos/flow-minute-01-share.mp4) preserves original timestamps and full 109.68-second timing. Full-resolution MP4/MOV, lossless native MKV and all 3618 PNGs are retained unchanged.
