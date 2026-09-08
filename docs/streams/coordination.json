@@ -1,5 +1,5 @@
 {
-  "status": "Neutral isolation passed:60 frames in lane,zero in three untouched games; captures finalized. Four trials awaiting shared CLI serialization patch.",
+  "status": "Four minute02 trials running on CLI transport with nofocus and serialized capture; root supervisor monitors every5minutes.",
   "streams": [
     {
       "name": "lane",
