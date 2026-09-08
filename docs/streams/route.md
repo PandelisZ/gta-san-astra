@@ -66,3 +66,24 @@ The [preceding image](route-minute-02-before-final.png) and final image show sli
 Route memory survived; lane alignment and long waits consumed most of the minute. A route-memory note can remain correct while physical progress is small. After the coordinator's neutral timing calibration, prepare a genuinely stationary, right-lane baseline beside a distinctive landmark using the model. For a subsequent route prompt experiment, require a compact current-leg target (the next visibly connected street) alongside the immutable fingerprint, and distinguish a completed corner from stable destination-lane alignment. Evaluate this only in a new, fixed-policy trial; no second trial has been run here.
 
 Shared control validation: 44 tests passed and 1 failed (`test_step_mapping_and_contract` still expects 35 ms while configured default is 90 ms). The earlier 6 autodrive Mock-serialization failures were reproduced on unchanged 0ac5edd. No test or timing configuration was changed during the trial.
+
+## Single-game attempt 03 started
+
+After coordinator visual restore verification, started `single-minute-03` from `right-lane-junction` on PID 68968 without another reset. Driver PID 69404, wrapper PID 69397. Current shared main 58f9a40 guidance/schema/policy is fixed, with a separate dynamics note and original start screenshot attached. Uses screenshot-only Astra low/fast, CLI bridge, 30-frame decisions, calibrated 350 ms interval, 240-decision safety cap and 3597 actually recorded-frame target. New loop fingerprint: yellow hillside buildings ahead-left, red-orange corner building right, same approach heading. One full-minute trial authorized; no further attempt before coordination.
+
+### Midpoint usage interruption and same-game continuation
+
+Attempt03 stopped on `usageLimitExceeded` after 60 decisions/actions and exactly 1800 requested/decoded frames (30.03 seconds). Last live lower bound was 1787; final flush added 13. Coordinator reported saving an opaque backup without advancing/resetting the paused game. After the user reset Astra usage, resumed the same PID 68968 as `single-minute-03-part2`, target 1797 stored frames,30-frame stride/350 ms, 180-decision safety cap. Driver 75741, wrapper 75728. The wrapper inherited all 60 prior decisions and the original start reference. SHA256 checks confirm `autodrive.py` and `policy.py` exactly match part1. No new guidance, reset or action replay was used; no quota auto-retry loop.
+
+
+### User-directed pause for real-time burst mode
+
+Part2 stopped at the next completed action boundary after five decisions/actions. SIGINT targeted only driver 75741 after its step 4 recording-progress event; the wrapper finalized capture. Final 150 source frames exactly match 150 requested frames (2.50 seconds). Part1+part2 total 1950 source frames, approximately 32.53 seconds; this is NOT a full-minute result. Remaining target is 1647 frames. Both segments preserve the original 58f9a40 policy hashes and use the same emulator without reset/replay. The mode has not yet changed in this worktree.
+
+The user requested normal-speed gameplay bursts with pauses about every 30 frames, overriding the earlier fixed stepping-mode plan. Handed sole paused PID 68968 back to root with capture off for implementation. No further gameplay inputs, new attempt, or reset performed.
+
+[Part1 replay](../videos/single-minute-03.mp4) · [Part2 replay](../videos/single-minute-03-part2.mp4) · [Partial decisions and capture provenance](single-minute-03-partial-evidence.json)
+
+Observed route remains incomplete: one right turn, pole collision and recovery, with the car still diagonal across the centerline toward the right lane at handback. The final screenshot records the exact handoff view. Source masters and every 1800+150 decoded PNG remain preserved.
+
+![Part2 final paused scene](single-minute-03-part2-final.png)

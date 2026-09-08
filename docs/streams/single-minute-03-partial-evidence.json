@@ -1,0 +1,1792 @@
+{
+  "single-minute-03": {
+    "summary": {
+      "model": "gpt-6-astra",
+      "reasoning_effort": "low",
+      "service_tier": "fast",
+      "goal": "Drive on the RIGHT around a connected compact street block and visibly return to THIS starting intersection with yellow hillside buildings ahead-LEFT and red-orange corner building RIGHT, with the same heading. Use the attached starting reference to verify return. Choose every control solely from screenshots; verify actual completed turns, avoid curbs, collisions, traffic and pedestrians. Do not count seeing the landmark from another heading as completion.",
+      "frame_stride": 30,
+      "target_pid": 68968,
+      "frame_interval_ms": 350,
+      "emulator_fps": 59.94,
+      "steer_pulse_frames": 12,
+      "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
+      "steps_limit": 240,
+      "scenario_state": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/state.p2s",
+      "scenario_state_note": "Provenance label only; runner does not load this state",
+      "resume_from": null,
+      "resume_decision_count": 0,
+      "resume_image_path": null,
+      "start_reference": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+      "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
+      "recording_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908142641.mkv",
+      "target_recorded_frames": 3597,
+      "recording_budget_note": "Live stored-frame count is a buffered lower bound. Final bursts are at least15 requests where possible; stopped recording can exceed the target.",
+      "started_at": 1788902802.0428958,
+      "status": "error",
+      "mode": "stepped",
+      "hold_ms": null,
+      "policy_transport": "app-server",
+      "bridge_transport": "cli",
+      "vision_max_edge": 640,
+      "vision_quality": 65,
+      "vision_colormode": "rgb",
+      "ended_at": 1788903944.583667,
+      "elapsed_wall_seconds": 1142.565,
+      "decision_count": 60,
+      "action_count": 60,
+      "actions_requested": 60,
+      "game_frames_requested": 1800,
+      "frames_in_completed_actions": 1800,
+      "recorded_frames_lower_bound": 1787,
+      "recording_target_reached": false,
+      "realtime_hold_ms_requested": null,
+      "frames_note": "Requested VSync counts, not independent game-state measurements",
+      "decision_latency_median_ms": 6743.52,
+      "capture_latency_median_ms": 212.13,
+      "action_and_capture_median_ms": 11714.328999863937,
+      "measured_decisions_per_wall_second": 0.05251341149723671,
+      "error": "Codex turn failed: {'message': \"You've hit your usage limit. Visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Sep 14th, 2026 7:07 PM.\", 'codexErrorInfo': 'usageLimitExceeded', 'additionalDetails': None, 'misalignment': None}",
+      "release_error": null
+    },
+    "capture": {
+      "master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908142641.mkv",
+      "master_sha256": "4e85460c53cb029bd998d79aa210221aa5d0360f309cd7799e904106a2750105",
+      "master_bytes": 721450377,
+      "frames_directory": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/single-minute-03/recording/frames",
+      "decoded_frame_count": 1800,
+      "playback": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/single-minute-03/recording/playback.mp4",
+      "playback_bytes": 9190206,
+      "export_elapsed_seconds": 9.24,
+      "timing": "Playback preserves the capture's simulation timestamps; no desktop wall-time or inferred FPS is substituted.",
+      "provenance": "Master retained unchanged; PNGs decode every stored frame. Completeness depends on successful PCSX2 native capture."
+    },
+    "decisions": [
+      {
+        "step": 0,
+        "recorded_frames_before": 0,
+        "decision": {
+          "buttons": [
+            "cross"
+          ],
+          "rationale": "Car is near the right curb, approximately aligned with the lane and centerline; motion is unverified. The junction mouth is ahead, with no visible crossing conflict; advance gently before turning.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross"
+              ],
+              "frames": 15
+            },
+            {
+              "buttons": [],
+              "frames": 15
+            }
+          ],
+          "route_note": "Starting intersection: yellow hillside buildings ahead-left, red-orange corner building right. On initial approach in right lane; 0 completed turns. Next: advance to the curb opening and verify right-turn clearance.",
+          "dynamics_note": "No prior action or recent motion sample; speed and steering response uncalibrated. Near right curb with junction ahead. Request 15 frames acceleration then 15 coast to assess forward displacement; no turn until front clearance is visible."
+        }
+      },
+      {
+        "step": 1,
+        "recorded_frames_before": 23,
+        "decision": {
+          "buttons": [
+            "cross"
+          ],
+          "rationale": "Car remains near the right curb and roughly parallel to the lane, with slight forward progress against curb features. The street mouth is still ahead; advance straight without cutting across the corner sidewalk.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross"
+              ],
+              "frames": 20
+            },
+            {
+              "buttons": [],
+              "frames": 10
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial right-lane approach; 0 completed turns. Right junction mouth remains ahead; next reach curb end and verify destination lane before turning.",
+          "dynamics_note": "Previous 15 throttle/15 coast produced modest forward displacement, no appreciable yaw; front remains short of corner clearance. Increase throttle to 20 frames then coast 10, expecting continued straight approach. Signal now red; stop before entering crossing."
+        }
+      },
+      {
+        "step": 2,
+        "recorded_frames_before": 47,
+        "decision": {
+          "buttons": [
+            "square"
+          ],
+          "rationale": "Car has advanced toward the signal poles, hugging the right curb with its nose slightly toward it. Junction mouth remains ahead; brake for the red light before attempting the corner.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "square"
+              ],
+              "frames": 12
+            },
+            {
+              "buttons": [],
+              "frames": 18
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach, 0 completed turns. Right street mouth still ahead; stop for red, then verify front clearance and right-hand destination lane.",
+          "dynamics_note": "20 throttle/10 coast advanced visibly against poles and curb, more than prior burst; car remains very close to right edge, slight rightward heading apparent. Request 12 brake/18 coast to reduce motion before crossing; stopping not yet verified. No steering response calibrated."
+        }
+      },
+      {
+        "step": 3,
+        "recorded_frames_before": 83,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car is tight against the right curb, angled slightly toward it, with some forward displacement relative to the poles despite braking. Junction remains ahead; a pedestrian is entering from the left, so hold before crossing.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Yield to pedestrian crossing from left; next verify stop and curb clearance before right turn.",
+          "dynamics_note": "12 square/18 coast still showed slight forward progress against poles, with right wheels at curb; standstill not confirmed. Pedestrian now at left crossing. Apply handbrake for 30 frames to arrest residual motion without reversing; assess stationary landmarks next."
+        }
+      },
+      {
+        "step": 4,
+        "recorded_frames_before": 107,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car hugs the right curb, angled slightly toward it; little displacement against the corner poles suggests near-standstill. Street mouth remains ahead, and the pedestrian continues crossing from the left; yield.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth still ahead. Pedestrian crossing from left; next verify crossing clear and front clearance for right turn.",
+          "dynamics_note": "30 handbrake frames produced little displacement relative to corner poles; near-standstill apparent, exact stop uncertain. Right side remains at curb, with another vehicle close behind-left. Hold handbrake another 30 frames while pedestrian crosses; no reverse or turn requested."
+        }
+      },
+      {
+        "step": 5,
+        "recorded_frames_before": 143,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "rationale": "Car is at the right-lane curb, slightly angled toward it and stationary against the poles. Junction mouth is ahead; pedestrian remains far left. Creep with a small left correction for curb clearance, not yet a right turn.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_left"
+              ],
+              "frames": 12
+            },
+            {
+              "buttons": [],
+              "frames": 8
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 10
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead; pedestrian at far-left edge. Next gain curb clearance and verify right destination lane before turning.",
+          "dynamics_note": "Another 30 handbrake frames left car essentially fixed against poles; stop now apparent. Right side tight to curb, door appears open; vehicle close behind-left prevents safe reverse. Try 12 throttle/left, 8 coast, 10 handbrake for slight forward clearance; steering response uncalibrated."
+        }
+      },
+      {
+        "step": 6,
+        "recorded_frames_before": 167,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car remains tight to the right curb, slightly nose-in, with minimal progress against the poles. Junction mouth is ahead; cross traffic now enters from the right, so hold before advancing.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Cross traffic visible from right; yield, then gain front curb clearance before right turn.",
+          "dynamics_note": "12 throttle/left, 8 coast, 10 handbrake gave little forward travel and slight heading change, insufficient to confirm curb clearance. Right side remains curb-tight, door open; rear-left vehicle restricts reverse. Hold for cross traffic; once clear, a longer moving correction may be needed."
+        }
+      },
+      {
+        "step": 7,
+        "recorded_frames_before": 203,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car is stationary against the poles, tight to the right curb and slightly angled toward it relative to the centerline. Junction mouth remains ahead; cars cross from both directions, blocking entry.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Yield to traffic crossing both ways; next gain front curb clearance and verify right destination lane.",
+          "dynamics_note": "30 handbrake frames kept position essentially unchanged against poles. Earlier 12 throttle/left gave little travel or yaw; curb clearance remains unconfirmed. Open right door and close rear-left vehicle constrain recovery. Continue holding for actual crossing traffic, then reassess a longer forward-left correction."
+        }
+      },
+      {
+        "step": 8,
+        "recorded_frames_before": 227,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car remains curb-tight in the right lane, slightly angled toward the curb and stationary relative to poles. Junction mouth is ahead; opposing cross traffic still blocks entry.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Yield to crossing cars; next gain front curb clearance and verify right destination lane.",
+          "dynamics_note": "Last 30 handbrake frames left position unchanged against poles. Earlier 12 throttle/left produced little travel or yaw; front curb clearance unconfirmed. Open right door and close rear-left car constrain recovery. Hold for crossing traffic; longer forward-left correction remains pending a clear gap."
+        }
+      },
+      {
+        "step": 9,
+        "recorded_frames_before": 263,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car is curb-tight in the right lane, slightly nose-in relative to road edges, with no displacement against poles. Junction mouth is ahead; a tan car crosses directly ahead and a red car remains left.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Yield to tan and red crossing cars; next gain front curb clearance before the first right turn.",
+          "dynamics_note": "Last 30 handbrake frames maintained apparent standstill against poles. Earlier 12 throttle/left gave little travel or yaw; curb clearance remains unconfirmed. Open right door and close rear-left car limit recovery. Hold for actual traffic; attempt a longer moving left correction once clear."
+        }
+      },
+      {
+        "step": 10,
+        "recorded_frames_before": 287,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "rationale": "Car is stationary against poles, curb-tight and slightly nose-in relative to the right-lane edges. Junction mouth remains ahead; tan traffic has cleared the immediate approach. Creep left for curb clearance without entering the crossing.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_left"
+              ],
+              "frames": 20
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 10
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Gain curb clearance before first right turn; red car remains at left, so recheck crossing and destination lane.",
+          "dynamics_note": "30 handbrake frames kept car fixed against poles. Prior 12 throttle/left gave little travel or yaw; increase to 20 then 10 handbrake to seek clearance, not a full turn. Right door open and rear-left car close; no reverse. Front clearance and subsequent stop require visual confirmation."
+        }
+      },
+      {
+        "step": 11,
+        "recorded_frames_before": 323,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "rationale": "Car remains at the right-lane curb, slightly nose-in, with little forward movement against poles after the correction. Junction mouth is ahead; immediate forward space is clear, but traffic remains left. Extend the moving correction, not the right turn.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_left"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Still gaining curb clearance; next verify front clearance and crossing traffic before first right turn.",
+          "dynamics_note": "20 throttle/left plus 10 handbrake produced little forward displacement and slight yaw; curb contact or low-speed response may limit progress. Rear-left car rules out easy reverse. Extend throttle/left to 30 without early braking to build steering motion; watch front curb/pole clearance and diagnose blockage if still fixed."
+        }
+      },
+      {
+        "step": 12,
+        "recorded_frames_before": 347,
+        "decision": {
+          "buttons": [
+            "square"
+          ],
+          "rationale": "Car remains curb-tight, angled slightly toward the right edge, with negligible movement against poles. Junction mouth is ahead. Repeated forward attempts appear blocked; reverse straight briefly within the visible rear gap, avoiding the rear-left car.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "square"
+              ],
+              "frames": 20
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 10
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Forward recovery appears blocked; back off cautiously before gaining curb clearance and verifying first right turn.",
+          "dynamics_note": "30 throttle/left produced negligible displacement or yaw, confirming ineffective forward recovery near curb/poles. Rear-left car constrains backing, but directly behind appears open briefly. Try 20 straight reverse then 10 handbrake; verify actual retreat and front clearance before forward drive."
+        }
+      },
+      {
+        "step": 13,
+        "recorded_frames_before": 383,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "rationale": "Car is still curb-tight and slightly nose-in relative to lane edges; reversing shifted the poles ahead slightly. Rear-left traffic is now very close, limiting further backing. Junction remains ahead; try moving the nose left away from the curb.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_left"
+              ],
+              "frames": 20
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 10
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Small retreat observed; rear-left traffic limits recovery. Gain front curb clearance before first right turn; crossing cars remain.",
+          "dynamics_note": "20 reverse plus 10 handbrake produced slight retreat relative to poles, with little heading change. Rear-left car is now close; further reverse risks contact. Front lateral clearance remains uncertain. Test 20 throttle/left from the backed-off position, then handbrake 10; do not assume clearance or stopping."
+        }
+      },
+      {
+        "step": 14,
+        "recorded_frames_before": 407,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "rationale": "Car remains at the right-lane curb, slightly nose-in; pole positions show modest movement and heading change, and the door has closed. Junction mouth is still ahead. Extend the leftward recovery before attempting any right turn.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_left"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Recovery shows slight heading change; gain separation from right curb, then verify crossing traffic and first right-turn clearance.",
+          "dynamics_note": "20 throttle/left plus 10 handbrake shifted poles slightly and closed the right door; progress remains small, but heading response is visible. Rear-left vehicle still limits reverse. Increase moving left correction to 30 frames; expect modest curb separation, not a completed turn. Front clearance remains unconfirmed."
+        }
+      },
+      {
+        "step": 15,
+        "recorded_frames_before": 443,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "rationale": "Car has advanced relative to the signal pole but remains tight to the right curb, pointing right of the road\u2019s direction. Junction mouth is ahead; crossing cars remain left. Continue a shorter left correction, then brake before the pole and crossing.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_left"
+              ],
+              "frames": 18
+            },
+            {
+              "buttons": [
+                "square"
+              ],
+              "frames": 12
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Some forward progress, but still curb-tight; next gain front clearance and verify right-hand destination lane before first right turn.",
+          "dynamics_note": "30 throttle/left advanced toward the signal pole with insufficient yaw or curb separation. Forward travel now exceeds earlier response; remaining pole/corner clearance is shrinking. Reduce throttle/left to 18 frames then brake 12, expecting limited advance; stopping and front clearance require verification."
+        }
+      },
+      {
+        "step": 16,
+        "recorded_frames_before": 467,
+        "decision": {
+          "buttons": [
+            "square"
+          ],
+          "rationale": "Car remains in the right lane but now points diagonally left toward the centerline; pole displacement shows substantial advance. Junction mouth is ahead, with crossing traffic blocking entry. Brake and hold before proceeding.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "square"
+              ],
+              "frames": 8
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 22
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead. Left recovery produced strong yaw; yield to crossing traffic, then align and establish front clearance for first right turn.",
+          "dynamics_note": "18 throttle/left then 12 brake produced substantial forward movement and much stronger left yaw than expected. Nose now angles toward centerline; rear remains near right curb/pole. Stopping unverified, crossing clearance limited. Brake 8 then handbrake 22 to arrest motion without prolonged reverse; reassess alignment."
+        }
+      },
+      {
+        "step": 17,
+        "recorded_frames_before": 503,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car is diagonally left within the right lane, nose near the centerline and rear near the curb. Slight advance relative to the pole continued under braking. Junction mouth remains ahead, blocked by crossing cars; hold position.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead; crossing traffic blocks entry. Hold, then correct leftward heading and verify curb clearance and destination right lane before first right.",
+          "dynamics_note": "8 brake then 22 handbrake allowed slight additional advance relative to the corner pole; left-diagonal heading persists. Near-centerline nose and crossing cars limit forward clearance, curb limits rear-right clearance. Hold handbrake 30 to settle and yield; complete standstill not yet verified."
+        }
+      },
+      {
+        "step": 18,
+        "recorded_frames_before": 527,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car is stationary against the pole and curb, angled left across the right lane with its nose near the centerline. The street mouth is ahead, but a brown crossing car still obstructs the intended path; continue yielding.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead; brown crossing car still blocks entry. Next correct leftward heading and verify front curb clearance and destination right lane before first right.",
+          "dynamics_note": "30 handbrake produced negligible displacement against pole and curb, supporting standstill; left-diagonal heading unchanged. Brown car remains immediately ahead, rear-right close to curb. Hold another 30 for actual traffic conflict; moving right correction must wait for clearance."
+        }
+      },
+      {
+        "step": 19,
+        "recorded_frames_before": 563,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car remains stationary relative to the pole, angled left within the right lane, nose near the centerline and rear curb-tight. Junction mouth is ahead; the brown car still occupies the crossing path, so hold.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead; brown car continues obstructing entry. Next gain a clear traffic gap, correct leftward heading, and verify destination right lane before first right.",
+          "dynamics_note": "Another 30 handbrake shows no displacement against pole or curb; standstill supported. Crossing cars also barely moved, suggesting a queue rather than a clear gap. Rear-right curb and rear-left vehicle constrain reversal. Hold 30 for conflict; no throttle until forward clearance opens."
+        }
+      },
+      {
+        "step": 20,
+        "recorded_frames_before": 587,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Stationary beside the pole, car angles left across the right lane, rear near curb. Junction mouth is ahead; brown car still blocks the nose and a pedestrian is crossing at left. Yield.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Street mouth ahead; brown car blocks entry. Next use a verified traffic gap to correct heading and enter the destination right lane.",
+          "dynamics_note": "Last 30 handbrake produced no visible displacement against pole or curb; standstill and left-diagonal heading persist. Traffic remains close ahead, pedestrian now visible left; rear curb limits recovery. Continue holding for actual conflict, not signal color; no movement expected."
+        }
+      },
+      {
+        "step": 21,
+        "recorded_frames_before": 623,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car remains stationary relative to the pole, angled left toward the centerline within the right lane, rear curb-tight. Street mouth is ahead, but the brown car still blocks entry; continue yielding.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead; brown car obstructs entry. Next correct heading when traffic clears, then verify curb clearance and destination right lane for first right.",
+          "dynamics_note": "30 handbrake again held position against pole and curb as expected; pedestrian moved but blocking cars remain. No forward gap verified; diagonal reverse path approaches right curb. Hold for traffic rather than force either constrained path; steering requires movement once clearance opens."
+        }
+      },
+      {
+        "step": 22,
+        "recorded_frames_before": 647,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Stationary beside the pole, angled left toward the centerline in the right lane, rear near curb. Junction mouth remains ahead; brown car blocks forward clearance and pedestrian approaches from left. Hold.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead, entry blocked by brown car. Next correct heading in a verified gap and check destination right lane before first right.",
+          "dynamics_note": "Last 30 handbrake maintained standstill against pole and curb. Blocking traffic remains stationary while pedestrian advances; cross-street signal now amber, but no gap yet. Rearward diagonal runs toward nearby curb. Maintain hold; reassess traffic clearance rather than assume signal change clears the path."
+        }
+      },
+      {
+        "step": 23,
+        "recorded_frames_before": 683,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Still stationary against the pole landmark, diagonally left across the right lane with rear near curb. Junction mouth is ahead, but brown car blocks the nose; pedestrians flank the approach. Yield.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead; brown car still blocks entry. Next correct heading when a gap opens, verify corner clearance, then turn into the destination right lane.",
+          "dynamics_note": "Last 30 handbrake held position relative to pole and curb, as expected. Traffic obstruction persists; a pedestrian is now on the right sidewalk, further constraining curb-side recovery. No safe forward or diagonal reverse corridor verified. Hold another 30 awaiting actual clearance."
+        }
+      },
+      {
+        "step": 24,
+        "recorded_frames_before": 707,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Stationary beside the pole, angled left across the right lane with rear near curb. Junction mouth is ahead; brown car blocks the nose and a pedestrian occupies the curb-side recovery area.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead remains blocked by brown car. Next use a verified gap to correct heading and check curb clearance before first right.",
+          "dynamics_note": "Last 30 handbrake produced no displacement relative to pole or curb; traffic also remains blocked while pedestrians move. Repeated standstill is a traffic constraint, not ineffective throttle. Rear-right curb and pedestrian constrain reverse; hold 30 pending visible clearance."
+        }
+      },
+      {
+        "step": 25,
+        "recorded_frames_before": 743,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car is stationary relative to the pole, diagonal left toward the centerline in the right lane, rear curb-tight. Street mouth is ahead; brown car still obstructs the nose and pedestrian remains beside the curb.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Still initial approach; 0 completed turns. Junction mouth ahead is obstructed by brown car. Next correct heading in a verified traffic gap, then check near curb and destination right lane for first right.",
+          "dynamics_note": "Last 30 handbrake again held position against pole and curb; pedestrian advanced but blocking cars did not visibly clear. Forward path remains obstructed; diagonal rearward path approaches curb. Maintain standstill for 30 rather than force constrained recovery; no heading change expected."
+        }
+      },
+      {
+        "step": 26,
+        "recorded_frames_before": 767,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Stationary against the pole landmark, angled left toward the centerline across the right lane, rear close to curb. Junction mouth is ahead; brown car still blocks forward travel and pedestrian approaches the corner.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead remains obstructed by brown car. Next correct heading when a gap is visible, then verify near-curb clearance and destination right lane before first right.",
+          "dynamics_note": "Last 30 handbrake maintained position relative to pole and curb, as expected. Blocking cars remain while pedestrian advances toward corner. Forward clearance unavailable; reverse heading runs toward nearby curb. Hold 30 for actual traffic conflict; signal change alone does not establish clearance."
+        }
+      },
+      {
+        "step": 27,
+        "recorded_frames_before": 803,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Stationary beside the pole, angled left toward the centerline within the right lane, rear near curb. Junction mouth is ahead, but brown car blocks the nose and pedestrian is at the right corner.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead remains blocked by brown car. Next correct heading in a verified gap, then verify curb clearance and destination right lane before first right.",
+          "dynamics_note": "Last 30 handbrake held position relative to pole and curb; no heading change. Brown car has not visibly cleared, and pedestrian now stands near corner pole. Rearward diagonal remains curb-constrained. Hold another 30 for actual conflict, expecting standstill rather than attempting an unverified recovery path."
+        }
+      },
+      {
+        "step": 28,
+        "recorded_frames_before": 827,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Stationary relative to pole and curb, rear curb-tight in the right lane and nose angled left toward centerline. Junction mouth is ahead; brown car blocks the nose and pedestrian remains beside the corner.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead remains traffic-blocked. Next correct heading in a verified gap, then check curb clearance and destination right lane before first right.",
+          "dynamics_note": "Last 30 handbrake produced no displacement relative to pole or curb; blocking brown car remains while pedestrian moves alongside pole. Forward route obstructed; diagonal reverse remains curb-constrained. Hold 30 for conflict clearance, expecting continued standstill, not heading correction."
+        }
+      },
+      {
+        "step": 29,
+        "recorded_frames_before": 863,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Stationary relative to pole and curb, rear near the right curb and nose diagonal toward centerline. Junction mouth remains ahead; brown car obstructs forward travel and pedestrian is beside the corner pole.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead remains traffic-blocked. Next correct heading in a verified gap, then check curb clearance and destination right lane before first right.",
+          "dynamics_note": "Last 30 handbrake maintained position against fixed pole and curb; brown car still blocks nose. Pedestrian moved behind pole but remains near curb. Reverse trajectory has little curb clearance. Continue holding 30 for actual traffic conflict; no movement or heading correction expected."
+        }
+      },
+      {
+        "step": 30,
+        "recorded_frames_before": 887,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Rear remains curb-tight in the right lane, nose angled left toward centerline; no motion relative to pole. Junction mouth is ahead, but brown car still blocks the nose and pedestrians flank the crossing.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead remains traffic-blocked. Next correct heading in a verified gap, then check curb clearance and destination right lane before first right.",
+          "dynamics_note": "Last 30 handbrake held position relative to pole and curb with no yaw. Brown car remains in forward path; pedestrian is partly hidden by right pole. Rearward diagonal still approaches nearby curb. Hold another 30 for actual obstruction, expecting standstill; no safe recovery corridor yet verified."
+        }
+      },
+      {
+        "step": 31,
+        "recorded_frames_before": 923,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Stationary beside the pole, rear near right curb and nose angled left toward centerline. Junction mouth is ahead; brown car still obstructs the nose, with no verified turning gap.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead remains traffic-blocked. Next correct heading in a verified gap, then check curb clearance and destination right lane before first right.",
+          "dynamics_note": "Last 30 handbrake held position relative to pole and curb without yaw. Brown car remains across forward path; right pedestrian now occluded, not confirmed clear. Reverse path remains curb-constrained. Hold 30 for traffic clearance; continued standstill expected."
+        }
+      },
+      {
+        "step": 32,
+        "recorded_frames_before": 947,
+        "decision": {
+          "buttons": [
+            "square",
+            "steer_left"
+          ],
+          "rationale": "Stationary with rear curb-tight in the right lane and nose angled toward centerline. Junction mouth is ahead, but brown car remains blocking; cautiously reverse leftward away from the curb to adjust heading.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "square",
+                "steer_left"
+              ],
+              "frames": 20
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 10
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction ahead remains blocked. Attempt limited reverse realignment, then verify front clearance and destination right lane before first right.",
+          "dynamics_note": "Repeated 30-frame handbrake holds show no displacement against pole/curb and no clearance from brown car: persistent blockage. Rear is curb-tight but roadway behind-left is visible. Try 20 reverse-left then 10 handbrake; expect limited rearward-left travel and nose-right yaw, neither yet verified."
+        }
+      },
+      {
+        "step": 33,
+        "recorded_frames_before": 983,
+        "decision": {
+          "buttons": [
+            "square",
+            "steer_left"
+          ],
+          "rationale": "Rear remains near the right curb, nose still angled left of the road edges. Limited reverse displacement relative to the pole opened some front clearance; the junction is ahead. Extend reverse realignment before advancing.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "square",
+                "steer_left"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction remains ahead with crossing traffic. Reverse realignment underway; verify heading, front clearance and destination right lane before first right.",
+          "dynamics_note": "20 reverse-left plus 10 handbrake produced limited reverse travel relative to pole and slight heading change, less alignment than needed. Rear remains curb-close; immediate roadway behind is clear. Increase reverse-left to 30 frames to gain clearance and yaw; monitor curb closely, with no forward switch yet."
+        }
+      },
+      {
+        "step": 34,
+        "recorded_frames_before": 1007,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Reversed relative to the corner pole, but rear remains curb-tight and nose still points left toward centerline. A vehicle now appears close behind; brake before further recovery. Junction mouth remains ahead.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction ahead. Reverse recovery gained distance but alignment remains diagonal; halt for close rear vehicle, then reassess forward clearance before first right.",
+          "dynamics_note": "30 reverse-left produced appreciable backward displacement against pole, but insufficient road alignment; rear remains near curb. A dark vehicle is now visible at bottom behind us, limiting further reverse. Apply 30 handbrake to arrest reverse; stopping is not yet observed. Front traffic has moved leftward."
+        }
+      },
+      {
+        "step": 35,
+        "recorded_frames_before": 1043,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car remains diagonal toward the centerline, rear at the right curb; position and yaw changed despite handbraking as a dark car closed behind. Junction mouth is ahead. Creep forward with right correction, stopping short of the pedestrian near the pole.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 12
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 18
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction ahead; rear vehicle now constrains recovery. Correct approach heading with limited forward motion, then verify pedestrian and curb clearance before first right.",
+          "dynamics_note": "30 handbrake did not preserve pose: substantial yaw/position change relative to pole, with dark car now very close behind; possible contact, standstill uncertain. Further reverse unsafe. Front brown car cleared left, pedestrian remains ahead near pole. Try 12 forward-right then 18 handbrake, limiting approach travel."
+        }
+      },
+      {
+        "step": 36,
+        "recorded_frames_before": 1067,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Rear remains curb-tight in the right lane, nose angled left toward the centerline; little movement against the pole. Junction mouth is ahead, but a pedestrian crosses immediately in front and a car crowds the rear. Hold for clearance.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Still initial approach; 0 completed turns. Junction ahead, pedestrian crossing directly before nose and rear vehicle constraining recovery. Wait for pedestrian, then correct heading before first right.",
+          "dynamics_note": "12 forward-right then 18 handbrake produced little displacement or yaw against corner pole; car remains diagonal, rear vehicle closer. Pedestrian now directly ahead-left of nose. Hold handbrake 30; no reverse clearance and no verified safe forward path. Standstill uncertain under rear contact."
+        }
+      },
+      {
+        "step": 37,
+        "recorded_frames_before": 1103,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Rear is still at the right curb, nose diagonal toward the centerline; pose shifted against the pole despite braking. Pedestrian has moved left of the nose. Junction mouth remains ahead; cautiously correct approach heading, not yet commit around the curb.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 20
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 10
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction ahead; pedestrian moved left of nose. Correct diagonal approach heading, then verify near-curb clearance and destination right lane before first right.",
+          "dynamics_note": "30 handbrake did not hold the same pose relative to pole/curb; rear contact may have shifted car, motion uncertain. Pedestrian now farther left; reverse clearance unverified. Prior 12 forward-right gave little yaw. Increase to 20 forward-right then 10 handbrake, seeking limited alignment travel before curb."
+        }
+      },
+      {
+        "step": 38,
+        "recorded_frames_before": 1127,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Rear remains curb-close in the right lane, nose angled left across the road alignment. Slight forward movement against the pole brought little yaw; pedestrian is moving clear left. Junction mouth is ahead; extend the approach correction without committing to the obscured right lane.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 25
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 5
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction still ahead; pedestrian moving left away from nose. Finish approach realignment, then verify curb end and destination right lane before first right.",
+          "dynamics_note": "20 forward-right plus 10 handbrake yielded slight forward displacement against pole and little right yaw, insufficient alignment. Rear remains curb-close; immediate front-right roadway clear but corner lane obscured. Extend powered right correction to 25 frames, then 5 handbrake; expect more yaw, not a completed corner."
+        }
+      },
+      {
+        "step": 39,
+        "recorded_frames_before": 1163,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car remains curb-tight on the right, heading diagonally toward the centerline. Movement against the pole is modest despite the camera pulling back; pedestrian is left of the immediate path. Junction mouth is ahead. Continue approach realignment, not the corner itself.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction ahead; pedestrian left of immediate path. Realign within approach roadway, then verify curb-end clearance and destination right lane before first right.",
+          "dynamics_note": "25 forward-right plus 5 handbrake showed modest landmark-relative travel and insufficient yaw; camera distance changed substantially. Repeated braking may limit steering movement; no definite front obstruction visible. Try uninterrupted 30 forward-right for alignment. Curb remains close on right; corner entry not yet cleared."
+        }
+      },
+      {
+        "step": 40,
+        "recorded_frames_before": 1187,
+        "decision": {
+          "buttons": [
+            "square"
+          ],
+          "rationale": "Car remains right-curb-tight and diagonal toward the centerline, with little landmark-relative travel. The signal pole is now falling, indicating contact. Junction mouth is ahead; pedestrian and crossing traffic prevent committing.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "square"
+              ],
+              "frames": 8
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 22
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction remains ahead. Pole contact apparent; pause powered correction, yield to pedestrian/cross traffic, then reassess clearance and destination right lane.",
+          "dynamics_note": "30 forward-right produced little displacement or alignment; signal pole now tilts and dust appears near curb, suggesting collision/blockage rather than insufficient throttle. Stop repeating powered steering. Request 8 brake then 22 handbrake; stopping unverified, reverse clearance unknown."
+        }
+      },
+      {
+        "step": 41,
+        "recorded_frames_before": 1223,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car is still curb-tight in the right lane, angled toward the centerline; slight pose change against the curb does not confirm stopping. Junction mouth is ahead, with crossing traffic and falling pole debris nearby. Hold while these clear.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction ahead; pole falling beside car and traffic crossing. Wait for immediate hazards, then verify front clearance and right-hand destination corridor.",
+          "dynamics_note": "8 brake plus 22 handbrake showed slight position/yaw change against curb, not verified standstill; pole continues falling beside front-right. Prior powered steering gave little travel, suggesting contact. Hold handbrake 30 during debris/traffic movement; rear clearance remains unverified."
+        }
+      },
+      {
+        "step": 42,
+        "recorded_frames_before": 1247,
+        "decision": {
+          "buttons": [
+            "cross"
+          ],
+          "rationale": "Car is stationary against the curb landmarks, rear tight to the right edge and nose angled toward the centerline. Pedestrian is now clear left; junction mouth is ahead, but the right exit remains obscured. Creep straight away from the curb obstruction before reassessing.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross"
+              ],
+              "frames": 15
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 15
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction ahead. Pole has fallen; pedestrian clear left. Creep within approach to free curb-side contact, then verify right-turn curb end and destination lane.",
+          "dynamics_note": "30 handbrake left car essentially unchanged against curb/building, supporting standstill; pole fell away. Repeated forward-right previously gave little travel, suggesting contact. Try 15 forward without steering then 15 handbrake to free car; limited room before crossing traffic, no corner commitment."
+        }
+      },
+      {
+        "step": 43,
+        "recorded_frames_before": 1283,
+        "decision": {
+          "buttons": [
+            "cross"
+          ],
+          "rationale": "Rear remains near the right curb, nose diagonal toward the centerline. Slight forward travel relative to the palm suggests some release from contact. Junction mouth is ahead; creep farther from the fallen pole without committing to the obscured right exit.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross"
+              ],
+              "frames": 22
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 8
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction ahead. Fallen pole beside right rear; pedestrian farther left. Advance clear of contact, then verify curb end and destination right lane before first right.",
+          "dynamics_note": "15 straight throttle plus 15 handbrake produced slight forward travel relative to palm/curb, little yaw; not fully blocked, but rear remains beside fallen pole. Increase straight throttle to 22 then handbrake 8. Expect modest clearance gain; crossing traffic limits advance and stopping remains unverified."
+        }
+      },
+      {
+        "step": 44,
+        "recorded_frames_before": 1307,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Rear remains near the right curb; nose points left across the approach lane. Forward movement relative to the palm has put debris behind. Junction mouth is ahead, with the rightward street visible; gently realign before entering, watching crossing traffic.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 20
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 10
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction mouth ahead, rightward street visible beyond near curb. Fallen pole now behind/right. Realign approach, then verify corner clearance and destination right lane before first right.",
+          "dynamics_note": "22 straight throttle plus 8 handbrake produced modest forward movement relative to palm and curb; debris now behind rear, heading still diagonal left. Stopping not verified. Try 20 forward-right then 10 handbrake for approach alignment, not full corner; crossing roadway is close."
+        }
+      },
+      {
+        "step": 45,
+        "recorded_frames_before": 1343,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car remains right of centerline, rear near the curb, with nose less diagonal left. Palm and curb show forward progress. The junction mouth is ahead and the near curb ends to the right; continue approach alignment without committing across traffic.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 25
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 5
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Junction ahead; near curb end and rightward street visible. Debris behind/right. Finish approach alignment and verify front clearance plus destination right lane before first right.",
+          "dynamics_note": "20 forward-right plus 10 handbrake visibly advanced relative to palm/curb and reduced leftward diagonal; alignment remains incomplete, stopping unverified. Increase powered steering to 25 frames, then handbrake 5. Expect modest further yaw and advance; near curb end still constrains corner entry."
+        }
+      },
+      {
+        "step": 46,
+        "recorded_frames_before": 1367,
+        "decision": {
+          "buttons": [
+            "cross"
+          ],
+          "rationale": "Car is curb-side in the right lane, now nearly parallel to the approach edges, and has advanced past more curb debris. The right-turn mouth is ahead; advance straight for front-corner clearance before turning around the curb end.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross"
+              ],
+              "frames": 18
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 12
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Initial approach; 0 completed turns. Approach heading nearly aligned. Right-turn mouth ahead beyond visible curb end; advance for front clearance, then verify destination right lane. Crossing car remains left.",
+          "dynamics_note": "25 forward-right plus 5 handbrake gave clear rightward yaw and modest forward travel against curb/palm, nearly aligning approach. Rear remains curb-close; front clearance around corner not established. Release steering, advance straight 18 then handbrake 12; expect limited approach travel, not a completed stop."
+        }
+      },
+      {
+        "step": 47,
+        "recorded_frames_before": 1403,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car is on the curb-side of the right lane, nearly aligned with the approach, and has advanced relative to the rounded curb. The mouth is now alongside the front; the curb bends away into a clear rightward roadway. Begin the right turn while traffic clears left.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 24
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 6
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 0 completed turns. At first junction mouth, alongside front; rounded near curb now behind front corner, rightward corridor visible and clear. Begin first right, then verify destination right-lane alignment.",
+          "dynamics_note": "18 straight throttle plus 12 handbrake produced clear forward travel relative to rounded curb, little yaw; front appears beyond curb end. Standstill unverified. Use 24 forward-right then 6 handbrake to start corner arc; prior 25-frame steering gave moderate yaw, so full turn is not expected yet."
+        }
+      },
+      {
+        "step": 48,
+        "recorded_frames_before": 1427,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car has advanced beyond the rounded curb and yawed right, but remains diagonal to the destination road. The mouth is alongside, with clear roadway to the right; continue the arc into its near-side right lane.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 26
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 4
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 0 completed turns. First right in progress; rounded near curb behind front, continuous destination street visible right. Finish arc into near-side right lane, then verify alignment.",
+          "dynamics_note": "24 forward-right plus 6 handbrake visibly advanced beyond curb end and produced moderate right yaw, short of destination alignment. Stop unverified. Front has clearance but further straight travel would approach centerline; use 26 powered-right then 4 handbrake, expecting more arc rather than a completed turn."
+        }
+      },
+      {
+        "step": 49,
+        "recorded_frames_before": 1463,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car advanced past the corner pole and yawed right, but is near the centerline with its nose still angled toward the opposite lane. The junction mouth remains alongside and the near-side destination lane is clear; continue turning right.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 28
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 2
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 0 completed turns. First right still in progress, near destination centerline; corner curb behind and destination corridor clear. Finish rightward alignment and settle into right lane before seeking next junction.",
+          "dynamics_note": "26 powered-right plus 4 handbrake gave clear forward travel past corner pole and substantial yaw, but nose still angles across destination centerline. No stop verified. Increase steering to 28 powered frames with 2 handbrake; expect continued arc toward right-lane alignment, not straight travel."
+        }
+      },
+      {
+        "step": 50,
+        "recorded_frames_before": 1487,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car moved past the corner building and is nearly parallel to the destination centerline, but still straddles it rather than occupying the right lane. Clear asphalt lies to its right; ease the turn into a lane correction.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 12
+            },
+            {
+              "buttons": [],
+              "frames": 12
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 6
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. First right visibly achieved destination heading: 1 completed turn, lane placement unfinished. Starting mouth behind; move fully right of centerline, then follow this street to next verified right junction.",
+          "dynamics_note": "28 powered-right plus 2 handbrake produced substantial forward travel and yaw to nearly parallel with destination road; car still straddles centerline. Right lane clear with curb farther right. Reduce steering to 12 frames, coast 12, handbrake 6; expect diagonal rightward entry, requiring subsequent alignment check."
+        }
+      },
+      {
+        "step": 51,
+        "recorded_frames_before": 1523,
+        "decision": {
+          "buttons": [
+            "square"
+          ],
+          "rationale": "Car moved toward the red-orange building and now points sharply across the right lane, with its nose at the curb beside a pole. The rearward roadway is visibly clear; brake and reverse away rather than drive onto the sidewalk.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "square"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right, now over-rotated across destination right lane beside red-orange building. Recover from curb/pole before proceeding along this street; next right junction not yet verified.",
+          "dynamics_note": "12 powered-right, 12 coast, 6 handbrake produced much more yaw and curbward travel than expected. Nose now at curb/pole; forward clearance exhausted, stopping uncertain. Apply 30 square to brake then reverse straight into visible road gap. Verify actual backward travel and front clearance before forward recovery."
+        }
+      },
+      {
+        "step": 52,
+        "recorded_frames_before": 1547,
+        "decision": {
+          "buttons": [
+            "square"
+          ],
+          "rationale": "Car points diagonally out of the right lane onto the sidewalk; its nose advanced beyond the pole despite braking. Front clearance remains blocked, while roadway behind is clear for reversing.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "square"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; recovering beside red-orange building with front on sidewalk and heading across right lane. Next right junction not verified; clear curb before continuing.",
+          "dynamics_note": "30 square did not visibly reverse away: front advanced beyond pole onto sidewalk, suggesting initial braking consumed the burst. Front remains obstructed; rearward road gap is clear locally. Continue square for 30 more frames to establish reverse, then reassess curb clearance and travel before steering or forward drive."
+        }
+      },
+      {
+        "step": 53,
+        "recorded_frames_before": 1583,
+        "decision": {
+          "buttons": [
+            "square",
+            "steer_right"
+          ],
+          "rationale": "Car has backed away from the wall relative to the pole, but its front still overlaps the sidewalk. It remains diagonal across the right lane, rear near the centerline; reverse with right steering to swing the nose toward road alignment.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "square",
+                "steer_right"
+              ],
+              "frames": 22
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 8
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; recovering beside red-orange building, front still at sidewalk and rear near centerline. Clear front and align within right lane before proceeding; next right junction unverified.",
+          "dynamics_note": "Second 30 square visibly reversed away from wall/pole, unlike initial braking burst; front has not fully cleared curb. Rear now approaches centerline, limiting straight reverse. Use 22 reverse-right to rotate nose left toward street heading, then 8 handbrake to limit travel; clearance and stopping require verification."
+        }
+      },
+      {
+        "step": 54,
+        "recorded_frames_before": 1607,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "rationale": "Car reversed well clear of the curb and pole, but now straddles the centerline, nose angled toward the right lane rather than parallel to it. The forward right lane is clear; gently pull forward-left to align.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_left"
+              ],
+              "frames": 18
+            },
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 12
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; front now clear of sidewalk/pole, car straddles centerline during recovery. Align and return fully to right lane on this street; next right junction not verified.",
+          "dynamics_note": "22 reverse-right plus 8 handbrake produced large backward displacement away from pole and leftward yaw; front visibly cleared, rear reached centerline. Stopping unverified. Avoid more reverse. Apply 18 forward-left then 12 handbrake, expecting limited forward recovery and alignment without reaching right curb."
+        }
+      },
+      {
+        "step": 55,
+        "recorded_frames_before": 1643,
+        "decision": {
+          "buttons": [
+            "r1"
+          ],
+          "rationale": "Car is now across the centerline in the oncoming half, roughly parallel to the road. Its displacement toward the opposite buildings suggests continued reverse rather than forward recovery; hold the brake before changing direction again.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; curb obstruction cleared, but recovery carried car across centerline into oncoming half. Arrest motion, then return to right lane; next right junction unverified.",
+          "dynamics_note": "18 forward-left plus 12 handbrake failed to show expected forward recovery; car moved across centerline toward opposite buildings with further yaw, consistent with residual reverse. Opposite curb limits more backward travel. Hold handbrake all 30 to arrest motion; standstill not yet verified. Avoid steering until direction is established."
+        }
+      },
+      {
+        "step": 56,
+        "recorded_frames_before": 1667,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car remains in the oncoming half, nearly parallel to the centerline. Little movement relative to the pole suggests braking reduced reverse drift. Clear roadway permits a gentle forward-right recovery; no street mouth is verified.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 10
+            },
+            {
+              "buttons": [
+                "cross"
+              ],
+              "frames": 20
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; clear of original curb obstruction but still in oncoming half. Recover into right lane, then find next verified right street junction. Return not established.",
+          "dynamics_note": "30 handbrake produced little displacement relative to pole and garage fronts, suggesting near standstill; direction remains uncertain. Nose nearly parallels centerline. Try 10 forward-right then 20 forward without steering to establish forward motion and shallow lane recovery; released steering will preserve any diagonal heading."
+        }
+      },
+      {
+        "step": 57,
+        "recorded_frames_before": 1703,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Still left of the centerline, nearly parallel to the road; the pole and garages shifted rearward, confirming forward progress. The clear right lane needs more rightward yaw, not straight cruising.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 18
+            },
+            {
+              "buttons": [],
+              "frames": 12
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; original curb cleared, still recovering from oncoming half into right lane. Next right street mouth unverified; return not established.",
+          "dynamics_note": "10 forward-right plus 20 forward moved car ahead relative to pole/garages but produced little yaw or lane recovery. Increase steering to 18 frames now that forward movement is visible, then coast 12. Roadway toward right lane is clear; monitor diagonal travel and countersteer before reaching its curb."
+        }
+      },
+      {
+        "step": 58,
+        "recorded_frames_before": 1727,
+        "decision": {
+          "buttons": [],
+          "rationale": "Car is still left of the centerline but now angles toward the right lane. Garages and stairs moved rearward substantially; coast along this shallow diagonal rather than add more yaw. No right street mouth is verified.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; recovering toward right lane from oncoming half, now angled toward centerline. Next right street mouth unverified; return not established.",
+          "dynamics_note": "18 forward-right plus 12 coast produced substantial forward travel past stairs and a shallow rightward heading relative to centerline. Still left of yellow lines; clear road remains toward right lane. Coast 30 to approach/cross centerline without increasing speed or yaw; countersteer once lane entry is visible."
+        }
+      },
+      {
+        "step": 59,
+        "recorded_frames_before": 1763,
+        "decision": {
+          "buttons": [
+            "steer_left"
+          ],
+          "rationale": "Car has advanced past the stairs and reached the centerline, pointing diagonally into the right lane rather than along it. Countersteer while coasting to settle into that lane; traffic is farther ahead.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "steer_left"
+              ],
+              "frames": 10
+            },
+            {
+              "buttons": [],
+              "frames": 20
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; recovery now at centerline, entering right lane. Street continues toward overhead signals; next right mouth unverified. Return not established.",
+          "dynamics_note": "30 coast maintained substantial forward travel relative to building corner; front reached yellow lines with stronger diagonal apparent in newer view. Right lane has immediate clearance. Use 10 unpowered left steering then 20 coast to reduce crossing angle while entering lane; alignment remains unverified."
+        }
+      }
+    ]
+  },
+  "single-minute-03-part2": {
+    "summary": {
+      "model": "gpt-6-astra",
+      "reasoning_effort": "low",
+      "service_tier": "fast",
+      "goal": "Drive on the RIGHT around a connected compact street block and visibly return to THIS starting intersection with yellow hillside buildings ahead-LEFT and red-orange corner building RIGHT, with the same heading. Use the attached starting reference to verify return. Choose every control solely from screenshots; verify actual completed turns, avoid curbs, collisions, traffic and pedestrians. Do not count seeing the landmark from another heading as completion.",
+      "frame_stride": 30,
+      "target_pid": 68968,
+      "frame_interval_ms": 350,
+      "emulator_fps": 59.94,
+      "steer_pulse_frames": 12,
+      "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
+      "steps_limit": 180,
+      "scenario_state": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/state.p2s",
+      "scenario_state_note": "Provenance label only; runner does not load this state",
+      "resume_from": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/single-minute-03",
+      "resume_decision_count": 60,
+      "resume_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/single-minute-03/20260908-142641-33566903/frame-1788903943145924000.png",
+      "start_reference": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+      "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
+      "recording_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908145526.mkv",
+      "target_recorded_frames": 1797,
+      "recording_budget_note": "Live stored-frame count is a buffered lower bound. Final bursts are at least15 requests where possible; stopped recording can exceed the target.",
+      "started_at": 1788904527.261632,
+      "status": "error",
+      "mode": "stepped",
+      "hold_ms": null,
+      "policy_transport": "app-server",
+      "bridge_transport": "cli",
+      "vision_max_edge": 640,
+      "vision_quality": 65,
+      "vision_colormode": "rgb",
+      "ended_at": 1788904626.628124,
+      "elapsed_wall_seconds": 99.366,
+      "decision_count": 5,
+      "action_count": 5,
+      "actions_requested": 5,
+      "game_frames_requested": 150,
+      "frames_in_completed_actions": 150,
+      "recorded_frames_lower_bound": 143,
+      "recording_target_reached": false,
+      "realtime_hold_ms_requested": null,
+      "frames_note": "Requested VSync counts, not independent game-state measurements",
+      "decision_latency_median_ms": 6942.26,
+      "capture_latency_median_ms": 219.82,
+      "action_and_capture_median_ms": 11841.919957660139,
+      "measured_decisions_per_wall_second": 0.05031896829182731,
+      "error": null,
+      "release_error": null
+    },
+    "capture": {
+      "master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908145526.mkv",
+      "master_sha256": "4fbf61f55831fbef998b89e67f61504bd9342aad36ccfa99757938aa112c52f3",
+      "master_bytes": 59993821,
+      "frames_directory": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/single-minute-03-part2/recording/frames",
+      "decoded_frame_count": 150,
+      "playback": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/single-minute-03-part2/recording/playback.mp4",
+      "playback_bytes": 1056612,
+      "export_elapsed_seconds": 0.944,
+      "timing": "Playback preserves the capture's simulation timestamps; no desktop wall-time or inferred FPS is substituted.",
+      "provenance": "Master retained unchanged; PNGs decode every stored frame. Completeness depends on successful PCSX2 native capture."
+    },
+    "decisions": [
+      {
+        "step": 0,
+        "recorded_frames_before": 0,
+        "decision": {
+          "buttons": [
+            "cross"
+          ],
+          "rationale": "Car remains mostly left of the centerline, angled toward the clear right lane. Pole and building positions appear unchanged; forward motion is unverified. No right street mouth is visible.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross"
+              ],
+              "frames": 15
+            },
+            {
+              "buttons": [],
+              "frames": 15
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; recovery remains at centerline, mostly in oncoming half and angled toward right lane. Continue lane recovery; next right street mouth unverified. Return not established.",
+          "dynamics_note": "10 left steering plus 20 coast shows essentially no displacement or yaw between supplied recent images; prior substantial-motion estimate is not confirmed now. No visible immediate obstruction. Try 15 straight throttle then 15 coast to establish movement toward clear right lane; verify displacement before further steering."
+        }
+      },
+      {
+        "step": 1,
+        "recorded_frames_before": 23,
+        "decision": {
+          "buttons": [],
+          "rationale": "Car is still mostly left of the yellow lines, with its nose entering the right lane diagonally. Building corner and signal moved rearward, confirming forward travel. Coast toward the clear lane; the right curb remains continuous.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [],
+              "frames": 30
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; recovering across centerline toward right lane on street toward overhead signals. Next right mouth unverified; current right curb continuous. Return not established.",
+          "dynamics_note": "15 throttle plus 15 coast produced visible forward displacement past building corner, unlike prior unchanged images. Nose reaches right lane but rear remains left of lines; heading still diagonal. Coast 30 without added yaw or speed, watching lane entry before left correction. Right curb has ample immediate clearance."
+        }
+      },
+      {
+        "step": 2,
+        "recorded_frames_before": 47,
+        "decision": {
+          "buttons": [
+            "steer_right"
+          ],
+          "rationale": "Car remains mostly left of the centerline and now nearly parallels it; coasting advanced past the building corner without completing lane entry. Add a small rightward correction into the clear right lane. No right street opening is verified.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "steer_right"
+              ],
+              "frames": 10
+            },
+            {
+              "buttons": [],
+              "frames": 20
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; still recovering from left of centerline toward clear right lane, approaching overhead signs/signals. Right curb continuous; next right street mouth unverified. Return not established.",
+          "dynamics_note": "30 coast produced forward travel relative to building corner but little lateral lane recovery; heading appears nearer parallel to centerline than expected. Right lane and immediate curb clearance remain ample. Use 10 right steering without throttle then 20 coast for a shallow crossing angle; verify yaw and lane position next."
+        }
+      },
+      {
+        "step": 3,
+        "recorded_frames_before": 83,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car still straddles the centerline mostly on its left, nearly parallel to the road. Building and sign supports show modest forward travel but insufficient rightward movement. The right lane is clear; no street mouth is verified.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 18
+            },
+            {
+              "buttons": [],
+              "frames": 12
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; recovering at centerline toward right lane, approaching overhead signs/signals. Right curb remains continuous; next right street mouth unverified. Return not established.",
+          "dynamics_note": "10 right steering plus 20 coast moved forward modestly relative to building/sign supports, with too little yaw to enter right lane. Increase to 18 right steering with throttle, then 12 coast. Clear lane provides lateral room; expect stronger response with powered movement and check before countersteering."
+        }
+      },
+      {
+        "step": 4,
+        "recorded_frames_before": 107,
+        "decision": {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "rationale": "Car remains mostly left of the centerline, angled slightly toward the clear right lane. Sign supports show modest forward travel; the right curb is continuous, with no verified turn mouth.",
+          "scene": "driving",
+          "stop": false,
+          "segments": [
+            {
+              "buttons": [
+                "cross",
+                "steer_right"
+              ],
+              "frames": 24
+            },
+            {
+              "buttons": [],
+              "frames": 6
+            }
+          ],
+          "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. 1 completed right; still recovering across centerline toward right lane beneath overhead signs/signals. Right curb continuous; next right street mouth unverified. Return not established.",
+          "dynamics_note": "18 powered right steering +12 coast produced modest forward displacement relative to sign supports and slight yaw, but rear remains left of centerline. Right lane offers ample lateral clearance. Increase powered right steering to24, coast6; inspect crossing angle before countersteering."
+        }
+      }
+    ]
+  },
+  "continuity": {
+    "same_emulator_pid": 68968,
+    "resets_between_parts": 0,
+    "action_replay": false,
+    "source_frames_total": 1950,
+    "minute_target_reached": false,
+    "part2_stop": "User requested change from slow frame stepping to real-time half-second bursts. SIGINT sent after completed action step4; capture finalized. Root owns paused emulator for implementation."
+  }
+}
