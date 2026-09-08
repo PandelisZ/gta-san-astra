@@ -93,6 +93,11 @@ class DaemonController(Controller):
         self.daemon_client = daemon_client or DaemonClient()
 
     def call(self, *args: str) -> dict:
+        args = self.target_args(args)
+        with self.actuation_lock(args):
+            return self._call_daemon(*args)
+
+    def _call_daemon(self, *args: str) -> dict:
         if not args:
             raise ControlError("Native daemon operation is required")
         fields = {}

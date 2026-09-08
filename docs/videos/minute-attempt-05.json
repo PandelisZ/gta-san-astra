@@ -1,0 +1,23 @@
+{
+  "name": "minute-attempt-05",
+  "goal": "Drive on the RIGHT side of the road around a compact city block and return near this garden wall opposite orange Jefferson Motel facing the SAME direction. Start in blue Tahoma partly on left curb, garden wall and hedges left, orange motel across road right, signal gantry ahead. Choose a feasible visible street route. Rejoin the right lane first and enter the right-hand lane after every turn. Confirm a real street opening in the latest image before turning: continuous walls, curbs, sidewalks, and parking lots are not road junctions. If an opening has passed, continue to another feasible junction. Keep controlled forward progress on clear streets, slow before uncertain corners, and avoid vehicles, pedestrians, and poles. Track actual completed turns and landmarks. All driving phases must come from your own current screenshot assessment, never a memorized sequence. Stop near the original location only when the loop and heading are visibly matched; otherwise continue until the one-minute attempt ends.",
+  "scenario": "quiet-tahoma",
+  "autonomy": "Astra chooses every driving control phase. Wrapper only handles reset, recording and export.",
+  "requested_vsync_budget": 7200,
+  "nominal_seconds_budget": 120.12,
+  "decoded_frame_count": 3608,
+  "target_recorded_frames": 3597,
+  "recorded_target_reached": true,
+  "full_recording_duration_seconds": 60.19,
+  "clip_seconds_limit": 60,
+  "git_video_frame_count": 3597,
+  "logic_sha256": {
+    "scripts/autodrive.py": "d28762ecdef303b03510ba07ef2ef550f59f6878059425f17a5366d8a98dc946",
+    "src/san_astra/policy.py": "2c1463a9f12d736eeb5f77dd36c06519d77ba8419d3811dc7bd5a25d788bf033"
+  },
+  "measured_video_duration_seconds": 60.01,
+  "measured_duration_source": "MP4 container duration reported by FFmpeg",
+  "duration_note": "Stop after a whole burst crosses3597 stored frames (about one minute), with120 decisions as a safety cap. Live count is buffered, so the full recording can exceed one minute. Git replay contains its first60 real seconds with no padding; actual frame count and duration are measured.",
+  "video_sha256": "abe83e2297a379cfaebcf7eb27aa0311e775fb7ec8e7c7b01f8629f425a5ab23",
+  "status": "completed"
+}

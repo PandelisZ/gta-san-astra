@@ -15,7 +15,10 @@ func emulator() throws -> NSRunningApplication {
         guard let pid = Int32(p), let app = NSRunningApplication(processIdentifier: pid), (app.bundleIdentifier ?? "").lowercased().contains("pcsx2") || (app.localizedName ?? "").lowercased().contains("pcsx2") else { throw BridgeError("--pid must identify a running PCSX2 application") }
         return app
     }
-    guard let app = NSWorkspace.shared.runningApplications.first(where: { ($0.bundleIdentifier ?? "").lowercased().contains("pcsx2") || ($0.localizedName ?? "").lowercased().contains("pcsx2") }) else { throw BridgeError("PCSX2 is not running. Launch the emulator first.") }
+    let candidates = NSWorkspace.shared.runningApplications.filter { ($0.bundleIdentifier ?? "").lowercased().contains("pcsx2") || ($0.localizedName ?? "").lowercased().contains("pcsx2") }
+    guard !candidates.isEmpty else { throw BridgeError("PCSX2 is not running. Launch the emulator first.") }
+    guard candidates.count == 1 else { throw BridgeError("Multiple PCSX2 applications are running; specify --pid for this operation") }
+    let app = candidates[0]
     return app
 }
 func windows(_ app: NSRunningApplication) -> [[String: Any]] {
@@ -82,7 +85,7 @@ func run() async throws {
         guard let dest = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else { throw BridgeError("Cannot write PNG destination") }
         CGImageDestinationAddImage(dest, image, nil)
         guard CGImageDestinationFinalize(dest) else { throw BridgeError("PNG write failed") }
-        output(["ok":true,"path":url.path,"windowId":window.windowID,"title":window.title ?? "","width":image.width,"height":image.height,"cropTop":cropTop,"timestamp":ISO8601DateFormatter().string(from:Date())])
+        output(["ok":true,"pid":app.processIdentifier,"path":url.path,"windowId":window.windowID,"title":window.title ?? "","width":image.width,"height":image.height,"cropTop":cropTop,"timestamp":ISO8601DateFormatter().string(from:Date())])
     case "input", "step":
         guard AXIsProcessTrusted() else { throw BridgeError("Accessibility permission is required for keyboard input. Enable your terminal/Codex app in System Settings > Privacy & Security > Accessibility.") }
         guard let names = option("--keys") else { throw BridgeError("input requires --keys comma-separated key names") }
@@ -97,7 +100,7 @@ func run() async throws {
         let active = ActiveKeys(pid: app.processIdentifier)
         let duration = Int(option("--duration-ms") ?? "100") ?? -1
         guard (0...10000).contains(duration) else { throw BridgeError("duration-ms must be an integer from 0 to 10000") }
-        if argv.contains("--focus") || command == "step" { _ = app.activate(options:[.activateAllWindows]); try await Task.sleep(for:.milliseconds(100)) }
+        if !argv.contains("--no-focus") && (argv.contains("--focus") || command == "step") { _ = app.activate(options:[.activateAllWindows]); try await Task.sleep(for:.milliseconds(100)) }
         // Defers release for normal exits/errors. Signal handlers release as well.
         signal(SIGINT, SIG_IGN); signal(SIGTERM, SIG_IGN)
         let sources = [SIGINT,SIGTERM].map { sig -> DispatchSourceSignal in

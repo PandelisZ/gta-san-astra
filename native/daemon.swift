@@ -11,16 +11,16 @@ func output(_ value: [String: Any]) { operationResult = value }
 let application = NSApplication.shared
 application.setActivationPolicy(.prohibited)
 var argv: [String] = []
-var cachedApp: NSRunningApplication?
 func option(_ name: String) -> String? { guard let i = argv.firstIndex(of: name), i + 1 < argv.count else { return nil }; return argv[i + 1] }
 func emulator() throws -> NSRunningApplication {
     if let p = option("--pid") {
         guard let pid = Int32(p), let app = NSRunningApplication(processIdentifier: pid), (app.bundleIdentifier ?? "").lowercased().contains("pcsx2") || (app.localizedName ?? "").lowercased().contains("pcsx2") else { throw BridgeError("--pid must identify a running PCSX2 application") }
         return app
     }
-    if let app = cachedApp, !app.isTerminated { return app }
-    guard let app = NSWorkspace.shared.runningApplications.first(where: { ($0.bundleIdentifier ?? "").lowercased().contains("pcsx2") || ($0.localizedName ?? "").lowercased().contains("pcsx2") }) else { throw BridgeError("PCSX2 is not running. Launch the emulator first.") }
-    cachedApp = app
+    let candidates = NSWorkspace.shared.runningApplications.filter { ($0.bundleIdentifier ?? "").lowercased().contains("pcsx2") || ($0.localizedName ?? "").lowercased().contains("pcsx2") }
+    guard !candidates.isEmpty else { throw BridgeError("PCSX2 is not running. Launch the emulator first.") }
+    guard candidates.count == 1 else { throw BridgeError("Multiple PCSX2 applications are running; specify --pid for this operation") }
+    let app = candidates[0]
     return app
 }
 func windows(_ app: NSRunningApplication) -> [[String: Any]] {
@@ -87,7 +87,7 @@ func run() async throws {
         guard let dest = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else { throw BridgeError("Cannot write PNG destination") }
         CGImageDestinationAddImage(dest, image, nil)
         guard CGImageDestinationFinalize(dest) else { throw BridgeError("PNG write failed") }
-        output(["ok":true,"path":url.path,"windowId":window.windowID,"title":window.title ?? "","width":image.width,"height":image.height,"cropTop":cropTop,"timestamp":ISO8601DateFormatter().string(from:Date())])
+        output(["ok":true,"pid":app.processIdentifier,"path":url.path,"windowId":window.windowID,"title":window.title ?? "","width":image.width,"height":image.height,"cropTop":cropTop,"timestamp":ISO8601DateFormatter().string(from:Date())])
     case "input", "step":
         guard AXIsProcessTrusted() else { throw BridgeError("Accessibility permission is required for keyboard input. Enable your terminal/Codex app in System Settings > Privacy & Security > Accessibility.") }
         guard let names = option("--keys") else { throw BridgeError("input requires --keys comma-separated key names") }
@@ -104,7 +104,7 @@ func run() async throws {
         guard (0...10000).contains(duration) else { throw BridgeError("duration-ms must be an integer from 0 to 10000") }
         try session.register(active)
         defer { active.clear(); session.unregister(active) }
-        if (argv.contains("--focus") || command == "step") && !app.isActive {
+        if !argv.contains("--no-focus") && (argv.contains("--focus") || command == "step") && !app.isActive {
             _ = app.activate(options:[.activateAllWindows])
             try await Task.sleep(for:.milliseconds(100))
         }
@@ -175,7 +175,7 @@ func requestArguments(_ request: [String: Any]) throws -> [String] {
           ["status", "windows", "focus", "capture", "input", "step", "release"].contains(op) else {
         throw BridgeError("op must be status, windows, focus, capture, input, step, or release")
     }
-    let allowed: Set<String> = ["id", "op", "keys", "duration_ms", "frames", "frame_interval_ms", "frame_key", "output", "crop_top", "window_id", "pid", "focus"]
+    let allowed: Set<String> = ["id", "op", "keys", "duration_ms", "frames", "frame_interval_ms", "frame_key", "output", "crop_top", "window_id", "pid", "focus", "no_focus"]
     guard Set(request.keys).isSubset(of: allowed) else { throw BridgeError("Unknown request field") }
     var args = [op]
     if let value = request["keys"] {
@@ -197,9 +197,12 @@ func requestArguments(_ request: [String: Any]) throws -> [String] {
             args += ["--" + field.replacingOccurrences(of:"_",with:"-"), text]
         }
     }
-    if let focus = request["focus"] {
-        guard let value = focus as? NSNumber, CFGetTypeID(value) == CFBooleanGetTypeID() else { throw BridgeError("focus must be boolean") }
+    for field in ["focus", "no_focus"] {
+        if let focus = request[field] {
+            guard let value = focus as? NSNumber, CFGetTypeID(value) == CFBooleanGetTypeID() else { throw BridgeError("\(field) must be boolean") }
+        }
     }
+    if request["no_focus"] as? Bool == true { args += ["--no-focus"] }
     if (request["focus"] as? Bool ?? true) && op == "input" { args += ["--focus"] }
     return args
 }

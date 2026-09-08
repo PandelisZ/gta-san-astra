@@ -64,7 +64,12 @@ def read_mapping(path: Path | None = None) -> tuple[dict, str]:
 
 
 class Controller:
-    def __init__(self, bridge: Path | None = None, run_dir: Path | None = None, window_id: int | None = None, frame_stride: int | None = None, crop_top: int | None = None):
+    def __init__(self, bridge: Path | None = None, run_dir: Path | None = None, window_id: int | None = None, frame_stride: int | None = None, crop_top: int | None = None,
+                 pid: int | None = None, ini_path: Path | None = None):
+        self.pid = pid if pid is not None else (int(os.environ["SAN_ASTRA_PID"]) if os.environ.get("SAN_ASTRA_PID") else None)
+        if self.pid is not None and (type(self.pid) is not int or self.pid <= 0):
+            raise ValueError("pid must be a positive integer")
+        self._held_locks = set()
         self.crop_top = crop_top if crop_top is not None else int(os.environ.get("SAN_ASTRA_CROP_TOP", "32"))
         if isinstance(self.crop_top, bool) or not isinstance(self.crop_top, int) or not 0 <= self.crop_top <= 4096:
             raise ValueError("crop_top must be an integer between 0 and 4096")
@@ -74,11 +79,33 @@ class Controller:
         self.bridge = Path(bridge or os.environ.get("SAN_ASTRA_BRIDGE", Path(__file__).resolve().parents[2] / "native/astra-bridge"))
         self.run_dir = Path(run_dir or os.environ.get("SAN_ASTRA_RUN_DIR", "runs"))
         self.window_id = window_id or (int(os.environ["SAN_ASTRA_WINDOW_ID"]) if os.environ.get("SAN_ASTRA_WINDOW_ID") else None)
-        self.config_path = config_path()
+        self.config_path = Path(ini_path) if ini_path else config_path()
         self.mapping, self.mapping_source = read_mapping(self.config_path)
         self.session = time.strftime("%Y%m%d-%H%M%S") + "-" + uuid.uuid4().hex[:8]
 
     def call(self, *args: str) -> dict:
+        args = self.target_args(args)
+        with self.actuation_lock(args):
+            return self._call_native(*args)
+
+    def target_args(self, args):
+        if "--pid" in args:
+            index = args.index("--pid")
+            if index + 1 >= len(args) or (self.pid is not None and int(args[index + 1]) != self.pid):
+                raise ControlError("Native PID conflicts with this controller's target")
+            return tuple(args)
+        return (*args, "--pid", str(self.pid)) if self.pid is not None else tuple(args)
+
+    @contextmanager
+    def actuation_lock(self, args):
+        if args and args[0] in ("input", "step", "focus"):
+            path = Path(os.environ.get("SAN_ASTRA_FOCUS_LOCK", str(Path.home() / ".san-astra/focus-input.lock")))
+            with self._file_lock(path):
+                yield
+        else:
+            yield
+
+    def _call_native(self, *args: str) -> dict:
         try:
             with subprocess.Popen([str(self.bridge), *args], text=True,
                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
@@ -106,17 +133,32 @@ class Controller:
 
     @contextmanager
     def lock(self):
-        # Shared across every run directory and MCP/CLI process for this user.
         lock_path = Path(os.environ.get("SAN_ASTRA_LOCK", str(Path.home() / ".san-astra/control.lock")))
+        if self.pid is not None:
+            lock_path = lock_path.with_name(f"{lock_path.name}.pid-{self.pid}")
+        with self._file_lock(lock_path):
+            yield
+
+    @contextmanager
+    def _file_lock(self, lock_path):
+        if str(lock_path) in self._held_locks:
+            raise ControlError("Another San Astra action already holds this controller lock")
         lock_path.parent.mkdir(parents=True, exist_ok=True)
         with lock_path.open("a") as handle:
-            try:
-                fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            except BlockingIOError as exc:
-                raise ControlError("Another San Astra action is in progress; retry after it completes") from exc
+            deadline = time.monotonic() + float(os.environ.get("SAN_ASTRA_LOCK_TIMEOUT", "90"))
+            while True:
+                try:
+                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except BlockingIOError as exc:
+                    if time.monotonic() >= deadline:
+                        raise ControlError("Timed out waiting for another San Astra action to finish") from exc
+                    time.sleep(0.05)
+            self._held_locks.add(str(lock_path))
             try:
                 yield
             finally:
+                self._held_locks.discard(str(lock_path))
                 fcntl.flock(handle, fcntl.LOCK_UN)
 
     def record(self, data: dict):
@@ -134,7 +176,7 @@ class Controller:
     def doctor(self):
         binding = self.frame_advance_binding()
         configured = binding.strip().lower() == "keyboard/n"
-        return {"bridge": str(self.bridge), "status": self.call("status"), "windows": self.call("windows"), "default_frame_stride": self.default_frame_stride, "crop_top": self.crop_top, "mapping": self.mapping, "mapping_source": self.mapping_source, "frame_advance_binding": binding, "frame_advance_configured": configured, "warnings": [] if configured else ["FrameAdvance is not configured as Keyboard/N in this profile; step may not advance emulation. Run setup and launch the isolated profile."], "observation_contract": "Screen pixels only; no game memory, position, speed, or telemetry."}
+        return {"bridge": str(self.bridge), "target_pid": self.pid, "status": self.call("status"), "windows": self.call("windows"), "default_frame_stride": self.default_frame_stride, "crop_top": self.crop_top, "mapping": self.mapping, "mapping_source": self.mapping_source, "frame_advance_binding": binding, "frame_advance_configured": configured, "warnings": [] if configured else ["FrameAdvance is not configured as Keyboard/N in this profile; step may not advance emulation. Run setup and launch the isolated profile."], "observation_contract": "Screen pixels only; no game memory, position, speed, or telemetry."}
 
     def _observe(self):
         directory = (self.run_dir / self.session).resolve()

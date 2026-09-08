@@ -100,14 +100,23 @@ def attempt(args) -> dict:
     if not 1 <= args.steps <= 10000:
         raise ValueError("steps must be between 1 and 10000")
     existing = subprocess.run(["pgrep", "-fl", r"(^|[ /])autodrive\.py([ ]|$)"], capture_output=True, text=True)
-    if existing.returncode == 0:
-        raise RuntimeError("An autodrive process is already active. Finish it before starting another attempt.")
+    target_pid = args.pid
+    if existing.returncode == 0 and not (target_pid is not None or args.allow_multiple):
+        raise RuntimeError("An autodrive process is already active; concurrent attempts require an explicit PID and separate profile.")
+    if target_pid is not None and existing.returncode == 0 and re.search(r"--pid\s+" + str(target_pid) + r"(?:\s|$)", existing.stdout):
+        raise RuntimeError("An autodrive process already targets this PCSX2 PID")
+    if args.no_reset and args.allow_multiple and target_pid is None:
+        raise ValueError("--no-reset --allow-multiple requires --pid or SAN_ASTRA_PID")
     if not args.no_reset and args.iso is None:
         raise ValueError("Reset requires --iso PATH, or use --no-reset after caller restoration")
     profile = args.profile.expanduser().resolve()
-    statefile = ROOT / ".runtime/scenarios" / args.scenario / "state.p2s"
+    if args.no_reset and target_pid is not None:
+        from san_astra.processes import verify_profile_pid
+        verify_profile_pid(target_pid, profile)
+    statefile = args.scenarios.expanduser().resolve() / args.scenario / "state.p2s"
     manifest = {"name": args.name, "started_at": time.time(), "status": "preparing",
                 "goal": args.goal, "scenario": args.scenario, "reset": not args.no_reset,
+                "target_pid": target_pid, "profile": str(profile),
                 "steps_budget": args.steps, "frames_per_decision": 60,
                 "requested_vsync_budget": args.steps * 60,
                 "nominal_seconds_budget": round(args.steps * 60 / 59.94, 3),
@@ -123,10 +132,15 @@ def attempt(args) -> dict:
     recording_started, source, failure = False, None, None
     try:
         if not args.no_reset:
-            manifest["reset_result"] = scenario.launch(args.scenario, args.iso, profile=profile)
+            manifest["reset_result"] = scenario.launch(args.scenario, args.iso, scenarios=args.scenarios,
+                                                        profile=profile, allow_multiple=args.allow_multiple)
+            target_pid = manifest["reset_result"]["pid"]
+            if target_pid is None:
+                raise RuntimeError("Scenario launcher did not report the new PCSX2 PID")
+            manifest["target_pid"] = target_pid
             # Read-only readiness: do not send gameplay input while loading the snapshot.
             from san_astra.control import Controller
-            controller = Controller()
+            controller = Controller(pid=target_pid, ini_path=profile / "inis/PCSX2.ini")
             deadline = time.monotonic() + 20
             while time.monotonic() < deadline:
                 try:
@@ -141,7 +155,7 @@ def attempt(args) -> dict:
         capture = recording.status(profile)
         folder = Path(capture["directory"])
         before = set(folder.glob("*.mkv"))
-        manifest["record_start"] = recording.toggle(profile)
+        manifest["record_start"] = recording.toggle(profile, pid=target_pid)
         recording_started = True
         source = new_recording(folder, before)
         manifest.update(status="driving", master=str(source))
@@ -155,6 +169,9 @@ def attempt(args) -> dict:
                    "--scenario-state", str(statefile), "--timeout", str(args.timeout),
                    "--recording-master", str(source), "--target-recorded-frames", "3597"]
         environment = {**os.environ, "SAN_ASTRA_PCSX2_INI": str(profile / "inis/PCSX2.ini")}
+        if target_pid is not None:
+            command.extend(["--pid", str(target_pid)])
+            environment["SAN_ASTRA_PID"] = str(target_pid)
         manifest["driver_exit_code"] = drive(command, directory / "driver.stdout", environment)
         summary_path = directory / "run_summary.json"
         if summary_path.is_file():
@@ -166,7 +183,7 @@ def attempt(args) -> dict:
     finally:
         if recording_started:
             try:
-                manifest["record_stop"] = recording.toggle(profile)
+                manifest["record_stop"] = recording.toggle(profile, pid=target_pid)
             except BaseException as exc:
                 manifest["record_stop_error"] = str(exc)
                 failure = failure or f"Could not stop recording: {exc}"
@@ -201,7 +218,7 @@ def attempt(args) -> dict:
                             status="failed" if failure else "completed", ended_at=time.time())
             # Only the compact replay and its provenance go in the Git-visible folder.
             with video_metadata.open("x") as stream:
-                json.dump({key: manifest[key] for key in ("name", "goal", "scenario", "autonomy",
+                json.dump({key: manifest[key] for key in ("name", "goal", "scenario", "target_pid", "profile", "autonomy",
                     "requested_vsync_budget", "nominal_seconds_budget", "decoded_frame_count",
                     "target_recorded_frames", "recorded_target_reached", "full_recording_duration_seconds",
                     "clip_seconds_limit", "git_video_frame_count", "logic_sha256",
@@ -221,15 +238,19 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--name", default=time.strftime("attempt-%Y%m%d-%H%M%S"))
     parser.add_argument("--scenario", default="quiet-tahoma")
+    parser.add_argument("--scenarios", type=Path, default=scenario.DEFAULT_SCENARIOS, help="Shared immutable scenario directory, including across worktrees")
     parser.add_argument("--iso", type=Path)
-    parser.add_argument("--profile", type=Path, default=ROOT / ".runtime/pcsx2")
+    parser.add_argument("--profile", type=Path, default=recording.DEFAULT_PROFILE)
+    parser.add_argument("--pid", type=int, default=int(os.environ["SAN_ASTRA_PID"]) if os.environ.get("SAN_ASTRA_PID") else None)
+    parser.add_argument("--allow-multiple", action="store_true", help="Permit other instances using different profiles; --no-reset also requires an explicit PID")
     parser.add_argument("--no-reset", action="store_true", help="Caller already restored paused baseline and ensured recording is OFF")
     parser.add_argument("--steps", type=int, default=120, help="Decision safety cap; recording target is3597 stored frames")
     parser.add_argument("--vision-max-edge", type=int, default=512)
     parser.add_argument("--timeout", type=float, default=120)
     parser.add_argument("--goal", default="Drive around one city block and return visibly to the starting landmark and orientation. Choose all driving actions autonomously from screenshots; avoid obstacles and pedestrians and recover when necessary.")
     args = parser.parse_args()
-    lock_path = Path.home() / ".san-astra/attempt.lock"
+    profile_key = hashlib.sha256(str(args.profile.expanduser().resolve()).encode()).hexdigest()[:16]
+    lock_path = Path.home() / f".san-astra/attempt-{profile_key}.lock"
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with lock_path.open("a") as lock:
         try:

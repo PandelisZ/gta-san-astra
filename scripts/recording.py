@@ -18,7 +18,7 @@ import time
 from functools import lru_cache
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PROFILE = ROOT / ".runtime/pcsx2"
+DEFAULT_PROFILE = Path(os.environ["SAN_ASTRA_PCSX2_INI"]).parent.parent if os.environ.get("SAN_ASTRA_PCSX2_INI") else ROOT / ".runtime/pcsx2"
 
 
 def status(profile: Path = DEFAULT_PROFILE) -> dict:
@@ -71,12 +71,16 @@ def count_frames(source: Path) -> int:
     return max(values, default=0)
 
 
-def toggle(profile: Path = DEFAULT_PROFILE) -> dict:
+def toggle(profile: Path = DEFAULT_PROFILE, pid: int | None = None) -> dict:
     from san_astra.control import Controller
     current = status(profile)
     if current["toggle_binding"].lower() != "keyboard/f12":
         raise ValueError("Reload the setup profile first; ToggleVideoCapture must be Keyboard/F12")
-    controller = Controller()
+    target_pid = pid if pid is not None else (int(os.environ["SAN_ASTRA_PID"]) if os.environ.get("SAN_ASTRA_PID") else None)
+    if target_pid is not None:
+        from san_astra.processes import verify_profile_pid
+        verify_profile_pid(target_pid, profile)
+    controller = Controller(pid=target_pid, ini_path=profile / "inis/PCSX2.ini")
     with controller.lock():
         result = controller.call("input", "--keys", "f12", "--duration-ms", "80", "--focus")
     return {"toggle_sent": True, "native": result, "video_directory": current["directory"],
@@ -130,6 +134,7 @@ def export(source: Path, output: Path | None = None) -> dict:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", type=Path, default=DEFAULT_PROFILE)
+    parser.add_argument("--pid", type=int, help="Explicit PCSX2 target, or SAN_ASTRA_PID")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("status", help="Read configured capture settings and existing files")
     commands.add_parser("toggle", help="Send F12 to start/stop capture; coordinate with the active driver")
@@ -139,7 +144,7 @@ def main():
     convert.add_argument("source", type=Path)
     convert.add_argument("--output", type=Path)
     args = parser.parse_args()
-    result = (status(args.profile) if args.command == "status" else toggle(args.profile) if args.command == "toggle"
+    result = (status(args.profile) if args.command == "status" else toggle(args.profile, args.pid) if args.command == "toggle"
               else {"frames": count_frames(args.source), "note": "Live count is a buffered lower bound"} if args.command == "count"
               else export(args.source, args.output))
     print(json.dumps(result, indent=2))

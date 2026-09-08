@@ -167,6 +167,11 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         "Do not carry a stale opening forward from an older image. A continuous wall or curb is not "
         "an entrance; a parking lot is not a street turn around a block. If the junction has passed, "
         "continue on the street to another feasible junction rather than forcing a late turn. "
+        "Before choosing controls, state in your rationale the car position within the right lane, "
+        "its heading relative to the ROAD edges and centerline, and motion relative to fixed landmarks. "
+        "The chase camera keeps the car upright on screen even when it points across the road. "
+        "Centered on screen does not mean aligned with the road. Releasing steering preserves the "
+        "new heading; it does not straighten a diagonal trajectory. Assess those separately. "
         "Compare recent forward displacement with heading change: substantial forward motion with "
         "little yaw can carry you past a corner during a burst. Slow before committing when that "
         "geometry is uncertain, and verify the right-hand destination lane before adding throttle. "
@@ -259,6 +264,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
     directory.mkdir(parents=True, exist_ok=True)
     started_at, started_clock = time.time(), time.monotonic()
     manifest = {"model": model, "reasoning_effort": reasoning_effort, "service_tier": service_tier, "goal": goal, "frame_stride": frame_stride,
+                "target_pid": getattr(controller, "pid", None),
                 "emulator_fps": emulator_fps, "steer_pulse_frames": steer_pulse_frames,
                 "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
                 "steps_limit": steps, "scenario_state": scenario_state,
@@ -406,6 +412,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode", choices=["stepped", "realtime"], default="stepped")
+    parser.add_argument("--pid", type=int, help="Explicit PCSX2 target, or SAN_ASTRA_PID")
     parser.add_argument("--hold-ms", type=int, default=150, help="Realtime bounded input hold, followed by coasting during inference")
     parser.add_argument("--bridge-transport", choices=["cli", "daemon"], default="daemon")
     parser.add_argument("--policy-transport", choices=["cli", "app-server"], default="app-server")
@@ -434,10 +441,10 @@ def main():
     with ExitStack() as stack:
         if args.bridge_transport == "daemon":
             from san_astra.daemon import DaemonController
-            controller = DaemonController(run_dir=args.run_dir)
+            controller = DaemonController(run_dir=args.run_dir, pid=args.pid)
             stack.callback(controller.close)
         else:
-            controller = Controller(run_dir=args.run_dir)
+            controller = Controller(run_dir=args.run_dir, pid=args.pid)
         decision_fn = decide
         if args.policy_transport == "app-server":
             from san_astra.policy import CodexPolicy

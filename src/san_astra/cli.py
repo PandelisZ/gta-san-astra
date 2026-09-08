@@ -10,6 +10,8 @@ def main():
     parser.add_argument("--bridge", type=Path)
     parser.add_argument("--run-dir", type=Path)
     parser.add_argument("--window-id", type=int)
+    parser.add_argument("--pid", type=int, help="PCSX2 instance PID; required when multiple instances run")
+    parser.add_argument("--ini", type=Path, help="The selected instance's PCSX2.ini")
     parser.add_argument("--crop-top", type=int, help="Remove top window pixels; default 32 for macOS titlebar, use 0 for fullscreen")
     parser.add_argument("--frame-stride", type=int, help="Default observation interval in emulated VSync requests (1–120); default 60")
     subs = parser.add_subparsers(dest="command", required=True)
@@ -31,7 +33,7 @@ def main():
     action.add_argument("--steer", choices=["left", "center", "right"], default="center")
     args = parser.parse_args()
     try:
-        controller = Controller(args.bridge, args.run_dir, args.window_id, args.frame_stride, args.crop_top)
+        controller = Controller(args.bridge, args.run_dir, args.window_id, args.frame_stride, args.crop_top, pid=args.pid, ini_path=args.ini)
         if args.command == "mcp":
             from .server import create_server
             create_server(controller).run(transport="stdio")

@@ -142,6 +142,7 @@ def main() -> None:
     parser.add_argument("--iso", type=Path)
     parser.add_argument("--bios", action="store_true", help="Boot BIOS for control smoke test")
     parser.add_argument("--launch", action="store_true")
+    parser.add_argument("--allow-multiple", action="store_true", help="Allow other PCSX2 processes only when they use different profiles")
     parser.add_argument("--statefile", type=Path)
     args = parser.parse_args()
     if args.iso:
@@ -159,9 +160,14 @@ def main() -> None:
     if args.launch:
         if not (args.app.expanduser() / "Contents/MacOS/PCSX2").is_file():
             parser.error(f"PCSX2 executable missing in {args.app}")
-        existing = subprocess.run(["pgrep", "-x", "PCSX2"], capture_output=True, text=True)
-        if existing.returncode == 0:
-            parser.error("PCSX2 is already running. Quit it before launching the isolated profile.")
+        if args.allow_multiple:
+            from san_astra.processes import profile_pids
+            if profile_pids(args.profile):
+                parser.error("This PCSX2 profile is already running; separate instances require separate profiles.")
+        else:
+            existing = subprocess.run(["pgrep", "-x", "PCSX2"], capture_output=True, text=True)
+            if existing.returncode == 0:
+                parser.error("PCSX2 is already running. Quit it or use --allow-multiple with a separate profile.")
     try:
         ini = prepare(args.source, args.profile)
     except (ValueError, OSError) as exc:

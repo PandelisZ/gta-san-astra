@@ -133,7 +133,8 @@ def capture(controller: Controller, name: str = "stationary-car", scenarios: Pat
                 shutil.rmtree(staging)
 
 
-def launch(name: str, iso: Path, scenarios: Path = DEFAULT_SCENARIOS, profile: Path | None = None) -> dict:
+def launch(name: str, iso: Path, scenarios: Path = DEFAULT_SCENARIOS, profile: Path | None = None,
+           allow_multiple: bool = False) -> dict:
     """Launch a stopped PCSX2 using the immutable statefile, never an unknown slot."""
     target = destination(scenarios, name)
     manifest = json.loads((target / "manifest.json").read_text())
@@ -145,15 +146,23 @@ def launch(name: str, iso: Path, scenarios: Path = DEFAULT_SCENARIOS, profile: P
         raise ValueError(f"Game image does not exist: {iso}")
     if manifest.get("game_filename") and iso.name != manifest["game_filename"]:
         raise ValueError("Game filename differs from the captured scenario")
-    if subprocess.run(["pgrep", "-x", "PCSX2"], capture_output=True).returncode == 0:
-        raise ControlError("PCSX2 is running. Quit it before launching this scenario; live slots are never overwritten.")
+    if allow_multiple:
+        from san_astra.processes import profile_pids
+        if profile_pids(profile or ROOT / ".runtime/pcsx2"):
+            raise ControlError("This scenario profile is already running. Quit only that instance before reset.")
+    elif subprocess.run(["pgrep", "-x", "PCSX2"], capture_output=True).returncode == 0:
+        raise ControlError("PCSX2 is running. Quit it or use --allow-multiple with a separate profile.")
     args = [sys.executable, str(ROOT / "scripts/setup_emulator.py"), "--iso", str(iso), "--statefile", str(state), "--launch"]
     if profile:
         args.extend(["--profile", str(profile)])
+    if allow_multiple:
+        args.append("--allow-multiple")
     result = subprocess.run(args, capture_output=True, text=True)
     if result.returncode:
         raise ControlError(result.stderr.strip() or result.stdout.strip())
-    return {"scenario": str(target), "statefile": str(state), "launcher_output": result.stdout.strip()}
+    launched = json.loads(result.stdout)
+    return {"scenario": str(target), "statefile": str(state), "launcher_output": result.stdout.strip(),
+            "pid": launched.get("pid"), "profile": launched.get("profile")}
 
 
 def main():
@@ -168,9 +177,10 @@ def main():
     restore.add_argument("name", nargs="?", default="stationary-car")
     restore.add_argument("--iso", type=Path, required=True)
     restore.add_argument("--profile", type=Path)
+    restore.add_argument("--allow-multiple", action="store_true")
     args = parser.parse_args()
     try:
-        result = capture(Controller(), args.name, args.scenarios, args.replace, args.iso) if args.command == "capture" else launch(args.name, args.iso, args.scenarios, args.profile)
+        result = capture(Controller(), args.name, args.scenarios, args.replace, args.iso) if args.command == "capture" else launch(args.name, args.iso, args.scenarios, args.profile, args.allow_multiple)
         print(json.dumps(result, indent=2))
     except (ControlError, ValueError, OSError) as exc:
         parser.exit(1, json.dumps({"error": str(exc)}) + "\n")
