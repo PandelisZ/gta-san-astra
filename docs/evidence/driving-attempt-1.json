@@ -1,0 +1,23 @@
+{
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "service_tier": "fast",
+  "decision_count": 20,
+  "game_frames_requested": 1200,
+  "elapsed_wall_seconds": 273.177,
+  "decision_latency_median_ms": 7483.209999999999,
+  "capture_latency_median_ms": 97.69,
+  "master_sha256": "6515c4c0c1d1a91b2b0ee14e9c9fbb60db7a1e4731b806b88e0af3bc3c2c1623",
+  "master_bytes": 379905023,
+  "decoded_frame_count": 898,
+  "playback_bytes": 3740303,
+  "recording_duration_seconds": 14.965,
+  "outcome": "Collisions and waiting behind blocked traffic; not collision-free driving.",
+  "subsequent_neutral_calibration": {
+    "requested_frames": 60,
+    "recorded_frames": 60,
+    "key_down_ms": 10,
+    "settle_ms": 90,
+    "master_sha256": "53df132f57ba81d29a6312960eca929b0bc62c4190e7fdae05d9a43900a60655"
+  }
+}

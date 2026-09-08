@@ -31,6 +31,8 @@ def build_report(run_dir: Path, output: Path, annotations: dict | None = None):
     latencies = []
     for event in decisions:
         if "decision" not in event:
+            if event.get("type") not in ("error", "release_error"):
+                continue
             rows.append(f'<article><h2>Run error</h2><pre>{esc(json.dumps(event, indent=2))}</pre></article>')
             continue
         decision = event["decision"]

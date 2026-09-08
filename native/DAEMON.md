@@ -14,7 +14,7 @@ without ending the session. Unknown fields and malformed numeric fields fail.
 {"id":1,"op":"status"}
 {"id":2,"op":"capture","output":"/tmp/frame.png","crop_top":32}
 {"id":3,"op":"input","keys":["k"],"duration_ms":150,"focus":true}
-{"id":4,"op":"step","keys":["k","a"],"frames":5,"frame_interval_ms":35}
+{"id":4,"op":"step","keys":["k","a"],"frames":5,"frame_interval_ms":90}
 {"id":5,"op":"release"}
 ```
 

@@ -6,7 +6,7 @@ The presentation below targets two minutes. Inference time varies; use a short b
 
 ## Prepare before presenting
 
-The current validated path includes capture, frame stepping, Astra vision, and a BIOS menu loop. San Andreas has booted; the stationary-car snapshot and autonomous-driving result remain to be established. Run the driving portion only after the starting scenario is captured and visually checked.
+The stationary-car snapshot has been captured and reloaded. A 20-decision Astra low/Fast run completed with an every-frame recording and game-speed playback. That attempt includes collisions and waiting in traffic; it is an integration demonstration, not successful collision-free driving. See [evidence](EVIDENCE.md).
 
 ```sh
 sh scripts/bootstrap.sh
@@ -36,7 +36,7 @@ Keep the emulator and terminal/report side by side. Keep the window visible, wit
 | Time | Show | Explain |
 | --- | --- | --- |
 | 0:00–0:20 | The game and architecture | Pixels go to Astra; validated buttons go to PCSX2. No game coordinates, speed, collision telemetry, or memory reads reach the policy. |
-| 0:20–0:40 | The paused starting screenshot | The snapshot resets the experiment. The policy never receives its contents. Choose stride 1, 5, or 10; smaller strides offer more frequent observations per game second. |
+| 0:20–0:40 | The paused starting screenshot | The snapshot resets the experiment. The policy never receives its contents. The default stride is 60; choose 1, 5, or 10 for finer control; smaller strides offer more frequent observations per game second. |
 | 0:40–1:30 | A short live model run | Point to each decision's visible rationale and resulting screen. The world pauses during inference. Describe only movement actually observed. |
 | 1:30–2:00 | The evidence report and source | Show input, before/after screenshots, latency, and requested frame counts. Explain what was built with Astra and which driving outcomes still need evaluation. |
 
@@ -45,7 +45,8 @@ Run a short live attempt from the restored scene:
 ```sh
 RUN_DIR="runs/judge-demo-$(date +%Y%m%d-%H%M%S)"
 uv run python scripts/autodrive.py \
-  --model gpt-6-astra --reasoning-effort low --service-tier fast --steps 4 --frame-stride 10 \
+  --model gpt-6-astra --reasoning-effort low --service-tier fast --steps 4 --frame-stride 60 --steer-pulse-frames 12 \
+  --bridge-transport daemon --policy-transport app-server --vision-max-edge 512 \
   --goal "Follow the road ahead and avoid collisions. Stop if the view is unsafe or unclear." \
   --scenario-state .runtime/scenarios/stationary-car/state.p2s \
   --run-dir "$RUN_DIR"
@@ -83,3 +84,28 @@ Those are manual diagnostic commands. Autonomous runs make their own decisions. 
 - **25% technicality:** explain paused stepping, the menu release-sampling edge case, input locking/cleanup, scenario integrity, and the distinction between requested frames and measured game state.
 
 **Close:** “The experiment is inspectable: the same starting scene, a chosen observation cadence, and a record of what Astra saw and pressed. Driving quality comes from the evidence.”
+
+## Continuous-world mode and compact vision inputs
+
+For the closest continuous-world demonstration, first unpause PCSX2 manually with Space. The runner does not toggle pause automatically. Warm transports avoid launching a native bridge and Codex process for every decision:
+
+```sh
+sh native/build-daemon.sh
+uv run python scripts/autodrive.py \
+  --mode realtime --hold-ms 250 \
+  --bridge-transport daemon --policy-transport app-server \
+  --model gpt-6-astra --reasoning-effort low --service-tier fast \
+  --vision-max-edge 640 --vision-quality 65 --vision-colormode rgb \
+  --steps 8 --goal "Drive carefully along the road ahead." \
+  --run-dir "runs/realtime-$(date +%Y%m%d-%H%M%S)"
+```
+
+Each realtime action holds controls for the bounded duration, then releases them. The world continues and the vehicle can coast during inference. A model stop decision releases controls; it does not pause the emulator. Pause with Space when ending the demo. This mode is not a claim of a particular model FPS. The summary reports measured decision, capture, and wall-clock timing. It leaves requested game-frame counts unset because this mode does not frame-step.
+
+Model inputs default to JPEG quality 65 with a 512-pixel longest edge. RGB preserves useful color information such as traffic lights. `--vision-colormode gray` removes color; `contrast` applies optional color autocontrast. Raw PNG screenshots remain the judge-facing evidence, and each processed image records original/output dimensions, bytes, and processing time. JPEG compression reduces transport bytes; it does not by itself guarantee fewer vision tokens. Image dimensions and the model's detail treatment affect token usage.
+
+Use `--mode stepped` with a paused emulator for the fixed-stride experiment. The CLI transports remain available with `--bridge-transport cli --policy-transport cli`.
+
+## One-second predictive bursts
+
+The stepped runner now defaults to 60 frame-advance requests between decisions, approximately one nominal NTSC game second. Driving decisions that steer apply that direction for 12 frames, then hold the remaining controls for 48 frames with steering released. Astra is told this plan before deciding. `--steer-pulse-frames 0` holds steering across the full stride. Every segment is recorded before execution; only the final observation of the burst is sent to the next policy decision. Intermediate raw captures remain available as evidence.

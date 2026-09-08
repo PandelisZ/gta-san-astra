@@ -1,6 +1,6 @@
 # Evidence for judges
 
-These are real emulator captures and final structured Astra decisions from September 8, 2026. They establish the image → model decision → controller input → new image loop in the PS2 BIOS. They do **not** establish successful autonomous driving in GTA.
+These are real emulator captures and final structured Astra decisions from September 8, 2026. They establish the image → model decision → controller input → new image loop in the PS2 BIOS and GTA. The first recorded GTA attempt includes collisions and waiting; it does **not** establish collision-free autonomous driving.
 
 The PNG files below were copied unchanged from recorded runs. Their existing 32-pixel title-bar crop was applied by the capture bridge. [The manifest](evidence/manifest.json) records SHA-256 hashes. Raw local paths, process IDs, private configuration, and model execution transcripts are excluded from this compact package.
 
@@ -60,6 +60,31 @@ The repository contained **6 commits through `a405c93`** when this evidence snap
 
 Development was divided across Codex task scopes for the native macOS bridge, Python controller/MCP, emulator setup and evaluation tooling, and integration/live verification. These are implementation scopes, not independent driving trials or performance scores. The commit count is a fixed historical snapshot and excludes later documentation commits. No private task transcript is included.
 
-## GTA driving gate
+## Recorded GTA attempt
 
-**Pending in this package:** an actual stationary in-car GTA capture, a reproducible saved driving scenario, and a bounded autonomous driving run from that scenario. GTA boot or a title screen alone is insufficient evidence of driving. Add the actual captures and logged actions when those gates are reached; no placeholder screenshot or invented result is included here.
+A stationary red Blista Compact scenario was captured and successfully reloaded. Astra low/Fast then completed 20 decisions using a persistent policy process, a warm native capture daemon, and 512-pixel JPEG observations. It accelerated, braked, and waited behind blocked traffic. The recording shows collisions, including a pedestrian beneath the car. No collision-free or distance score is claimed.
+
+![Actual frame 400 from the recorded attempt](evidence/driving-attempt-1.png)
+
+| Measurement | Observed value |
+| --- | ---: |
+| Decisions | 20 |
+| Requested frame advances | 1,200 |
+| Frames decoded from native recording | 898 |
+| Native recording duration | 14.965 seconds |
+| Wall time | 273.177 seconds |
+| Median model decision latency | 7,483.21 ms |
+| Median capture latency | 97.69 ms |
+
+Requested hotkey pulses are not a reliable delivered-frame count: this run recorded fewer frames than requested. All 898 stored frames were decoded into PNGs; playback preserves the recording timestamps. The lossless master, PNGs, MP4, full decision logs, and HTML report remain in Git-ignored local folders. [Compact result metadata](evidence/driving-attempt-1.json) preserves the measurements and master hash.
+
+Local artifacts:
+
+- `runs/recordings/driving-attempt-1/playback.mp4`
+- `runs/recordings/driving-attempt-1/frames/`
+- `runs/driving-demo-01/report.html`
+
+See [recording instructions](RECORDING.md) to reproduce the capture/export process. The recorded outcome is an integration result, not a claim of wall-clock realtime model control.
+
+
+After this run, frame-key timing was increased to 10 ms held plus 90 ms settling. A separate neutral 60-request calibration recorded and decoded exactly 60 frames. This is one observed calibration, not a guarantee under every load. The original 898-frame attempt is retained unchanged.

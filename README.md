@@ -6,17 +6,17 @@ GTA San Astra is a visual driving experiment inside the PlayStation 2 version of
 
 Astra builds the experiment and becomes its driving policy. The question is concrete: **can a visual model follow a road when pixels are its only sensor?**
 
-[Two-minute demo guide](docs/DEMO.md) · [Recorded evidence](docs/EVIDENCE.md) · [Live validation](TESTING.md) · [Private repository](https://github.com/PandelisZ/gta-san-astra)
+[Two-minute demo guide](docs/DEMO.md) · [Recorded evidence](docs/EVIDENCE.md) · [Live validation](docs/TESTING.md) · [Private repository](https://github.com/PandelisZ/gta-san-astra)
 
 ## What works today
 
 The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, and evidence recorder are implemented. Astra low has navigated the playable San Andreas world, entered a Blista Compact, and prepared a stationary-car snapshot. Live checks also cover screenshot capture, paused stepping at strides 1/5/10, and Astra's screenshot-to-control decisions.
 
-**A cleaner driving location, snapshot replay verification, and latency tuning are in progress.** The repository keeps recorded observations separate from claims about driving quality. No driving benchmark score is claimed.
+**The road baseline has been captured and visually restored, and a 20-decision driving run has completed.** Restoration needed 66 neutral frame-advance requests to redraw an initially black screen; the displayed game clock advanced from 16:56 to 16:57, so this is not a bit-exact replay claim. The repository keeps recorded observations separate from driving-quality judgments. No benchmark score is claimed. The first attempt includes collisions and waiting in traffic. Its native recorder captured 898 frames (14.965 seconds), exported to individual PNGs and a game-speed MP4; see [recording instructions](docs/RECORDING.md).
 
 ![Astra entered a Blista Compact and prepared a stationary starting scene](docs/evidence/gta-stationary-car.png)
 
-*Actual game screenshot after Astra low entered the car. The named snapshot and its checksum are recorded locally; replay verification is the next gate.*
+*Actual captured road baseline: the red Blista Compact at 16:56. The [snapshot evidence](docs/evidence/stationary-car.json) records its checksum and the visual replay check.*
 
 ## The loop
 
@@ -34,15 +34,15 @@ flowchart LR
 
 The policy receives no game memory, vehicle coordinates, speed, collision counters, or emulator debug telemetry. Save states are opaque reset artifacts; their contents never enter the policy prompt. The decision process has shell, browser, MCP/app, and web capabilities disabled.
 
-Controls remain held for the chosen stride. After each action, the bridge releases host keys and captures a screenshot. For a repeated menu confirmation, an empty-controls step lets the game sample the release before the next press. Consecutive driving actions can continue holding acceleration or steering.
+The default driving burst requests 60 frames. Steering, when selected, is applied for the first 12 frames, then released for the remaining 48 while other controls continue. Astra is told this schedule so it can predict the full burst. The bridge releases host keys afterward and supplies the final observation. For a repeated menu confirmation, an empty-controls step lets the game sample the release before the next press. Consecutive driving actions can continue holding acceleration or steering.
 
 ## Four judging criteria, one inspectable experiment
 
 | Criterion | Weight | What this project demonstrates |
 | --- | ---: | --- |
 | GPT-6 Astra in development | 25% | Astra acted as the primary builder and coordinated three focused subagents across native input/capture, Python controls/MCP, and emulator integration. The implementation and fixes are recorded in Git history. |
-| GPT-6 Astra in the project | 25% | Astra is the visual policy on every autonomous decision: screenshots in, validated PS2 controls out. Live vision and BIOS control evidence exercise this path. |
-| Live demo | 25% | Show the paused emulator, one observation/action loop, a chosen stride, and the resulting evidence. A saved starting scene enables repeatable driving attempts once prepared. |
+| GPT-6 Astra in the project | 25% | Astra is the visual policy on every autonomous decision: screenshots in, validated PS2 controls out. Live vision, BIOS navigation, and the recorded driving attempt exercise this path. |
+| Live demo | 25% | Show the paused emulator, one observation/action loop, a chosen stride, and the resulting evidence. A saved road scene and documented visual reset provide a starting point for repeated attempts. |
 | Technicality | 25% | Native ScreenCaptureKit capture and keyboard injection, frame-step synchronization, strict decision validation, process locking, cleanup, CLI/MCP interfaces, and recorded evaluation artifacts. |
 
 These are the judging categories, not claimed scores. Driving quality must be judged from the recorded game behavior.
@@ -71,7 +71,7 @@ uv run san-astra --frame-stride 5 step --throttle   # request every fifth frame
 uv run san-astra --frame-stride 10 step --throttle  # request every tenth frame
 ```
 
-Any stride from 1 to 120 is supported. `step --frames N` overrides it for one action. The autonomous runner fixes the stride for the entire run; Astra cannot change it.
+Any stride from 1 to 120 is supported; the driving runner defaults to 60. `step --frames N` overrides it for one action. The autonomous runner fixes the total stride throughout a run, including both steering segments. `--steer-pulse-frames 0` holds steering for the full burst.
 
 At NTSC 59.94 VSyncs/second, strides 1/5/10 nominally yield 59.94/11.99/5.99 observations per **game second**. Wall-clock cadence includes model and bridge latency. Requested VSyncs are not independent proof of delivered frames, and consecutive screenshots may contain the same rendered game image.
 
@@ -80,13 +80,21 @@ At NTSC 59.94 VSyncs/second, strides 1/5/10 nominally yield 59.94/11.99/5.99 obs
 Start from a paused driving scene. The runner defaults to authenticated Codex with `gpt-6-astra`, low reasoning effort, and fast mode, preferring the app-bundled CLI; no separate API key is needed. `SAN_ASTRA_CODEX` overrides the executable.
 
 ```sh
+sh native/build-daemon.sh
 RUN_DIR="runs/demo-$(date +%Y%m%d-%H%M%S)"
 uv run python scripts/autodrive.py \
-  --model gpt-6-astra --reasoning-effort low --service-tier fast --steps 20 --frame-stride 10 \
+  --model gpt-6-astra --reasoning-effort low --service-tier fast \
+  --policy-transport app-server --bridge-transport daemon \
+  --steps 20 --frame-stride 60 --steer-pulse-frames 12 \
+  --vision-max-edge 512 --vision-quality 65 --vision-colormode rgb \
   --goal "Follow the road, stay in the lane, and avoid collisions." \
   --run-dir "$RUN_DIR"
 uv run python scripts/report.py "$RUN_DIR"
 ```
+
+The demonstrated configuration uses warm native-daemon and Codex app-server transports with 512-pixel RGB JPEG inputs. JPEG reduces bytes sent; fewer bytes alone do not establish lower vision-token usage. Raw PNGs remain available as evidence. The portable fallbacks are `--bridge-transport cli --policy-transport cli`.
+
+The completed 20-decision run requested 1,200 emulated frames and took 273.18 wall-clock seconds. Median model-decision latency was 7.48 seconds, with variable multi-second calls. This is a paused simulation experiment, not realtime wall-clock autonomous driving. See [the measured run summary](docs/TESTING.md).
 
 The runner stops at the decision limit, on a model stop decision, or on failure. Controls are released on exit, including Ctrl-C. Explicit release is also available:
 
@@ -105,7 +113,7 @@ uv run python scripts/scenario.py capture stationary-car --iso "$GAME_ISO"
 uv run python scripts/scenario.py launch stationary-car --iso "$GAME_ISO"
 ```
 
-The snapshot includes an integrity checksum, screenshot, and manifest. Existing names require `--replace` to overwrite. `autodrive.py --scenario-state .runtime/scenarios/stationary-car/state.p2s` records provenance only; use the scenario launcher to actually load the state.
+The snapshot includes an integrity checksum, screenshot, and manifest. The current replay check restored the visible scene after 66 neutral frame-advance requests; those redraw steps also advanced the game clock, so comparisons must record that preparation. Existing names require `--replace` to overwrite. `autodrive.py --scenario-state .runtime/scenarios/stationary-car/state.p2s` records provenance only; use the scenario launcher to actually load the state.
 
 ## Interfaces and evidence
 
@@ -141,6 +149,6 @@ uv run --extra test pytest
 python3 native/smoke.py
 ```
 
-Tests cover input bounds, locks, cleanup, cadence, decision validation, scenario handling, MCP responses, and evidence rendering. Native smoke checks require a visible running PCSX2 window. Live results and remaining gates are documented in [TESTING.md](TESTING.md).
+Tests cover input bounds, locks, cleanup, cadence, decision validation, scenario handling, MCP responses, and evidence rendering. Native smoke checks require a visible running PCSX2 window. Live results and remaining gates are documented in [docs/TESTING.md](docs/TESTING.md).
 
 Implementation references: [PCSX2 hotkeys](https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/Hotkeys.cpp), [PCSX2 frame stepping](https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/VMManager.cpp), [Codex noninteractive execution](https://developers.openai.com/codex/noninteractive/).

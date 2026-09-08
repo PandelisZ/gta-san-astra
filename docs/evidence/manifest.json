@@ -16,6 +16,11 @@
       "artifact": "bios-daylight-mcp.png",
       "source_run": "runs/mcp-smoke",
       "sha256": "f1c68bb8cf02aef0108e11c23e039809f4a03e24f358bb325301659749f7bc63"
+    },
+    {
+      "artifact": "gta-stationary-car.png",
+      "source_run": ".runtime/scenarios/stationary-car",
+      "sha256": "3f59706358a11f83412887fc4f4ad6dc5719ed87b4e4dab14fc48328ed2952e1"
     }
   ],
   "development_snapshot": {

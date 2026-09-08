@@ -11,7 +11,7 @@ def main():
     parser.add_argument("--run-dir", type=Path)
     parser.add_argument("--window-id", type=int)
     parser.add_argument("--crop-top", type=int, help="Remove top window pixels; default 32 for macOS titlebar, use 0 for fullscreen")
-    parser.add_argument("--frame-stride", type=int, help="Default observation interval in emulated VSync requests (1–120); default 5")
+    parser.add_argument("--frame-stride", type=int, help="Default observation interval in emulated VSync requests (1–120); default 60")
     subs = parser.add_subparsers(dest="command", required=True)
     for name in ("doctor", "observe", "release", "mcp"):
         subs.add_parser(name)
@@ -50,4 +50,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

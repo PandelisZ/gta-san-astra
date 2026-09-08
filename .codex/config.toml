@@ -7,4 +7,4 @@ tool_timeout_sec = 30
 [mcp_servers.san_astra.env]
 SAN_ASTRA_PCSX2_INI = "/Users/pz/w/oaihackathon/.runtime/pcsx2/inis/PCSX2.ini"
 SAN_ASTRA_RUN_DIR = "/Users/pz/w/oaihackathon/runs/mcp"
-SAN_ASTRA_FRAME_STRIDE = "5"
+SAN_ASTRA_FRAME_STRIDE = "60"

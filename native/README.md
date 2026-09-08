@@ -13,7 +13,7 @@ native/astra-bridge windows
 native/astra-bridge focus
 native/astra-bridge capture --output /absolute/frame.png [--window-id 123] [--crop-top 32]
 native/astra-bridge input --keys w,a --duration-ms 100 [--focus]
-native/astra-bridge step --keys w --frames 10 --frame-key n --frame-interval-ms 35
+native/astra-bridge step --keys w --frames 10 --frame-key n --frame-interval-ms 90
 native/astra-bridge step --keys '' --frames 1
 native/astra-bridge release [--keys w,a,s,d]
 ```
@@ -26,8 +26,8 @@ chrome); zero is the default, and no title-bar size is assumed. No game state, m
 
 Input sends CGEvents specifically to the emulator PID. Timed input is limited to
 0–10000 ms; `step` focuses PCSX2 and advances 1–120 paused frames by pressing and
-releasing the configured frame advance key. Each frame key press lasts 5 ms,
-followed by the requested 10–1000 ms interval (default 35). This needs PCSX2's
+releasing the configured frame advance key. Each frame key press lasts 10 ms,
+followed by the requested 10–1000 ms interval (default 90). This needs PCSX2's
 FrameAdvance hotkey configured to N (or the supplied key), with gameplay paused
 before starting. The returned `frames` count means frame-advance requests sent,
 not independently measured rendered frames. `durationMs` and

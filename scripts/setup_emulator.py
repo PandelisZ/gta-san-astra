@@ -86,6 +86,11 @@ def prepare(source: Path, target: Path) -> Path:
         "Folders": folders,
         "Filenames": {"BIOS": bios.name},
         "EmuCore": {"EnablePINE": "false", "EnableCheats": "false"},
+        # Installed PCSX2 FFmpeg exposes FFV1 + bgr0 (pixel-format 121): lossless display frames.
+        "EmuCore/GS": {"EnableVideoCapture": "true", "EnableAudioCapture": "false",
+                       "CaptureContainer": "mkv", "VideoCaptureCodec": "ffv1",
+                       "VideoCaptureFormat": "121", "VideoCaptureAutoResolution": "true",
+                       "EnableVideoCaptureParameters": "false", "OrganizeVideoCaptureByGame": "false"},
         "Pad1": {"Type": "DualShock2", **{button: "Keyboard/" + key for button, key in KEYBOARD.items()}},
     }
     # Remove custom conflicting hotkeys before installing explicit experiment bindings.
@@ -94,7 +99,7 @@ def prepare(source: Path, target: Path) -> Path:
                    ToggleFullscreen="Keyboard/Alt & Keyboard/Return",
                    SaveStateToSlot="Keyboard/F1", LoadStateFromSlot="Keyboard/F3",
                    NextSaveStateSlot="Keyboard/F2", Screenshot="Keyboard/F8",
-                   OpenPauseMenu="Keyboard/Escape")
+                   OpenPauseMenu="Keyboard/Escape", ToggleVideoCapture="Keyboard/F12")
     settings["Hotkeys"] = hotkeys
     for section, values in settings.items():
         if not config.has_section(section):

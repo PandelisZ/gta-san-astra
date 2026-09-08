@@ -61,17 +61,22 @@ def build_command(model: str, images: list[Path], output: Path, cwd: Path, *,
     return command + ["-"]
 
 
-def make_prompt(goal: str, history: list[dict], image_count: int) -> str:
+def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "stepped") -> str:
+    timing = ("The emulator is paused while you decide. Each frame is one emulated VSync "
+              "(approximately 1/60 second for NTSC), not necessarily a distinct rendered game frame. "
+              if mode == "stepped" else
+              "The emulator runs continuously, including while you decide. Your screenshot becomes older "
+              "during inference. Controls are held briefly, then released, and the vehicle coasts during inference. "
+              "Do not assume the world stopped at the screenshot. Favor simple conservative controls. ")
     return (
         "You are Astra driving GTA San Andreas in a PS2 emulator for a visual autonomy evaluation. "
         "Use ONLY the attached game screenshots and your own prior actions below. Do not call tools, "
         "inspect files, search the web, or obtain game telemetry. Return the required JSON decision. "
         f"There are {image_count} screenshots, oldest first; the final one is current. "
-        "The emulator is paused while you decide. Each frame is one emulated VSync (approximately "
-        "1/60 second for NTSC), not necessarily a distinct rendered game frame. "
+        + timing +
         "Controls: cross accelerates; square brakes/reverses; steer_left/steer_right steer; r1 is "
         "handbrake; move_forward/move_backward move on foot; triangle enters/exits a vehicle; start pauses the game; d-pad navigates menus; "
-        "cross confirms. Empty buttons coasts. The caller controls the fixed frame stride. "
+        "cross confirms. Empty buttons coasts. The caller controls the action duration. "
         "For menu confirmations/one-shot actions, follow a press with one empty-buttons decision so "
         "the game samples release before pressing the same button again. Driving continuous held "
         "controls do not need neutral gaps. Host key release between paused steps is only sampled "
@@ -86,7 +91,7 @@ def make_prompt(goal: str, history: list[dict], image_count: int) -> str:
 
 def decide(model: str, images: list[Path], history: list[dict], goal: str,
            directory: Path, index: int, timeout: float, runner: Callable = subprocess.run, *,
-           reasoning_effort: str = "low", service_tier: str = "fast") -> tuple[dict, float]:
+           reasoning_effort: str = "low", service_tier: str = "fast", mode: str = "stepped") -> tuple[dict, float]:
     output = directory / f"decision-{index:04d}.json"
     output.unlink(missing_ok=True)  # A failed run must never reuse a prior decision.
     # No project instructions or unrelated files in the model's working directory.
@@ -96,7 +101,7 @@ def decide(model: str, images: list[Path], history: list[dict], goal: str,
     try:
         result = runner(build_command(model, images, output, model_cwd,
                                       reasoning_effort=reasoning_effort, service_tier=service_tier),
-                        input=make_prompt(goal, history, min(2, len(images))),
+                        input=make_prompt(goal, history, min(2, len(images)), mode),
                         text=True, capture_output=True, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         for name, content in (("stdout", exc.stdout), ("stderr", exc.stderr)):
@@ -114,41 +119,92 @@ def decide(model: str, images: list[Path], history: list[dict], goal: str,
 
 
 def run(controller, *, steps: int, goal: str, model: str, directory: Path,
-        timeout: float = 120, frame_stride: int = 5, emulator_fps: float = 59.94,
+        timeout: float = 120, frame_stride: int = 60, emulator_fps: float = 59.94,
         decision_fn: Callable = decide, scenario_state: str | None = None,
-        reasoning_effort: str = "low", service_tier: str = "fast") -> list[dict]:
+        reasoning_effort: str = "low", service_tier: str = "fast",
+        mode: str = "stepped", hold_ms: int = 150, vision_max_edge: int | None = None,
+        vision_quality: int = 65, vision_colormode: str = "rgb",
+        policy_transport: str = "cli", bridge_transport: str = "cli",
+        steer_pulse_frames: int = 12) -> list[dict]:
     if type(frame_stride) is not int or not 1 <= frame_stride <= 120:
         raise ValueError("frame_stride must be an integer between 1 and 120")
+    if type(steer_pulse_frames) is not int or not 0 <= steer_pulse_frames <= 120:
+        raise ValueError("steer_pulse_frames must be an integer between 0 and 120")
     if not 0 < emulator_fps < float("inf"):
         raise ValueError("emulator_fps must be finite and positive")
+    if mode not in ("stepped", "realtime") or type(hold_ms) is not int or not 50 <= hold_ms <= 2000:
+        raise ValueError("mode must be stepped or realtime; hold_ms must be 50..2000")
     if decision_fn is decide:
-        decision_fn = partial(decide, reasoning_effort=reasoning_effort, service_tier=service_tier)
+        decision_fn = partial(decide, reasoning_effort=reasoning_effort, service_tier=service_tier, mode=mode)
     directory.mkdir(parents=True, exist_ok=True)
     started_at, started_clock = time.time(), time.monotonic()
     manifest = {"model": model, "reasoning_effort": reasoning_effort, "service_tier": service_tier, "goal": goal, "frame_stride": frame_stride,
-                "emulator_fps": emulator_fps, "steps_limit": steps, "scenario_state": scenario_state,
+                "emulator_fps": emulator_fps, "steer_pulse_frames": steer_pulse_frames, "steps_limit": steps, "scenario_state": scenario_state,
                 "scenario_state_note": "Provenance label only; runner does not load this state",
-                "started_at": started_at, "status": "running"}
+                "started_at": started_at, "status": "running", "mode": mode,
+                "hold_ms": hold_ms if mode == "realtime" else None,
+                "policy_transport": policy_transport, "bridge_transport": bridge_transport,
+                "vision_max_edge": vision_max_edge, "vision_quality": vision_quality,
+                "vision_colormode": vision_colormode}
     (directory / "run_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     outcome, error, release_error = "completed", None, None
     actions_requested, actions_completed = 0, 0
+    frames_requested, frames_completed = 0, 0
     latencies = []
     history: list[dict] = []
     images: list[Path] = []
+    raw_images: list[Path] = []
+    prepared: list[dict] = []
+    capture_latencies = []
+    action_latencies = []
     log = directory / "decisions.jsonl"
     def record(event):
         with log.open("a") as handle:
             handle.write(json.dumps(event) + "\n")
+    def add_observation(observation):
+        raw = Path(observation["image_path"])
+        raw_images.append(raw)
+        if isinstance(observation.get("capture_ms"), (int, float)):
+            capture_latencies.append(observation["capture_ms"])
+        if vision_max_edge is not None:
+            from san_astra.frames import prepare_frame
+            metadata = prepare_frame(raw, directory / "model-frames", max_edge=vision_max_edge,
+                                     quality=vision_quality, colormode=vision_colormode)
+        else:
+            metadata = {"source_image_path": str(raw), "image_path": str(raw), "processing_ms": 0}
+        prepared.append(metadata)
+        images.append(Path(metadata["image_path"]))
+        del images[:-2], raw_images[:-2], prepared[:-2]
+        record({"type": "model_frame", **metadata})
     try:
-        images.append(Path(controller.observe()["image_path"]))
+        add_observation(controller.observe())
         for index in range(steps):
             decision, latency = decision_fn(model, images[-2:], history,
-                goal + f" Each action lasts {frame_stride} VSyncs ({frame_stride / emulator_fps:.3f} game seconds).",
+                goal + (f" Each action lasts {frame_stride} VSyncs ({frame_stride / emulator_fps:.3f} game seconds)."
+                        + (f" For driving decisions, left/right steering is applied only for the first {min(steer_pulse_frames, frame_stride)} frames, "
+                           f"then released for the remaining {max(0, frame_stride-steer_pulse_frames)} frames; all other buttons remain held. "
+                           "Predict the vehicle path across this entire burst before choosing controls."
+                           if steer_pulse_frames else " Steering remains held for the entire burst.")
+                        if mode == "stepped" else f" Each action holds for {hold_ms} milliseconds, then releases."),
                 directory, index, timeout)
             validate_decision(decision)  # Validate even when a custom decision function is supplied.
+            segments = []
+            if not decision["stop"]:
+                if mode == "stepped":
+                    buttons = list(decision["buttons"])
+                    pulse = min(steer_pulse_frames, frame_stride)
+                    if decision["scene"] == "driving" and 0 < pulse < frame_stride and any(b in buttons for b in ("steer_left", "steer_right")):
+                        segments = [{"buttons": buttons, "frames": pulse},
+                                    {"buttons": [b for b in buttons if b not in ("steer_left", "steer_right")], "frames": frame_stride - pulse}]
+                    else:
+                        segments = [{"buttons": buttons, "frames": frame_stride}]
+                else:
+                    segments = [{"buttons": list(decision["buttons"]), "duration_ms": hold_ms}]
             event = {"step": index, "timestamp": time.time(), "decision": decision,
                      "decision_latency_ms": latency, "frame_stride": frame_stride,
-                     "nominal_observations_per_game_second": emulator_fps / frame_stride, "images": [str(p) for p in images[-2:]]}
+                     "nominal_observations_per_game_second": emulator_fps / frame_stride if mode == "stepped" else None,
+                     "mode": mode, "action_plan": segments, "images": [str(p) for p in raw_images[-2:]],
+                     "model_images": [str(p) for p in images[-2:]], "model_frame_metadata": list(prepared)}
             record(event)
             print(json.dumps(event), flush=True)
             history.append(decision)
@@ -157,10 +213,17 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                 outcome = "stopped"
                 break
             actions_requested += 1
-            result = controller.step(buttons=decision["buttons"], frames=frame_stride)
+            action_started = time.monotonic()
+            if mode == "stepped":
+                for segment in segments:
+                    frames_requested += segment["frames"]
+                    result = controller.step(buttons=segment["buttons"], frames=segment["frames"])
+                    frames_completed += segment["frames"]
+            else:
+                result = controller.action(buttons=decision["buttons"], duration_ms=hold_ms)
+            action_latencies.append((time.monotonic() - action_started) * 1000)
             actions_completed += 1
-            images.append(Path(result["observation"]["image_path"]))
-            images = images[-2:]
+            add_observation(result["observation"])
     except BaseException as exc:
         outcome, error = "error", str(exc)
         record({"type": "error", "timestamp": time.time(), "error": error})
@@ -176,10 +239,14 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                    "elapsed_wall_seconds": round(time.monotonic() - started_clock, 3),
                    "decision_count": len(history), "action_count": actions_completed,
                    "actions_requested": actions_requested,
-                   "game_frames_requested": actions_requested * frame_stride,
-                   "frames_in_completed_actions": actions_completed * frame_stride,
+                   "game_frames_requested": frames_requested if mode == "stepped" else None,
+                   "frames_in_completed_actions": frames_completed if mode == "stepped" else None,
+                   "realtime_hold_ms_requested": actions_requested * hold_ms if mode == "realtime" else None,
                    "frames_note": "Requested VSync counts, not independent game-state measurements",
                    "decision_latency_median_ms": median(latencies) if latencies else None,
+                   "capture_latency_median_ms": median(capture_latencies) if capture_latencies else None,
+                   "action_and_capture_median_ms": median(action_latencies) if action_latencies else None,
+                   "measured_decisions_per_wall_second": len(history) / max(time.monotonic() - started_clock, 0.001),
                    "error": error or (str(release_error) if release_error is not None else None),
                    "release_error": str(release_error) if release_error is not None else None}
         (directory / "run_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
@@ -192,6 +259,13 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--mode", choices=["stepped", "realtime"], default="stepped")
+    parser.add_argument("--hold-ms", type=int, default=150, help="Realtime bounded input hold, followed by coasting during inference")
+    parser.add_argument("--bridge-transport", choices=["cli", "daemon"], default="daemon")
+    parser.add_argument("--policy-transport", choices=["cli", "app-server"], default="app-server")
+    parser.add_argument("--vision-max-edge", type=int, default=512)
+    parser.add_argument("--vision-quality", type=int, default=65)
+    parser.add_argument("--vision-colormode", choices=["rgb", "gray", "contrast"], default="rgb")
     parser.add_argument("--steps", type=int, default=20)
     parser.add_argument("--goal", default="Drive safely along the road, avoiding collisions.")
     parser.add_argument("--model", default="gpt-6-astra")
@@ -200,16 +274,40 @@ def main():
     parser.add_argument("--run-dir", type=Path, default=Path("runs") / time.strftime("autodrive-%Y%m%d-%H%M%S"))
     parser.add_argument("--scenario-state", help="Optional state path provenance label; does not load a save state")
     parser.add_argument("--timeout", type=float, default=120)
-    parser.add_argument("--frame-stride", type=int, default=5, help="Observe every N emulated VSyncs (1..120); game pauses during model latency")
+    parser.add_argument("--frame-stride", type=int, default=60, help="Observe every N emulated VSyncs (1..120); game pauses during model latency")
+    parser.add_argument("--steer-pulse-frames", type=int, default=12, help="Steering frames per driving burst; 0 holds steering for the full stride")
     parser.add_argument("--emulator-fps", type=float, default=59.94, help="Nominal VSync rate, for logging game-time observation cadence")
     args = parser.parse_args()
     if not 1 <= args.steps <= 10000 or args.timeout <= 0 or not 1 <= args.frame_stride <= 120 or not 0 < args.emulator_fps < float("inf"):
         parser.error("steps must be 1..10000, stride 1..120, timeout and emulator-fps positive")
+    from contextlib import ExitStack
     from san_astra.control import Controller
-    run(Controller(run_dir=args.run_dir), steps=args.steps, goal=args.goal, model=args.model,
-        directory=args.run_dir.resolve(), timeout=args.timeout, frame_stride=args.frame_stride,
-        emulator_fps=args.emulator_fps, scenario_state=args.scenario_state,
-        reasoning_effort=args.reasoning_effort, service_tier=args.service_tier)
+    with ExitStack() as stack:
+        if args.bridge_transport == "daemon":
+            from san_astra.daemon import DaemonController
+            controller = DaemonController(run_dir=args.run_dir)
+            stack.callback(controller.close)
+        else:
+            controller = Controller(run_dir=args.run_dir)
+        decision_fn = decide
+        if args.policy_transport == "app-server":
+            from san_astra.policy import CodexPolicy
+            policy = stack.enter_context(CodexPolicy(model=args.model, directory=args.run_dir.resolve(),
+                timeout=args.timeout, effort=args.reasoning_effort, service_tier=args.service_tier))
+            def decision_fn(model, images, history, goal, directory, index, timeout):
+                value, latency = policy.decide(images=images, prompt=make_prompt(goal, history, len(images), args.mode),
+                                                output_schema=json.loads(SCHEMA.read_text()))
+                (directory / f"decision-{index:04d}.json").write_text(json.dumps(value) + "\n")
+                return validate_decision(value), latency
+        run(controller, steps=args.steps, goal=args.goal, model=args.model,
+            directory=args.run_dir.resolve(), timeout=args.timeout, frame_stride=args.frame_stride,
+            emulator_fps=args.emulator_fps, scenario_state=args.scenario_state,
+            reasoning_effort=args.reasoning_effort, service_tier=args.service_tier,
+            mode=args.mode, hold_ms=args.hold_ms, vision_max_edge=args.vision_max_edge,
+            vision_quality=args.vision_quality, vision_colormode=args.vision_colormode,
+            policy_transport=args.policy_transport, bridge_transport=args.bridge_transport,
+            decision_fn=decision_fn, steer_pulse_frames=args.steer_pulse_frames)
+
 
 
 if __name__ == "__main__":

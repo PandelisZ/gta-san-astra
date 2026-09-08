@@ -68,7 +68,7 @@ class Controller:
         self.crop_top = crop_top if crop_top is not None else int(os.environ.get("SAN_ASTRA_CROP_TOP", "32"))
         if isinstance(self.crop_top, bool) or not isinstance(self.crop_top, int) or not 0 <= self.crop_top <= 4096:
             raise ValueError("crop_top must be an integer between 0 and 4096")
-        self.default_frame_stride = frame_stride if frame_stride is not None else int(os.environ.get("SAN_ASTRA_FRAME_STRIDE", "5"))
+        self.default_frame_stride = frame_stride if frame_stride is not None else int(os.environ.get("SAN_ASTRA_FRAME_STRIDE", "60"))
         if isinstance(self.default_frame_stride, bool) or not isinstance(self.default_frame_stride, int) or not 1 <= self.default_frame_stride <= 120:
             raise ValueError("frame_stride must be an integer between 1 and 120")
         self.bridge = Path(bridge or os.environ.get("SAN_ASTRA_BRIDGE", Path(__file__).resolve().parents[2] / "native/astra-bridge"))
@@ -205,7 +205,7 @@ class Controller:
                 else:
                     event.update(type="step", frames=frames)
                     event.pop("duration_ms")
-                    event["native"] = self.call("step", "--keys", ",".join(keys), "--frames", str(frames), "--frame-key", "n", "--frame-interval-ms", "35")
+                    event["native"] = self.call("step", "--keys", ",".join(keys), "--frames", str(frames), "--frame-key", "n", "--frame-interval-ms", "90")
             except BaseException as exc:
                 event["error"] = str(exc)
                 # A failed or interrupted bridge may leave remapped keys down.

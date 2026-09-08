@@ -90,7 +90,7 @@ func run() async throws {
             guard let key = keyMap[String(name).lowercased()] else { throw BridgeError("Unknown key: \(name)") }; return key
         }
         let frameCount = Int(option("--frames") ?? "1") ?? -1
-        let frameInterval = Int(option("--frame-interval-ms") ?? "35") ?? -1
+        let frameInterval = Int(option("--frame-interval-ms") ?? "90") ?? -1
         guard command != "step" || ((1...120).contains(frameCount) && (10...1000).contains(frameInterval)) else { throw BridgeError("frames must be 1..120 and frame-interval-ms 10..1000") }
         guard let frameKey = keyMap[(option("--frame-key") ?? "n").lowercased()] else { throw BridgeError("Unknown frame key") }
         guard command != "step" || !keys.contains(frameKey) else { throw BridgeError("Frame advance key cannot also be held as a control") }
@@ -114,7 +114,7 @@ func run() async throws {
                 if frame > 0 { for key in keys { try active.set(key, down:false) } }
                 for key in keys { try active.set(key, down:true) }
                 try active.set(frameKey, down:true)
-                try await Task.sleep(for:.milliseconds(5))
+                try await Task.sleep(for:.milliseconds(10))
                 try active.set(frameKey, down:false)
                 try await Task.sleep(for:.milliseconds(frameInterval))
             }
@@ -124,7 +124,7 @@ func run() async throws {
         }
         active.clear()
         let elapsedMs = Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000
-        let requestedMs = command == "step" ? frameCount * (frameInterval + 5) : duration
+        let requestedMs = command == "step" ? frameCount * (frameInterval + 10) : duration
         output(["ok":true,"keys":names,"durationMs":requestedMs,"requestedDurationMs":requestedMs,"elapsedMs":elapsedMs,"frames":command == "step" ? frameCount : 0,"pid":app.processIdentifier])
     case "release":
         let names = option("--keys") ?? "w,a,s,d,i,j,k,l,q,e,1,2,3,4,up,down,left,right,enter,backspace,t,f,g,h"

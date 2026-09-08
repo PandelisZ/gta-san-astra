@@ -1,10 +1,18 @@
 {
   "name": "stationary-car",
-  "created_at": 1788890306.970454,
-  "state_sha256": "5c53a345a15ed42570ee6ef73b6311ada31e4517a852697c0ea2625870513c8e",
-  "state_bytes": 16883868,
+  "created_at": 1788892240.053736,
+  "state_sha256": "c866d417a32f802ee4fa5f4196ad1a07539cc067b8fedd3f2ced805a4b34a25b",
+  "state_bytes": 17987606,
   "game_filename": "Grand Theft Auto - San Andreas (USA) (v3.00).iso",
   "pixel_only_invariant": "Savestate is an opaque reset artifact. Never parse its contents or provide it to the driving policy. Policy observations are game screenshots only.",
   "screenshot": "gta-stationary-car.png",
-  "replay_verified": false
+  "replay_verified": true,
+  "replay_verification": {
+    "method": "Quit PCSX2 and launch the named scenario with --iso, then visually inspect the restored car scene.",
+    "neutral_frame_advance_requests_before_redraw": 66,
+    "baseline_game_clock": "16:56",
+    "restored_game_clock_after_redraw": "16:57",
+    "bit_exact_replay_claimed": false,
+    "note": "Initial GS output was black. Neutral stepping restored the display and also advanced simulation time."
+  }
 }

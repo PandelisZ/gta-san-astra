@@ -24,7 +24,7 @@ def create_server(controller: Controller | None = None):
 
     @server.tool()
     def step(buttons: list[str] | None = None, frames: int | None = None, throttle: bool = False, brake: bool = False, steer: str = "center", handbrake: bool = False):
-        """Preferred driving loop: hold controls and advance 1–120 paused frames, release, return screenshot. Requires prepared PCSX2 profile with FrameAdvance=N and paused emulation. Game remains paused while you reason. Omit frames to use configured observation stride (default 5). Frames count VSync requests, not a guaranteed FPS. Steering is digital left/center/right."""
+        """Preferred driving loop: hold controls and advance 1–120 paused frames, release, return screenshot. Requires prepared PCSX2 profile with FrameAdvance=N and paused emulation. Game remains paused while you reason. Omit frames to use configured observation stride (default 60). Frames count VSync requests, not a guaranteed FPS. Steering is digital left/center/right."""
         return frame_result(controller.step(buttons, frames, throttle, brake, steer, handbrake))
 
     @server.tool()
