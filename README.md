@@ -10,7 +10,7 @@ Astra builds the experiment and becomes its driving policy. The question is conc
 
 ## What works today
 
-The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, and evidence recorder are implemented. Astra low has navigated the playable San Andreas world, entered a Blista Compact, and prepared a stationary-car snapshot. Live checks also cover screenshot capture, paused stepping at strides 1/5/10, and Astra's screenshot-to-control decisions.
+The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, and evidence recorder are implemented. Four isolated emulator streams now compare autonomous driving policies from the same saved scene. The current wave has observed first right turns but has not proved a full block return. Concurrent runs also exposed a deficit between requested advances and recorded frames; [the timing investigation](docs/streams/timing-wave02-review.md) separates requested advances from recorded frames. Astra low has navigated the playable San Andreas world, entered a Blista Compact, and prepared a stationary-car snapshot. Live checks also cover screenshot capture, paused stepping at strides 1/5/10, and Astra's screenshot-to-control decisions.
 
 **The road baseline has been captured and visually restored, and a 20-decision driving run has completed.** Restoration needed 66 neutral frame-advance requests to redraw an initially black screen; the displayed game clock advanced from 16:56 to 16:57, so this is not a bit-exact replay claim. The repository keeps recorded observations separate from driving-quality judgments. No benchmark score is claimed. The first attempt includes collisions and waiting in traffic. Its native recorder captured 898 frames (14.965 seconds), exported to individual PNGs and a game-speed MP4; see [recording instructions](docs/RECORDING.md). Completing a full block and visually returning to the starting road is the current goal; that route has not yet been proven.
 
@@ -56,10 +56,10 @@ The state stays in `.runtime/scenarios/quiet-tahoma/`, outside Git. [Snapshot me
 ```mermaid
 flowchart LR
     G[PCSX2 / San Andreas] -->|Rendered window pixels| S[ScreenCaptureKit screenshot]
-    S -->|Latest two images + own action history| A[GPT-6 Astra]
-    A -->|Control phases + visual route note + stop| V[Validate decision]
+    S -->|Recent images + optional start reference + action history| A[GPT-6 Astra]
+    A -->|Control phases + route and motion notes + stop| V[Validate decision]
     V -->|Allowed controls, fixed frame stride| B[Native macOS input bridge]
-    B -->|Hold controls, advance N VSyncs, release| G
+    B -->|Hold controls, request N VSyncs, release| G
     G -.->|Paused between decisions| G
     V --> E[Decisions, timings, screenshots]
     E --> R[Evidence gallery + manual evaluation]
@@ -69,7 +69,7 @@ The policy receives no game memory, vehicle coordinates, speed, collision counte
 
 The default driving burst requests 60 frames. Astra now chooses 1–6 sequential control phases whose frame counts must add up to that burst: for example, brake for 8 frames, coast for 12, then accelerate and steer for 40. Each phase selects its own buttons and duration. The validator rejects invalid controls, simultaneous acceleration/braking within a phase, and totals that differ from the fixed burst. The bridge supplies the final observation to the next decision. For a repeated menu confirmation, an empty-controls step lets the game sample the release before the next press. Consecutive driving actions can continue holding acceleration or steering.
 
-Astra also maintains a short `route_note`: starting landmark, current leg, visually completed turns, next landmark, and observed vehicle response. The note is carried into later decisions alongside recent action history. It is the model’s own visual memory, not telemetry. A commanded turn does not count as a completed turn; an around-the-block success requires seeing the starting landmark and road orientation again.
+Astra maintains a short `route_note` for landmarks and visually completed turns, plus a separate `dynamics_note` for observed travel, steering response, and prediction errors. Both notes are carried into later decisions alongside recent action history. An optional `--start-reference` image keeps the original landmark visible for loop verification. It is the model’s own visual memory, not telemetry. A commanded turn does not count as a completed turn; an around-the-block success requires seeing the starting landmark and road orientation again.
 
 ## Four judging criteria, one inspectable experiment
 
