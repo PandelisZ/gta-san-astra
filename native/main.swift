@@ -100,10 +100,12 @@ final class BurstSession: @unchecked Sendable {
     var held: [CGKeyCode] = []
     var running = false
     var finished = false
-    init(pid: pid_t) { self.pid = pid }
-    func togglePause() throws {
-        try event(49, down: true, pid: pid)
-        defer { try? event(49, down: false, pid: pid) }
+    let continuous: Bool
+    init(pid: pid_t, continuous: Bool = false) { self.pid = pid; self.continuous = continuous }
+    func toggleActionSpeed() throws {
+        let key: CGKeyCode = continuous ? 48 : 49
+        try event(key, down: true, pid: pid)
+        defer { try? event(key, down: false, pid: pid) }
         usleep(10_000)
     }
     func start(_ keys: [CGKeyCode]) throws -> UInt64 {
@@ -113,7 +115,7 @@ final class BurstSession: @unchecked Sendable {
         // Set before posting so cleanup also covers a partially issued toggle.
         running = true
         let started = DispatchTime.now().uptimeNanoseconds
-        try togglePause()
+        try toggleActionSpeed()
         return started
     }
     func transition(_ keys: [CGKeyCode]) throws {
@@ -128,10 +130,10 @@ final class BurstSession: @unchecked Sendable {
         guard !finished else { return }
         finished = true
         if running {
-            try? togglePause()
+            try? toggleActionSpeed()
             running = false
-            // Give the pause event a bounded processing interval before releasing.
-            usleep(80_000)
+            // Paused bursts wait for pause processing; continuous mode releases immediately.
+            if !continuous { usleep(80_000) }
         }
         release(held, pid: pid); held = []
         try? event(49, down: false, pid: pid)
@@ -176,7 +178,7 @@ func run() async throws {
     case "burst":
         guard AXIsProcessTrusted() else { throw BridgeError("Accessibility permission is required for burst input") }
         guard let plan = burstPlan else { throw BridgeError("Missing burst plan") }
-        let burst = BurstSession(pid: app.processIdentifier)
+        let burst = BurstSession(pid: app.processIdentifier, continuous: argv.contains("--continuous"))
         signal(SIGINT, SIG_IGN); signal(SIGTERM, SIG_IGN)
         let sources = [SIGINT, SIGTERM].map { sig -> DispatchSourceSignal in
             let source = DispatchSource.makeSignalSource(signal: sig, queue: .global())
@@ -195,7 +197,7 @@ func run() async throws {
         }
         let runningElapsedMs = Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000
         burst.finish()
-        output(["ok":true,"pid":app.processIdentifier,"frames":plan.frames,"requestedFrames":plan.frames,"fps":plan.fps,"requestedDurationMs":Double(plan.frames) / plan.fps * 1000,"runningElapsedMs":runningElapsedMs,"elapsedMs":Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000,"segments":plan.segments.count,"timing":"Approximate wall-time burst; requested frames are not measured emulator frames","pauseToggleSent":true])
+        output(["ok":true,"pid":app.processIdentifier,"frames":plan.frames,"requestedFrames":plan.frames,"fps":plan.fps,"requestedDurationMs":Double(plan.frames) / plan.fps * 1000,"runningElapsedMs":runningElapsedMs,"elapsedMs":Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000,"segments":plan.segments.count,"timing":"Approximate wall-time burst; requested frames are not measured emulator frames","pauseToggleSent":!argv.contains("--continuous"),"slowMotionToggleSent":argv.contains("--continuous")])
     case "input", "step":
         guard AXIsProcessTrusted() else { throw BridgeError("Accessibility permission is required for keyboard input. Enable your terminal/Codex app in System Settings > Privacy & Security > Accessibility.") }
         guard let names = option("--keys") else { throw BridgeError("input requires --keys comma-separated key names") }

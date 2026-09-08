@@ -247,12 +247,14 @@ class Controller:
             raise ControlError("step requires FrameAdvance = Keyboard/N in the selected PCSX2 profile. Run setup, launch that profile, and pause emulation before stepping.")
         return self._execute(buttons, 150, throttle, brake, steer, handbrake, frames)
 
-    def burst(self, segments: list[dict], fps: float = 59.94):
-        """Run one complete timed plan, then observe after native pause cleanup."""
+    def burst(self, segments: list[dict], fps: float = 59.94, continuous: bool = False):
+        """Run a timed plan; finish paused, or at half speed in continuous mode."""
         config = configparser.ConfigParser(interpolation=None, strict=False)
         config.read(self.config_path)
         if config.get("Hotkeys", "TogglePause", fallback="").strip().lower() != "keyboard/space":
             raise ControlError("burst requires TogglePause = Keyboard/Space and an initially paused emulator")
+        if continuous:
+            self.validate_flow_config()
         if not isinstance(segments, list) or not 1 <= len(segments) <= 6:
             raise ValueError("burst requires 1..6 control segments")
         if isinstance(fps, bool) or not isinstance(fps, (int, float)) or not 10 <= fps <= 240:
@@ -284,7 +286,8 @@ class Controller:
                      "frames": total, "fps": fps, "nominal_duration_ms": round(total / fps * 1000, 3),
                      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames"}
             try:
-                event["native"] = self.call("burst", "--segments", json.dumps(native_segments), "--fps", str(fps))
+                event["native"] = self.call("burst", "--segments", json.dumps(native_segments), "--fps", str(fps),
+                                            *(("--continuous",) if continuous else ()))
             except BaseException as exc:
                 event["error"] = str(exc)
                 raise  # Native owns pause/key cleanup; never retry a timed plan.
@@ -292,6 +295,34 @@ class Controller:
                 event["elapsed_ms"] = round((time.monotonic() - started) * 1000, 2)
                 self.record(event)
             return {"action": event, "observation": self._observe()}
+
+    def validate_flow_config(self):
+        config = configparser.ConfigParser(interpolation=None, strict=False)
+        config.read(self.config_path)
+        if (config.get("Hotkeys", "ToggleSlowMotion", fallback="").strip().lower() != "keyboard/tab"
+                or config.get("Hotkeys", "TogglePause", fallback="").strip().lower() != "keyboard/space"
+                or config.getfloat("Framerate", "NominalScalar", fallback=0) != 1.0
+                or config.getfloat("Framerate", "SlomoScalar", fallback=0) != 0.5):
+            raise ControlError("flow requires Tab slow motion, Space pause, NominalScalar=1 and SlomoScalar=0.5")
+
+    def start_flow(self):
+        """Precondition: paused at normal speed. Return running at half speed."""
+        self.validate_flow_config()
+        with self.lock():
+            self.call("input", "--keys", "tab", "--duration-ms", "20", "--no-focus")
+            try:
+                self.call("input", "--keys", "space", "--duration-ms", "20", "--no-focus")
+            except BaseException:
+                self.call("input", "--keys", "tab", "--duration-ms", "20", "--no-focus")
+                raise
+            self.record({"type": "flow_started", "timestamp": time.time(), "inference_speed": 0.5})
+
+    def stop_flow(self):
+        """Precondition: running at half speed. Pause and restore normal limiter."""
+        with self.lock():
+            self.call("input", "--keys", "space", "--duration-ms", "20", "--no-focus")
+            self.call("input", "--keys", "tab", "--duration-ms", "20", "--no-focus")
+            self.record({"type": "flow_stopped", "timestamp": time.time()})
 
     def _execute(self, buttons, duration_ms, throttle, brake, steer, handbrake, frames=None):
         if buttons is not None and (not isinstance(buttons, list) or any(not isinstance(button, str) for button in buttons)):

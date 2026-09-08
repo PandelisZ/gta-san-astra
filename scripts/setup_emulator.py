@@ -83,6 +83,7 @@ def prepare(source: Path, target: Path) -> Path:
         folders[name] = str(destination)
     settings = {
         "UI": {"StartPaused": "true", "PauseOnFocusLoss": "false", "RenderToSeparateWindow": "true", "HideMainWindowWhenRunning": "true", "ConfirmShutdown": "true"},
+        "Framerate": {"NominalScalar": "1", "SlomoScalar": "0.5"},
         "Folders": folders,
         "Filenames": {"BIOS": bios.name},
         "EmuCore": {"EnablePINE": "false", "EnableCheats": "false"},
@@ -95,7 +96,7 @@ def prepare(source: Path, target: Path) -> Path:
     }
     # Remove custom conflicting hotkeys before installing explicit experiment bindings.
     hotkeys = {key: "" for key in config["Hotkeys"]} if config.has_section("Hotkeys") else {}
-    hotkeys.update(FrameAdvance="Keyboard/N", TogglePause="Keyboard/Space",
+    hotkeys.update(FrameAdvance="Keyboard/N", TogglePause="Keyboard/Space", ToggleSlowMotion="Keyboard/Tab",
                    ToggleFullscreen="Keyboard/Alt & Keyboard/Return",
                    SaveStateToSlot="Keyboard/F1", LoadStateFromSlot="Keyboard/F3",
                    NextSaveStateSlot="Keyboard/F2", Screenshot="Keyboard/F8",

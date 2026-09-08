@@ -35,6 +35,9 @@ def test_normalizes_bindings_and_isolates_absolute_writable_paths(profile):
     assert original.read_bytes() == source_bytes
     assert result["Pad1"]["Cross"] == "Keyboard/K"
     assert result["Hotkeys"]["ToggleTurbo"] == ""
+    assert result["Hotkeys"]["ToggleSlowMotion"] == "Keyboard/Tab"
+    assert result["Framerate"]["NominalScalar"] == "1"
+    assert result["Framerate"]["SlomoScalar"] == "0.5"
     assert result["Hotkeys"]["FrameAdvance"] == "Keyboard/N"
     assert result["MemoryCards"]["Slot1_Filename"] == "original.ps2"
     for name in setup.WRITABLE_FOLDERS:

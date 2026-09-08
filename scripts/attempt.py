@@ -101,9 +101,9 @@ def attempt(args) -> dict:
         raise ValueError("steps must be between 1 and 10000")
     if not 1 <= args.frame_stride <= 120:
         raise ValueError("frame stride must be between 1 and 120")
-    if args.mode not in ("stepped", "burst"):
-        raise ValueError("mode must be stepped or burst")
-    if args.mode == "burst" and args.bridge_transport != "cli":
+    if args.mode not in ("stepped", "burst", "flow"):
+        raise ValueError("mode must be stepped, burst or flow")
+    if args.mode in ("burst", "flow") and args.bridge_transport != "cli":
         raise ValueError("burst mode requires --bridge-transport cli")
     if not 1 <= args.target_recorded_frames <= 3597:
         raise ValueError("target recorded frames must be between 1 and 3597")
@@ -152,6 +152,8 @@ def attempt(args) -> dict:
     manifest_path = directory / "attempt.json"
     write_json(manifest_path, manifest)
     recording_started, source, failure = False, None, None
+    screen_process, screen_log = None, None
+    screen_movie = directory / "wall-clock.mov"
     try:
         if not args.no_reset:
             manifest["reset_result"] = scenario.launch(args.scenario, args.iso, scenarios=args.scenarios,
@@ -198,6 +200,23 @@ def attempt(args) -> dict:
             command.extend(["--resume-from", str(args.resume_from.resolve())])
         if start_reference is not None:
             command.extend(["--start-reference", str(start_reference)])
+        if args.mode == "flow":
+            from san_astra.control import Controller
+            controller = Controller(pid=target_pid, ini_path=profile / "inis/PCSX2.ini")
+            candidates = [w for w in controller.call("windows").get("windows", [])
+                          if "grand theft auto" in w.get("title", "").lower()]
+            if len(candidates) != 1:
+                raise RuntimeError("Flow demo needs exactly one game window for wall-clock recording")
+            screen_log = (directory / "screen-capture.log").open("x")
+            screen_process = subprocess.Popen(["screencapture", "-v", f"-l{candidates[0]['id']}",
+                "-x", str(screen_movie)], stdout=screen_log, stderr=subprocess.STDOUT, start_new_session=True)
+            time.sleep(0.5)
+            if screen_process.poll() is not None:
+                raise RuntimeError("Wall-clock recording did not start; see screen-capture.log")
+            manifest.update(wall_clock_master=str(screen_movie), screen_recorder_pid=screen_process.pid,
+                clip_seconds_limit=None,
+                duration_note="Full window recording preserves real elapsed time: 100% during actions and 50% during inference. Native GS capture separately preserves all emulator frames; its fixed-rate playback does not preserve slow motion.")
+            write_json(manifest_path, manifest)
         manifest["driver_exit_code"] = drive(command, directory / "driver.stdout", environment)
         summary_path = directory / "run_summary.json"
         if summary_path.is_file():
@@ -207,6 +226,18 @@ def attempt(args) -> dict:
     except BaseException as exc:
         failure = str(exc) or type(exc).__name__
     finally:
+        if screen_process is not None:
+            try:
+                if screen_process.poll() is None:
+                    screen_process.send_signal(signal.SIGINT)
+                screen_process.wait(timeout=15)
+                if screen_process.returncode != 0 or not screen_movie.is_file() or screen_movie.stat().st_size == 0:
+                    raise RuntimeError("Wall-clock recording failed to finalize")
+            except BaseException as exc:
+                failure = failure or str(exc)
+            finally:
+                if screen_log is not None:
+                    screen_log.close()
         if recording_started:
             try:
                 manifest["record_stop"] = recording.toggle(profile, pid=target_pid)
@@ -221,9 +252,11 @@ def attempt(args) -> dict:
             exported = recording.export(source, directory / "recording")
             playback = Path(exported["playback"])
             full_duration = media_duration(playback)
-            replay = directory / "recording/first-minute.mp4"
-            clip = subprocess.run([recording.ffmpeg_path(), "-hide_banner", "-nostdin", "-n", "-i", str(playback),
-                                   "-map", "0:v:0", "-t", "60", "-c:v", "libx264", "-preset", "fast",
+            replay = directory / ("recording/wall-clock.mp4" if args.mode == "flow" else "recording/first-minute.mp4")
+            replay_source = screen_movie if args.mode == "flow" else playback
+            clip_limit = [] if args.mode == "flow" else ["-t", "60"]
+            clip = subprocess.run([recording.ffmpeg_path(), "-hide_banner", "-nostdin", "-n", "-i", str(replay_source),
+                                   "-map", "0:v:0", *clip_limit, "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2", "-c:v", "libx264", "-preset", "fast",
                                    "-crf", "18", "-pix_fmt", "yuv420p", "-fps_mode", "passthrough",
                                    "-movflags", "+faststart", str(replay)], text=True, capture_output=True)
             (directory / "recording/clip.stderr").write_text(clip.stderr)
@@ -272,7 +305,7 @@ def main():
     parser.add_argument("--no-reset", action="store_true", help="Caller already restored paused baseline and ensured recording is OFF")
     parser.add_argument("--steps", type=int, default=120, help="Decision safety cap; recording target is3597 stored frames")
     parser.add_argument("--frame-stride", type=int, default=60, help="Requested VSyncs per decision, 1..120 (default: 60)")
-    parser.add_argument("--mode", choices=("stepped", "burst"), default="stepped", help="Frame-advance requests or approximate normal-speed bursts followed by pause")
+    parser.add_argument("--mode", choices=("stepped", "burst", "flow"), default="stepped", help="stepped frames, paused burst decisions, or flow with half-speed inference")
     parser.add_argument("--vision-max-edge", type=int, default=512)
     parser.add_argument("--bridge-transport", choices=("cli", "daemon"), default="daemon")
     parser.add_argument("--resume-from", type=Path, help="Continue visual context only; never replay controls")

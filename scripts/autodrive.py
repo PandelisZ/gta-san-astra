@@ -130,6 +130,10 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
               "The emulator runs continuously, including while you decide. Your screenshot becomes older "
               "during inference. Controls are held briefly, then released, and the vehicle coasts during inference. "
               "Do not assume the world stopped at the screenshot. Favor simple conservative controls. ")
+    if mode == "flow":
+        timing = ("The world runs at 50% speed while you decide, with controls released. "
+                  "Your screenshot becomes stale as the car coasts and other actors move. "
+                  "Actions run at normal 100% speed; no fast-forward. Plan for inference-time drift. ")
     if mode == "burst":
         timing = ("The emulator is paused while you decide. It resumes at normal speed for one short timed plan, "
                   "then pauses before the next screenshot. Segment frames express nominal wall-time at the supplied FPS; "
@@ -147,7 +151,7 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         "Controls: cross accelerates; square brakes/reverses; steer_left/steer_right steer; r1 is "
         "handbrake; move_forward/move_backward move on foot; triangle enters/exits a vehicle; start pauses the game; d-pad navigates menus; "
         "cross confirms. Empty buttons coasts. The caller controls the total action duration. "
-        "In stepped or burst mode, choose segments: 1..6 sequential {buttons,frames} phases whose frame counts "
+        "In stepped, burst or flow mode, choose segments: 1..6 sequential {buttons,frames} phases whose frame counts "
         "sum exactly to the requested burst. Each phase releases the prior phase's controls. Set top-level "
         "buttons to the first phase's buttons. You choose each throttle, brake and steering duration. "
         "Choose steering duration from the yaw and travel observed after your previous action. "
@@ -272,14 +276,14 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         raise ValueError("steer_pulse_frames must be an integer between 0 and 120")
     if not 0 < emulator_fps < float("inf"):
         raise ValueError("emulator_fps must be finite and positive")
-    if mode not in ("stepped", "burst", "realtime") or type(hold_ms) is not int or not 50 <= hold_ms <= 2000:
-        raise ValueError("mode must be stepped, burst or realtime; hold_ms must be 50..2000")
-    if mode == "burst" and bridge_transport != "cli":
-        raise ValueError("burst mode requires --bridge-transport cli")
+    if mode not in ("stepped", "burst", "flow", "realtime") or type(hold_ms) is not int or not 50 <= hold_ms <= 2000:
+        raise ValueError("mode must be stepped, burst, flow or realtime; hold_ms must be 50..2000")
+    if mode in ("burst", "flow") and bridge_transport != "cli":
+        raise ValueError("burst and flow modes require --bridge-transport cli")
     if (recording_master is None) != (target_recorded_frames is None):
         raise ValueError("recording_master and target_recorded_frames must be provided together")
-    if target_recorded_frames is not None and (type(target_recorded_frames) is not int or target_recorded_frames < 1 or mode not in ("stepped", "burst")):
-        raise ValueError("Recorded-frame target must be positive and use stepped or burst mode")
+    if target_recorded_frames is not None and (type(target_recorded_frames) is not int or target_recorded_frames < 1 or mode not in ("stepped", "burst", "flow")):
+        raise ValueError("Recorded-frame target must be positive and use stepped, burst or flow mode")
     if decision_fn is decide:
         decision_fn = partial(decide, reasoning_effort=reasoning_effort, service_tier=service_tier, mode=mode)
     resume_history, resume_image = [], None
@@ -350,7 +354,11 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         images.append(Path(metadata["image_path"]))
         del images[:-2], raw_images[:-2], prepared[:-2]
         record({"type": "model_frame", **metadata})
+    flow_started = False
     try:
+        if mode == "flow":
+            controller.start_flow()
+            flow_started = True
         reference_metadata = None
         if start_reference is not None:
             add_observation({"image_path": str(start_reference)})
@@ -391,25 +399,34 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
             duration_context = (f" Each action lasts exactly {current_stride} requested VSyncs ({current_stride / emulator_fps:.3f} nominal game seconds)."
                                 if mode == "stepped" else
                                 f" Each action runs at normal speed for approximately {current_stride / emulator_fps:.3f} wall seconds, a budget of {current_stride} nominal frames at {emulator_fps} FPS, then pauses. Actual delivered frames are measured from the recording, not guaranteed by this budget.")
+            if mode == "flow":
+                duration_context = (f"Each action runs at 100% speed for {current_stride} nominal frames. "
+                    "While you decide, the world CONTINUES at 50% speed with all controls released. "
+                    "The current screenshot therefore ages during inference; the car coasts and traffic moves. "
+                    "Account for several seconds of scene drift. End each action with a stable trajectory and "
+                    "enough clearance for the subsequent coasting interval. Do not assume a paused scene. "
+                    "Your chosen segments must total the requested frame budget. ")
+            decision_started = time.time()
             decision, latency = decision_fn(model, selected_images, history,
                 goal + image_context + (duration_context +
                         " Select control segments whose frame counts sum exactly to that total. "
                         "Controls in each segment remain held for its chosen frames, including steering; "
                         "there is no automatic short steering cap on explicit segments. "
                         "Predict the vehicle path across the entire burst."
-                        if mode in ("stepped", "burst") else f" Each action holds for {hold_ms} milliseconds, then releases."),
+                        if mode in ("stepped", "burst", "flow") else f" Each action holds for {hold_ms} milliseconds, then releases."),
                 directory, index, timeout)
             validate_decision(decision)  # Validate even when a custom decision function is supplied.
             segments = []
             if not decision["stop"]:
-                if mode in ("stepped", "burst"):
+                if mode in ("stepped", "burst", "flow"):
                     segments = action_plan(decision, current_stride, steer_pulse_frames)
                 else:
                     segments = [{"buttons": list(decision["buttons"]), "duration_ms": hold_ms}]
             event = {"step": index, "timestamp": time.time(), "decision": decision,
-                     "decision_latency_ms": latency, "frame_stride": current_stride,
+                     "decision_latency_ms": latency, "decision_started_at": decision_started,
+                     "inference_world_speed": 0.5 if mode == "flow" else None, "frame_stride": current_stride,
                      "recorded_frames_before": recorded_frames if recording_master else None,
-                     "nominal_observations_per_game_second": emulator_fps / current_stride if mode in ("stepped", "burst") else None,
+                     "nominal_observations_per_game_second": emulator_fps / current_stride if mode in ("stepped", "burst", "flow") else None,
                      "mode": mode, "action_plan": segments, "images": [item["source_image_path"] for item in selected],
                      "model_images": [str(p) for p in selected_images], "model_frame_metadata": selected,
                      "image_labels": image_labels}
@@ -420,6 +437,11 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
             if decision["stop"]:
                 outcome = "stopped"
                 break
+            if mode == "flow" and recording_master is not None:
+                recorded_frames = max(recorded_frames, count_frames(recording_master))
+                if target_recorded_frames is not None and recorded_frames >= target_recorded_frames:
+                    outcome = "recording_target_reached"
+                    break
             actions_requested += 1
             action_started = time.monotonic()
             if mode == "stepped":
@@ -427,9 +449,9 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                     frames_requested += segment["frames"]
                     result = controller.step(buttons=segment["buttons"], frames=segment["frames"])
                     frames_completed += segment["frames"]
-            elif mode == "burst":
+            elif mode in ("burst", "flow"):
                 frames_requested += current_stride
-                result = controller.burst(segments=segments, fps=emulator_fps)
+                result = controller.burst(segments=segments, fps=emulator_fps, **({"continuous": True} if mode == "flow" else {}))
                 frames_completed += current_stride
             else:
                 result = controller.action(buttons=decision["buttons"], duration_ms=hold_ms)
@@ -449,7 +471,11 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         raise
     finally:
         try:
-            controller.release()
+            try:
+                if flow_started:
+                    controller.stop_flow()
+            finally:
+                controller.release()
         except BaseException as exc:
             release_error = exc
             outcome = "error"
@@ -458,13 +484,13 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                    "elapsed_wall_seconds": round(time.monotonic() - started_clock, 3),
                    "decision_count": len(history) - len(resume_history), "action_count": actions_completed,
                    "actions_requested": actions_requested,
-                   "game_frames_requested": frames_requested if mode in ("stepped", "burst") else None,
-                   "frames_in_completed_actions": frames_completed if mode in ("stepped", "burst") else None,
+                   "game_frames_requested": frames_requested if mode in ("stepped", "burst", "flow") else None,
+                   "frames_in_completed_actions": frames_completed if mode in ("stepped", "burst", "flow") else None,
                    "recorded_frames_lower_bound": recorded_frames if recording_master else None,
                    "recording_target_reached": recorded_frames >= target_recorded_frames if target_recorded_frames else None,
                    "realtime_hold_ms_requested": actions_requested * hold_ms if mode == "realtime" else None,
                    "frames_note": ("Nominal frame budgets for timed bursts, not delivered frames; recording count measures actual output"
-                                   if mode == "burst" else "Requested VSync counts, not independent game-state measurements"),
+                                   if mode in ("burst", "flow") else "Requested VSync counts, not independent game-state measurements"),
                    "decision_latency_median_ms": median(latencies) if latencies else None,
                    "capture_latency_median_ms": median(capture_latencies) if capture_latencies else None,
                    "action_and_capture_median_ms": median(action_latencies) if action_latencies else None,
@@ -481,7 +507,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=["stepped", "burst", "realtime"], default="stepped")
+    parser.add_argument("--mode", choices=["stepped", "burst", "flow", "realtime"], default="stepped")
     parser.add_argument("--pid", type=int, help="Explicit PCSX2 target, or SAN_ASTRA_PID")
     parser.add_argument("--hold-ms", type=int, default=150, help="Realtime bounded input hold, followed by coasting during inference")
     parser.add_argument("--bridge-transport", choices=["cli", "daemon"], default="daemon")
@@ -505,8 +531,8 @@ def main():
     parser.add_argument("--steer-pulse-frames", type=int, default=12, help="Steering frames per driving burst; 0 holds steering for the full stride")
     parser.add_argument("--emulator-fps", type=float, default=59.94, help="Nominal VSync rate, for logging game-time observation cadence")
     args = parser.parse_args()
-    if args.mode == "burst" and args.bridge_transport != "cli":
-        parser.error("burst mode requires --bridge-transport cli")
+    if args.mode in ("burst", "flow") and args.bridge_transport != "cli":
+        parser.error("burst and flow modes require --bridge-transport cli")
     if not 1 <= args.steps <= 10000 or args.timeout <= 0 or not 1 <= args.frame_stride <= 120 or not 0 < args.emulator_fps < float("inf"):
         parser.error("steps must be 1..10000, stride 1..120, timeout and emulator-fps positive")
     from contextlib import ExitStack

@@ -140,7 +140,7 @@ uv run san-astra --frame-stride 10 step --throttle  # request every tenth frame
 
 Any stride from 1 to 120 is supported; the driving runner defaults to 60. `step --frames N` overrides it for one action. The autonomous runner fixes the total stride throughout a run, across all model-selected phases. The older four-field decision format remains supported: only that fallback uses `--steer-pulse-frames` (12 by default; 0 holds steering throughout).
 
-The current single-game experiment uses `--mode burst --frame-stride 60` for roughly one second of normal-speed gameplay between decisions. The game pauses while Astra evaluates the next screenshot. Driving improvement is still being evaluated.
+The current single-game demo uses `--mode flow --frame-stride 60`: roughly one second at normal speed for each action, then 50% world speed while Astra evaluates the next screenshot. The car coasts with controls released during inference. Driving improvement is still being evaluated.
 
 Set `SAN_ASTRA_FRAME_INTERVAL_MS=350` for the pulse spacing validated in the current setup. Faster 90 ms and 180 ms spacing produced fewer recorded frames than requested, even with one foreground emulator. The 350 ms neutral check recorded 60 frames from 60 requests; recorded increments during driving remain the relevant verification. See [calibration evidence](docs/streams/calibration-wave02.md).
 
@@ -151,6 +151,14 @@ At NTSC 59.94 VSyncs/second, strides 1/5/10 nominally yield 59.94/11.99/5.99 obs
 Use `--mode burst --bridge-transport cli --frame-stride 60` with the attempt wrapper. The game runs at normal speed for roughly one second, executes Astra's chosen control phases, then pauses for the next screenshot and decision. A local neutral check took0.596seconds including pause cleanup and recorded30VSync samples; the final screenshot visibly showed Paused. Timing is approximate and recordings measure the actual output.
 
 The NTSC emulator timing is59.94VSyncs/second. Our half-second sample contained16distinct successive game images, consistent with roughly30 rendered gameFPS. VSync samples and newly rendered game images are different counts. [Live check](docs/evidence/burst-neutral-check.json) · [PCSX2 timing documentation](https://wiki.pcsx2.net/Setting_up_Windows_version)
+
+### Half-speed thinking demo
+
+Use `--mode flow --bridge-transport cli --frame-stride 60` with the attempt wrapper. The world runs at 100% speed during action phases and 50% during inference, with no decision pause. Controls are released during inference; the policy accounts for the car coasting and other actors moving after its screenshot. Completion or an error pauses the emulator and restores the normal speed setting.
+
+Setup binds slow motion to Tab and configures normal speed to 1.0 and slow motion to 0.5. A live check visibly measured 50%, 100%, then 50% on the emulator display. [Timing evidence](docs/evidence/flow-speed-check.json).
+
+Flow attempts save a window recording in real elapsed time and publish that as the demo, preserving slow motion. The separate lossless GS capture and all PNG frames remain available; that capture's fixed-rate playback represents game time, so it does not preserve the slow-motion effect. The attempt budget still counts actual captured emulator frames, including frames produced during inference.
 
 ### Start an Astra run
 

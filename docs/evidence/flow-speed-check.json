@@ -1,0 +1,52 @@
+{
+  "mode": "flow",
+  "observed_speed_percentages": [
+    50,
+    100,
+    50
+  ],
+  "observed_vps": [
+    29.99,
+    59.94,
+    29.96
+  ],
+  "source": "Visually inspected PCSX2 OSD, not game telemetry",
+  "action": {
+    "type": "burst",
+    "segments": [
+      {
+        "buttons": [],
+        "frames": 120
+      }
+    ],
+    "native_segments": [
+      {
+        "keys": [],
+        "frames": 120
+      }
+    ],
+    "frames": 120,
+    "fps": 59.94,
+    "nominal_duration_ms": 2002.002,
+    "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+    "native": {
+      "elapsedMs": 2093.892833,
+      "fps": 59.94,
+      "frames": 120,
+      "ok": true,
+      "pauseToggleSent": false,
+      "pid": 76989,
+      "requestedDurationMs": 2002.0020020020022,
+      "requestedFrames": 120,
+      "runningElapsedMs": 2081.209292,
+      "segments": 1,
+      "slowMotionToggleSent": true,
+      "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+    },
+    "elapsed_ms": 2169.91
+  },
+  "full_window_recording": "/Users/pz/w/oaihackathon/runs/flow-speed-proof-01/demo.mov",
+  "native_calibration": "/Users/pz/w/oaihackathon/runs/flow-neutral-check-01/evidence.json",
+  "test_result": "14 flow/setup tests passed. Existing control/autodrive suite has identical 8 failures on HEAD and this change (43 pass, 11 subtests pass).",
+  "limitation": "Timing switch verified with neutral controls. Full block driving remains unproven."
+}
