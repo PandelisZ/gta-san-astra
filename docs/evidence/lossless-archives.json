@@ -1,0 +1,113 @@
+{
+  "records": [
+    {
+      "source": "/Users/pz/w/oaihackathon/.runtime/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908114414.mkv",
+      "archive": "/Users/pz/w/oaihackathon/.runtime/archives/Grand Theft Auto - San Andreas_SLUS-20946_20260908114414.lossless-rgb.mkv",
+      "source_sha256": "6515c4c0c1d1a91b2b0ee14e9c9fbb60db7a1e4731b806b88e0af3bc3c2c1623",
+      "archive_sha256": "206033799b6d58b23ba9e8e1522b8881d14ce3e7250f3d97f0818ff325f66a74",
+      "source_bytes": 379905023,
+      "archive_bytes": 42251499,
+      "frames": 898,
+      "encode_seconds": 3.0044325832277536,
+      "total_seconds": 6.415740250144154,
+      "inferred_duration_mismatches": 13,
+      "max_inferred_duration_difference_ms": 1,
+      "verification": "/Users/pz/w/oaihackathon/.runtime/archives/Grand Theft Auto - San Andreas_SLUS-20946_20260908114414.lossless-rgb.verification.json"
+    },
+    {
+      "source": "/Users/pz/w/oaihackathon/.runtime/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908115415.mkv",
+      "archive": "/Users/pz/w/oaihackathon/.runtime/archives/Grand Theft Auto - San Andreas_SLUS-20946_20260908115415.lossless-rgb.mkv",
+      "source_sha256": "53df132f57ba81d29a6312960eca929b0bc62c4190e7fdae05d9a43900a60655",
+      "archive_sha256": "b00376bbf74ea3ad816ec2664a72c463c92eaf8522c19d4b298d7b699e409f0d",
+      "source_bytes": 25140484,
+      "archive_bytes": 751647,
+      "frames": 60,
+      "encode_seconds": 0.17997279111295938,
+      "total_seconds": 0.528673583175987,
+      "inferred_duration_mismatches": 12,
+      "max_inferred_duration_difference_ms": 1,
+      "verification": "/Users/pz/w/oaihackathon/.runtime/archives/Grand Theft Auto - San Andreas_SLUS-20946_20260908115415.lossless-rgb.verification.json"
+    },
+    {
+      "source": "/Users/pz/w/oaihackathon/.runtime/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908120110.mkv",
+      "archive": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908120110.lossless-rgb.mkv",
+      "source_sha256": "d902ce7de5893f9fc67dc9260ef44e5417ff0517591beefebdd331259eb2a33d",
+      "archive_sha256": "2ed9fb70cb04ae0a5cea954086955476e3a434abdb4377410d1030f8520ec320",
+      "source_bytes": 551310239,
+      "archive_bytes": 132733382,
+      "frames": 1315,
+      "encode_seconds": 5.504279333166778,
+      "total_seconds": 10.46800758317113,
+      "inferred_duration_mismatches": 13,
+      "max_inferred_duration_difference_ms": 1,
+      "verification": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908120110.lossless-rgb.verification.json"
+    },
+    {
+      "source": "/Users/pz/w/oaihackathon/.runtime/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908120956.mkv",
+      "archive": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908120956.lossless-rgb.mkv",
+      "source_sha256": "0edfadb4a1af41bc769ed4da4fdf51e90f00304223f6334a6d3741daf911585e",
+      "archive_sha256": "4c29834713b5adc1b8849cf2b95ff7a9c35aee1c57b9f0771016f45f0e2d0adc",
+      "source_bytes": 1283323057,
+      "archive_bytes": 288693198,
+      "frames": 3096,
+      "encode_seconds": 11.337983292061836,
+      "total_seconds": 22.65489491727203,
+      "inferred_duration_mismatches": 12,
+      "max_inferred_duration_difference_ms": 1,
+      "verification": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908120956.lossless-rgb.verification.json"
+    },
+    {
+      "source": "/Users/pz/w/oaihackathon/.runtime/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908123425.mkv",
+      "archive": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908123425.lossless-rgb.mkv",
+      "source_sha256": "4bd1f86ccefd92a34e33f0ce9b1da92420e028451c068171c060c5338383a7c0",
+      "archive_sha256": "f9a07a4d3727d8cf1fcb0d1c704b45bdf7d5e5d59f70c782db446bdb48127380",
+      "source_bytes": 448625133,
+      "archive_bytes": 132191384,
+      "frames": 1080,
+      "encode_seconds": 5.273080375045538,
+      "total_seconds": 9.478046459145844,
+      "inferred_duration_mismatches": 12,
+      "max_inferred_duration_difference_ms": 1,
+      "verification": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908123425.lossless-rgb.verification.json"
+    },
+    {
+      "source": "/Users/pz/w/oaihackathon/.runtime/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908124347.mkv",
+      "archive": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908124347.lossless-rgb.mkv",
+      "source_sha256": "fcb80a30f8f34facb41ff147e55c6a69f93cbc7626d44eb7a0dee0c4fed4d834",
+      "archive_sha256": "83b73bb66b5ccf984944e1587aa9c7453a44d85ea35933e7fd351926cbf8530c",
+      "source_bytes": 1028140390,
+      "archive_bytes": 300596618,
+      "frames": 2530,
+      "encode_seconds": 11.583631874993443,
+      "total_seconds": 21.058990124613047,
+      "inferred_duration_mismatches": 12,
+      "max_inferred_duration_difference_ms": 1,
+      "verification": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908124347.lossless-rgb.verification.json"
+    },
+    {
+      "source": "/Users/pz/w/oaihackathon/.runtime/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908130214.mkv",
+      "archive": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908130214.lossless-rgb.mkv",
+      "source_sha256": "c63e4145e86c03948093340456a0223063280ee4e45df308c69d3b432cfbb584",
+      "archive_sha256": "a485c5d050e696b0484f92d96935cda201205b0496905e5f1393476be67ee2c5",
+      "source_bytes": 1535121151,
+      "archive_bytes": 445117248,
+      "frames": 3608,
+      "encode_seconds": 17.195646207779646,
+      "total_seconds": 31.007099917158484,
+      "inferred_duration_mismatches": 12,
+      "max_inferred_duration_difference_ms": 1,
+      "verification": "/Users/pz/w/oaihackathon/.runtime/archives/exact-timebase/Grand Theft Auto - San Andreas_SLUS-20946_20260908130214.lossless-rgb.verification.json"
+    }
+  ],
+  "total_source_bytes": 5251565477,
+  "total_archive_bytes": 1342334976,
+  "total_frames": 12587,
+  "all_rgb24_pixels_and_pts_dts_verified": true,
+  "dimensions_sar_verified": true,
+  "originals_deleted": true,
+  "unverified_candidates": [
+    "/Users/pz/w/oaihackathon/.runtime/archives/Grand Theft Auto - San Andreas_SLUS-20946_20260908120110.lossless-rgb.mkv"
+  ],
+  "potential_bytes_reclaimed": 3909230501,
+  "qualification": "All pixels and timestamps identical; inferred decoded duration metadata differs by at most 1ms."
+}

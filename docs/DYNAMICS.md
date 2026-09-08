@@ -17,3 +17,7 @@ Minute attempt 04, steps 3–6: the real right-hand junction was visible under t
 Applied after minute attempt 04: revalidate the curb ends and continuous street corridor in the newest image before committing. If the entrance has passed, seek another junction rather than forcing the turn. Compare recent forward displacement and heading change when deciding how much motion to command near a corner. This is general visual-control guidance, not a memorized route or action sequence.
 
 The next attempt uses a 640-pixel longest image edge instead of 512 to provide more curb/opening detail. This is an experimental quality change, not a measured improvement claim. Right-hand lane use is explicit following the user correction.
+
+## Road-relative heading
+
+Minute attempt 05 confused a screen-upright car with alignment to the road. The chase camera follows the car while curbs and the centerline reveal a diagonal trajectory. Releasing steering does not cancel that heading. The next policy explicitly describes lane position, heading relative to road edges, and movement relative to fixed landmarks before choosing controls. This improvement remains to be evaluated in the parallel streams.

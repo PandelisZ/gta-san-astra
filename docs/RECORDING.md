@@ -24,7 +24,7 @@ uv run python scripts/recording.py toggle
 uv run python scripts/recording.py status
 ```
 
-Keep the master MKV unchanged. Audio is disabled in this visual evaluation capture. Starting or stopping the recorder does not advance the game or toggle emulation pause.
+Keep the master MKV until a lossless archive has been verified. Audio is disabled in this visual evaluation capture. Starting or stopping the recorder does not advance the game or toggle emulation pause.
 
 ## Export all frames and playback
 
@@ -44,4 +44,10 @@ A working system FFmpeg is used when available. This machine's Homebrew FFmpeg h
 The installed PCSX2 FFmpeg libraries were directly checked for FFV1, Matroska, and bgr0 pixel-format support. That capability check and the source establish the capture mechanism. A completed recording and its decoded frame count establish what a particular run actually stored. Capture errors, graphics-device resets, or interrupted files still require review; successful encoding must not be assumed from requested frame counts alone.
 
 
-After this run, frame-key timing was increased to 10 ms held plus 90 ms settling. A separate neutral 60-request calibration recorded and decoded exactly 60 frames. This is one observed calibration, not a guarantee under every load. The original 898-frame attempt is retained unchanged.
+After this run, frame-key timing was increased to 10 ms held plus 90 ms settling. A separate neutral 60-request calibration recorded and decoded exactly 60 frames. This is one observed calibration, not a guarantee under every load. The original 898-frame attempt is preserved in a verified lossless archive.
+
+## Verified lossless archival
+
+Seven finalized captures were transcoded from FFV1 to lossless RGB H.264 MKV to make room for concurrent experiments. Every decoded RGB24 frame hash, PTS, DTS, dimension and sample aspect ratio was compared. All 12,587 frames matched; inferred frame-duration metadata differs by at most 1 ms, while presentation timestamps are identical. The original codec files were removed only after both source and archive SHA256 checks passed. Individual PNG frames remain preserved.
+
+[Archive mappings](evidence/lossless-archives.json) record the original checksums and replacement paths. Historical run manifests retain their original capture paths and hashes; resolve those through this mapping. `scripts/archive_recordings.py` performs the verified transcode without deleting inputs.

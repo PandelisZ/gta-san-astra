@@ -14,6 +14,25 @@ The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, a
 
 **The road baseline has been captured and visually restored, and a 20-decision driving run has completed.** Restoration needed 66 neutral frame-advance requests to redraw an initially black screen; the displayed game clock advanced from 16:56 to 16:57, so this is not a bit-exact replay claim. The repository keeps recorded observations separate from driving-quality judgments. No benchmark score is claimed. The first attempt includes collisions and waiting in traffic. Its native recorder captured 898 frames (14.965 seconds), exported to individual PNGs and a game-speed MP4; see [recording instructions](docs/RECORDING.md). Completing a full block and visually returning to the starting road is the current goal; that route has not yet been proven.
 
+## Video proofs
+
+Uploaded recordings and provenance are collected in [GitHub issue #1](https://github.com/PandelisZ/gta-san-astra/issues/1). These are autonomous attempts, with collisions and recovery failures; none proves a completed loop. Playback follows actual simulation time, excluding paused inference gaps.
+
+**Block attempt 03 — 51.65 seconds, two observed right turns, incomplete loop.**
+
+https://github.com/user-attachments/assets/b4bbc3c2-f8af-49f6-a2a0-92e5126b6997
+
+**Minute attempt 04 — 60.01 seconds, missed junction and curb/wall recovery failure.**
+
+https://github.com/user-attachments/assets/638ea65b-b0aa-4192-a586-48535febb98d
+
+**Minute attempt 05 — 60.01 seconds, heading and curb-recovery errors remain.**
+
+https://github.com/user-attachments/assets/6951f5aa-bb5c-461f-98a3-33df283c93d8
+
+The MP4s and metadata also remain versioned under [docs/videos](docs/videos). [Upload provenance](docs/evidence/video-uploads.json) records attachment URLs and checksums.
+
+
 ![Astra entered a Blista Compact and prepared a stationary starting scene](docs/evidence/gta-stationary-car.png)
 
 *Actual captured road baseline: the red Blista Compact at 16:56. The [snapshot evidence](docs/evidence/stationary-car.json) records its checksum and the visual replay check.*

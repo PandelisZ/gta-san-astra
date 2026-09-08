@@ -1,0 +1,54 @@
+{
+  "issue_url": "https://github.com/PandelisZ/gta-san-astra/issues/1",
+  "issue_title": "Autonomous driving video proofs",
+  "verified_at_utc": "2026-09-08T20:26:25.398551+00:00",
+  "method": "GitHub issue attachments uploaded through normal native file picker; persisted issue body verified with GitHub CLI. Unauthenticated byte-range GET responses verified video/mp4 and original file sizes.",
+  "completed_block_loop": false,
+  "videos": [
+    {
+      "name": "block-attempt-03",
+      "local_path": "docs/videos/block-attempt-03.mp4",
+      "asset_url": "https://github.com/user-attachments/assets/b4bbc3c2-f8af-49f6-a2a0-92e5126b6997",
+      "duration_seconds": 51.651651651651655,
+      "sha256": "9fb621c7e20d1a1de3288409b44b74f3428cdefc7e3e0124d65fad36ee503936",
+      "bytes": 22610622,
+      "verification": {
+        "http_status": 206,
+        "content_type": "video/mp4",
+        "content_range": "bytes 0-0/22610622",
+        "remote_file_bytes": 22610622
+      },
+      "outcome": "Two visually completed right turns, curb/pole recovery, full block not completed."
+    },
+    {
+      "name": "minute-attempt-04",
+      "local_path": "docs/videos/minute-attempt-04.mp4",
+      "asset_url": "https://github.com/user-attachments/assets/638ea65b-b0aa-4192-a586-48535febb98d",
+      "duration_seconds": 60.010010010010014,
+      "sha256": "00ddc2e00429521631a7128a7151fe6899389cf032ed47f25f246a566259b801",
+      "bytes": 29718283,
+      "verification": {
+        "http_status": 206,
+        "content_type": "video/mp4",
+        "content_range": "bytes 0-0/29718283",
+        "remote_file_bytes": 29718283
+      },
+      "outcome": "Failed block loop; wall/curb collisions and recovery. Entire clip preserved, not a clean driving claim."
+    },
+    {
+      "name": "minute-attempt-05",
+      "local_path": "docs/videos/minute-attempt-05.mp4",
+      "asset_url": "https://github.com/user-attachments/assets/6951f5aa-bb5c-461f-98a3-33df283c93d8",
+      "duration_seconds": 60.01,
+      "sha256": "abe83e2297a379cfaebcf7eb27aa0311e775fb7ec8e7c7b01f8629f425a5ab23",
+      "bytes": 30498554,
+      "verification": {
+        "http_status": 206,
+        "content_type": "video/mp4",
+        "content_range": "bytes 0-0/30498554",
+        "remote_file_bytes": 30498554
+      },
+      "outcome": "Recording target completed; no verified completed block loop."
+    }
+  ]
+}
