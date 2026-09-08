@@ -1,0 +1,168 @@
+{
+  "attempt": "stream-junction-minute-01",
+  "status": "interrupted infrastructure failure; coordinator paused further trials",
+  "decision_events": [
+    {
+      "step": 0,
+      "timestamp": 1788899262.108702,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Tahoma straddles the left curb, roughly parallel to the road; motion is unknown. Garden wall is left, motel right. No verified street mouth yet; gently move off the curb toward the right lane.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 22
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 38
+          }
+        ],
+        "route_note": "Start: garden wall/hedges left, orange Jefferson Motel right, gantry ahead. At left curb; rejoining roadway before seeking a verified street junction. Completed turns: 0. Initial right-steering/throttle 22f then straight throttle 38f; displacement and response not yet observed."
+      },
+      "decision_latency_ms": 16501.29,
+      "frame_stride": 60,
+      "recorded_frames_before": 0,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 22
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 38
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-01/20260908-132725-8e69551d/frame-1788899245270331000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-01/model-frames/frame-1788899245270331000-1788899245503795894-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-01/20260908-132725-8e69551d/frame-1788899245270331000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-01/model-frames/frame-1788899245270331000-1788899245503795894-640-65-rgb.jpg",
+          "source_dimensions": [
+            818,
+            630
+          ],
+          "dimensions": [
+            640,
+            493
+          ],
+          "source_bytes": 868578,
+          "bytes": 34368,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 50.3
+        }
+      ]
+    }
+  ],
+  "error_events": [
+    {
+      "type": "error",
+      "timestamp": 1788899281.30547,
+      "error": "Native daemon timed out after 15 seconds"
+    },
+    {
+      "type": "release_error",
+      "timestamp": 1788899281.3056672,
+      "error": "Native daemon transport is closed"
+    }
+  ],
+  "native_step_events": [
+    {
+      "timestamp": 1788899266.297649,
+      "type": "step",
+      "buttons": [
+        "cross",
+        "steer_right"
+      ],
+      "keys": [
+        "k",
+        "d"
+      ],
+      "frames": 22,
+      "native": {
+        "durationMs": 2200,
+        "elapsedMs": 2351.343416,
+        "frames": 22,
+        "id": 2,
+        "keys": "k,d",
+        "ok": true,
+        "pid": 66528,
+        "request_elapsed_ms": 3476.162375,
+        "requestedDurationMs": 2200
+      },
+      "elapsed_ms": 4187.16
+    }
+  ],
+  "summary": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "low",
+    "service_tier": "fast",
+    "goal": "Drive on the RIGHT side of the road around a compact city block and return near this garden wall opposite orange Jefferson Motel facing the SAME direction. Start in blue Tahoma partly on left curb, garden wall and hedges left, orange motel across road right, signal gantry ahead. Choose a feasible visible street route. Rejoin the right lane first and enter the right-hand lane after every turn. Confirm a real street opening in the latest image before turning: continuous walls, curbs, sidewalks, and parking lots are not road junctions. If an opening has passed, continue to another feasible junction. Keep controlled forward progress on clear streets, slow before uncertain corners, and avoid vehicles, pedestrians, and poles. Track actual completed turns and landmarks. All driving phases must come from your own current screenshot assessment, never a memorized sequence. Stop near the original location only when the loop and heading are visibly matched; otherwise continue until the one-minute attempt ends.",
+    "frame_stride": 60,
+    "target_pid": 66528,
+    "emulator_fps": 59.94,
+    "steer_pulse_frames": 12,
+    "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
+    "steps_limit": 120,
+    "scenario_state": "/Users/pz/w/oaihackathon/.runtime/scenarios/quiet-tahoma/state.p2s",
+    "scenario_state_note": "Provenance label only; runner does not load this state",
+    "resume_from": null,
+    "resume_decision_count": 0,
+    "resume_image_path": null,
+    "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
+    "recording_master": "/Users/pz/.codex/worktrees/9143/oaihackathon/.runtime/stream-junction/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908132724.mkv",
+    "target_recorded_frames": 3597,
+    "recording_budget_note": "Live stored-frame count is a buffered lower bound. Final bursts are at least15 requests where possible; stopped recording can exceed the target.",
+    "started_at": 1788899245.269851,
+    "status": "error",
+    "mode": "stepped",
+    "hold_ms": null,
+    "policy_transport": "app-server",
+    "bridge_transport": "daemon",
+    "vision_max_edge": 640,
+    "vision_quality": 65,
+    "vision_colormode": "rgb",
+    "ended_at": 1788899281.30573,
+    "elapsed_wall_seconds": 36.036,
+    "decision_count": 1,
+    "action_count": 0,
+    "actions_requested": 1,
+    "game_frames_requested": 22,
+    "frames_in_completed_actions": 0,
+    "recorded_frames_lower_bound": 0,
+    "recording_target_reached": false,
+    "realtime_hold_ms_requested": null,
+    "frames_note": "Requested VSync counts, not independent game-state measurements",
+    "decision_latency_median_ms": 16501.29,
+    "capture_latency_median_ms": 235.08,
+    "action_and_capture_median_ms": null,
+    "measured_decisions_per_wall_second": 0.02774977761002854,
+    "error": "Native daemon timed out after 15 seconds",
+    "release_error": "Native daemon transport is closed"
+  },
+  "visual_review": "Final stored frame remains beside original left curb. No right-lane entry, junction traversal, or block return demonstrated. Native step returned success for22 frames; subsequent observation timed out before second phase. No further controls issued after coordinator pause."
+}
