@@ -1,0 +1,26 @@
+{
+  "trial": "single-minute-03",
+  "source_video": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/docs/videos/single-minute-03.mp4",
+  "attachment_url": "https://github.com/user-attachments/assets/2551e731-6d48-4544-8c19-7d59acb5656a",
+  "issue_comment_url": "https://github.com/PandelisZ/gta-san-astra/issues/1#issuecomment-5592366945",
+  "duration_seconds": 30.03,
+  "frames": 1800,
+  "source_frames": 1800,
+  "bytes": 8154988,
+  "sha256": "a125bed25be88e5496053b2ef82a99dbf89e27e23b0be68838564be0a97ecf48",
+  "decisions": 60,
+  "requested_frames": 1800,
+  "recorded_target_reached": false,
+  "stop_reason": "usageLimitExceeded",
+  "outcome": "One completed right turn with pole collision and recovery. Block loop incomplete. Partial recording; no padding added; all 1800 source frames preserved.",
+  "verification": {
+    "source_sha256_matches_sidecar": true,
+    "persisted_issue_comment": true,
+    "public_attachment": {
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_range": "bytes 0-0/8154988"
+    }
+  },
+  "uploaded_at": "2026-09-08T21:52:53.330909+00:00"
+}

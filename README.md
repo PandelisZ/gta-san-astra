@@ -18,6 +18,12 @@ The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, a
 
 Uploaded recordings and provenance are collected in [GitHub issue #1](https://github.com/PandelisZ/gta-san-astra/issues/1). These are autonomous attempts, with collisions and recovery failures; none proves a completed loop. Playback follows actual simulation time, excluding paused inference gaps.
 
+**Single-game attempt 03 — interrupted at30.03seconds by Astra usage limits, one rightturn with pole collision and recovery, incomplete loop.**
+
+https://github.com/user-attachments/assets/2551e731-6d48-4544-8c19-7d59acb5656a
+
+The final recording contains1,800frames from1,800requested advances. [Review and continuation state](docs/streams/single-minute-03.md) · [Upload provenance](docs/evidence/single-minute-03-upload.json)
+
 **Block attempt 03 — 51.65 seconds, two observed right turns, incomplete loop.**
 
 https://github.com/user-attachments/assets/b4bbc3c2-f8af-49f6-a2a0-92e5126b6997
