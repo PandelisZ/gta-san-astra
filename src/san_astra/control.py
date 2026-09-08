@@ -118,11 +118,16 @@ class Controller:
             yield
 
     def _call_native(self, *args: str) -> dict:
+        timeout = 15.0
+        if args and args[0] == "step":
+            frames = int(args[args.index("--frames") + 1]) if "--frames" in args else 1
+            interval = int(args[args.index("--frame-interval-ms") + 1]) if "--frame-interval-ms" in args else 90
+            timeout = max(timeout, min(132.0, frames * (interval + 10) / 1000 + 10))
         try:
             with subprocess.Popen([str(self.bridge), *args], text=True,
                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
                 try:
-                    stdout, stderr = process.communicate(timeout=15)
+                    stdout, stderr = process.communicate(timeout=timeout)
                 except (subprocess.TimeoutExpired, KeyboardInterrupt):
                     # The native bridge handles SIGTERM by releasing active keys.
                     # Give that cleanup a bounded chance before forced termination.
