@@ -95,17 +95,19 @@ The state stays in `.runtime/scenarios/quiet-tahoma/`, outside Git. [Snapshot me
 flowchart LR
     G[PCSX2 / San Andreas] -->|Rendered window pixels| S[ScreenCaptureKit screenshot]
     S -->|Recent images + optional start reference + action history| A[GPT-6 Astra]
-    A -->|Control phases + route and motion notes + stop| V[Validate decision]
-    V -->|Allowed controls, fixed frame stride| B[Native macOS input bridge]
-    B -->|Hold controls, request N VSyncs, release| G
-    G -.->|Paused between decisions| G
+    A -->|Action phases + thinking controls + visual notes| V[Validate decision]
+    V -->|Allowed controls, fixed action budget| B[Native macOS input bridge]
+    B -->|100% speed during action phases| G
+    B -->|50% speed with chosen controls during inference| G
     V --> E[Decisions, timings, screenshots]
     E --> R[Evidence gallery + manual evaluation]
 ```
 
 The policy receives no game memory, vehicle coordinates, speed, collision counters, or emulator debug telemetry. Save states are opaque reset artifacts; their contents never enter the policy prompt. The decision process has shell, browser, MCP/app, and web capabilities disabled.
 
-The default driving burst requests 60 frames. Astra now chooses 1–6 sequential control phases whose frame counts must add up to that burst: for example, brake for 8 frames, coast for 12, then accelerate and steer for 40. Each phase selects its own buttons and duration. The validator rejects invalid controls, simultaneous acceleration/braking within a phase, and totals that differ from the fixed burst. The bridge supplies the final observation to the next decision. For a repeated menu confirmation, an empty-controls step lets the game sample the release before the next press. Consecutive driving actions can continue holding acceleration or steering.
+The current flow trial gives each action a 60-frame nominal budget at normal speed. Astra chooses 1–6 sequential control phases whose counts add up to that budget, then chooses `thinking_buttons` to hold while the next decision runs at half speed. Empty thinking controls mean coast, not brake. Actual delivered frames are measured from the recording; the timed budget is not an exact VSync guarantee. The validator rejects invalid controls, simultaneous acceleration/braking within a phase, and incorrect totals.
+
+Later decisions receive four images: the original starting reference, the view before the previous inference, the view after that inference but before its action, and the current view after the action. These separate motion during thinking from motion during the short action. The runner reports observed image intervals and recent inference latency so Astra can account for an aging screenshot. Each trial stops after approximately one minute of recorded simulation, including inference time; reset and review happen between attempts.
 
 Astra maintains a short `route_note` for landmarks and visually completed turns, plus a separate `dynamics_note` for observed travel, steering response, and prediction errors. Both notes are carried into later decisions alongside recent action history. An optional `--start-reference` image keeps the original landmark visible for loop verification. It is the model’s own visual memory, not telemetry. A commanded turn does not count as a completed turn; an around-the-block success requires seeing the starting landmark and road orientation again.
 
