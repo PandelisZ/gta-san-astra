@@ -1,0 +1,13 @@
+{
+  "name": "block-attempt-03",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "service_tier": "fast",
+  "requested_frames": 3600,
+  "recorded_frames": 3096,
+  "duration_seconds": 51.651651651651655,
+  "outcome": "Two visually completed right turns, curb/pole recovery, full block not completed.",
+  "interruption": "Transient model connection failure after55bursts; continued5bursts fromsamegameandvisualcontext.",
+  "video_sha256": "9fb621c7e20d1a1de3288409b44b74f3428cdefc7e3e0124d65fad36ee503936",
+  "autonomy": "All driving phases chosen by Astra from screenshots. No recorded action replay or hardcoded driving route."
+}
