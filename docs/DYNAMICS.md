@@ -31,3 +31,9 @@ This revision is prepared for the next trial wave; it was not injected into ongo
 ## Avoiding unnecessary signal-only waiting
 
 Route wave02 decisions24,28,32 and35 report stationary right-lane alignment and wait on signal color alone. Decision28's saved image shows no vehicle occupying the visible immediate right-turn corridor, although pedestrians remain relevant. The next game policy explicitly permits a right turn after stopping when the whole visible path and destination lane are clear, and still yields to actual traffic or pedestrian conflicts. This is a policy for the game evaluation, not a claim about every real-world junction. No turn sequence or control duration is prescribed. Its effect remains to be tested in the next wave.
+
+## Steering response changes as motion builds
+
+Single-minute-03 decisions 12–16 provide a concrete prediction error. After little observed response to powered left steering, the policy extended that correction. It then reported substantially greater forward travel and left yaw than expected, requiring braking. Later images show the car diagonal across the approach. These screenshots do not measure speed or a numeric steering gain. They do show why a duration learned from near-standstill should not be reused without considering increasing travel.
+
+Prepared for the following attempt: retain whether travel is increasing, steady, or slowing, and revise expected yaw as motion builds before extending steering. This is general feedback guidance, not a prescribed control sequence. The current single-minute-03 policy remains unchanged; the benefit of this addition is untested.
