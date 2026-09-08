@@ -1,0 +1,24 @@
+{
+  "trial": "stream-recovery-minute-02-complete",
+  "source_video": "/Users/pz/w/oaihackathon/docs/videos/stream-recovery-minute-02-complete.mp4",
+  "attachment_url": "https://github.com/user-attachments/assets/87ecc867-9bef-4dca-9be4-4638a4f9115c",
+  "issue_comment_url": "https://github.com/PandelisZ/gta-san-astra/issues/1#issuecomment-5592061402",
+  "duration_label_seconds": 60,
+  "frames": 3597,
+  "source_frames": 3604,
+  "bytes": 21757284,
+  "sha256": "46610613faf57b4395a0073911ad34d62050043b8cbc5bd2808698d287f2c16f",
+  "decisions": 83,
+  "outcome": "One completed right turn with curb contact; later carjacking/ejection and re-entry. Block loop and landmark return incomplete.",
+  "continuity": "Three successive recordings of the same game across transport interruptions; no game reset or controls replayed. First 3597 frames shown; all 3604 source frames retained.",
+  "verification": {
+    "source_sha256_matches_sidecar": true,
+    "persisted_issue_comment": true,
+    "public_attachment": {
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_range": "bytes 0-0/21757284"
+    }
+  },
+  "uploaded_at": "2026-09-08T21:23:52.224762+00:00"
+}

@@ -44,6 +44,10 @@ https://github.com/user-attachments/assets/ce89c0a6-ea37-432a-8c56-662ffddefa19
 
 https://github.com/user-attachments/assets/b0ccfef0-d235-4a07-8a98-0814c78eefb0
 
+**Parallel recovery attempt 02 — 60.01 seconds across three continuous recordings; curb contact, carjacking, and re-entry; incomplete loop.**
+
+https://github.com/user-attachments/assets/87ecc867-9bef-4dca-9be4-4638a4f9115c
+
 The MP4s and metadata also remain versioned under [docs/videos](docs/videos). [Upload provenance](docs/evidence/video-uploads.json) records attachment URLs and checksums.
 
 
