@@ -4,6 +4,7 @@ import ScreenCaptureKit
 import Foundation
 import ImageIO
 import UniformTypeIdentifiers
+import Darwin
 
 struct BridgeError: Error, CustomStringConvertible { let description: String; init(_ message: String) { description = message } }
 var operationResult: [String: Any] = [:]
@@ -63,31 +64,9 @@ func run() async throws {
         let activated = app.activate(options: [.activateAllWindows])
         output(["ok":activated,"pid":app.processIdentifier])
     case "capture":
-        guard let path = option("--output") else { throw BridgeError("capture requires --output PATH") }
-        let content = try await SCShareableContent.excludingDesktopWindows(true, onScreenWindowsOnly: true)
-        let candidates = content.windows.filter { $0.owningApplication?.processID == app.processIdentifier && $0.windowLayer == 0 && $0.frame.width > 1 && $0.frame.height > 1 }
-        let target: SCWindow?
-        if let rawID = option("--window-id") {
-            guard let id = UInt32(rawID) else { throw BridgeError("window-id must be a positive integer") }
-            target = candidates.first { $0.windowID == id }
-        }
-        else { target = candidates.max { $0.frame.width * $0.frame.height < $1.frame.width * $1.frame.height } }
-        guard let window = target else { throw BridgeError("No matching visible PCSX2 window") }
-        let filter = SCContentFilter(desktopIndependentWindow: window)
-        let config = SCStreamConfiguration()
-        config.width = Int(window.frame.width)
-        config.height = Int(window.frame.height)
-        config.showsCursor = false
-        config.ignoreShadowsSingleWindow = true
-        guard let cropTop = Int(option("--crop-top") ?? "0"), cropTop >= 0, cropTop < config.height else { throw BridgeError("crop-top must be an integer from 0 to window height minus 1") }
-        let captured = try await SCScreenshotManager.captureImage(contentFilter: filter, configuration: config)
-        guard let image = captured.cropping(to: CGRect(x:0, y:cropTop, width:captured.width, height:captured.height - cropTop)) else { throw BridgeError("Could not crop captured window") }
-        let url = URL(fileURLWithPath: path)
-        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-        guard let dest = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else { throw BridgeError("Cannot write PNG destination") }
-        CGImageDestinationAddImage(dest, image, nil)
-        guard CGImageDestinationFinalize(dest) else { throw BridgeError("PNG write failed") }
-        output(["ok":true,"pid":app.processIdentifier,"path":url.path,"windowId":window.windowID,"title":window.title ?? "","width":image.width,"height":image.height,"cropTop":cropTop,"timestamp":ISO8601DateFormatter().string(from:Date())])
+        var arguments = argv
+        if option("--pid") == nil { arguments += ["--pid", String(app.processIdentifier)] }
+        output(try captureInShortLivedProcess(arguments))
     case "input", "step":
         guard AXIsProcessTrusted() else { throw BridgeError("Accessibility permission is required for keyboard input. Enable your terminal/Codex app in System Settings > Privacy & Security > Accessibility.") }
         guard let names = option("--keys") else { throw BridgeError("input requires --keys comma-separated key names") }
@@ -144,6 +123,7 @@ func run() async throws {
 final class Session: @unchecked Sendable {
     let lock = NSLock()
     var active: ActiveKeys?
+    var captureProcess: Process?
     var closed = false
     func register(_ keys: ActiveKeys) throws {
         lock.lock(); defer { lock.unlock() }
@@ -158,13 +138,66 @@ final class Session: @unchecked Sendable {
         lock.lock(); let keys = active; lock.unlock()
         keys?.clear()
     }
+    func launchCapture(_ process: Process) throws {
+        lock.lock(); defer { lock.unlock() }
+        guard !closed else { throw BridgeError("Daemon stdin closed") }
+        try process.run()
+        captureProcess = process
+    }
+    func finishCapture(_ process: Process) {
+        lock.lock(); defer { lock.unlock() }
+        if captureProcess === process { captureProcess = nil }
+    }
     func close() {
-        lock.lock(); closed = true; let keys = active; lock.unlock()
+        lock.lock(); closed = true; let keys = active; let process = captureProcess; lock.unlock()
         keys?.clear()
+        if let process, process.isRunning { process.terminate() }
     }
     func isClosed() -> Bool { lock.lock(); defer { lock.unlock() }; return closed }
 }
 let session = Session()
+
+func captureInShortLivedProcess(_ arguments: [String]) throws -> [String: Any] {
+    // Persistent SCK clients from multiple copies of this daemon disconnect each
+    // other's replayd sessions. Isolate SCK in a one-shot helper and serialize its
+    // entire lifetime across daemon instances. Inputs remain warm and PID scoped.
+    let directory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".san-astra")
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    let lockPath = directory.appendingPathComponent("capture.lock").path
+    let descriptor = Darwin.open(lockPath, O_CREAT | O_RDWR | O_CLOEXEC, 0o600)
+    guard descriptor >= 0 else { throw BridgeError("Could not open shared capture lock") }
+    defer { Darwin.close(descriptor) }
+    guard flock(descriptor, LOCK_EX) == 0 else { throw BridgeError("Could not acquire shared capture lock") }
+    defer { flock(descriptor, LOCK_UN) }
+
+    let executable = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath().deletingLastPathComponent().appendingPathComponent("astra-bridge")
+    guard FileManager.default.isExecutableFile(atPath: executable.path) else { throw BridgeError("Capture helper missing; run sh native/build.sh") }
+    let process = Process()
+    process.executableURL = executable
+    process.arguments = arguments
+    let pipe = Pipe()
+    process.standardOutput = pipe
+    let errorPath = FileManager.default.temporaryDirectory.appendingPathComponent("astra-capture-\(UUID().uuidString).stderr")
+    FileManager.default.createFile(atPath: errorPath.path, contents: nil)
+    let errors = try FileHandle(forWritingTo: errorPath)
+    process.standardError = errors
+    defer { try? errors.close(); try? FileManager.default.removeItem(at:errorPath) }
+    try session.launchCapture(process)
+    defer { session.finishCapture(process) }
+    let timeout = DispatchWorkItem { if process.isRunning { process.terminate() } }
+    DispatchQueue.global().asyncAfter(deadline:.now() + 5, execute:timeout)
+    defer { timeout.cancel() }
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    process.waitUntilExit()
+    guard process.terminationStatus == 0 else {
+        let diagnostics = (try? String(contentsOf:errorPath, encoding:.utf8)) ?? ""
+        let stdout = String(data:data, encoding:.utf8) ?? ""
+        throw BridgeError("Capture helper failed or exceeded 5 seconds: \(stdout) \(diagnostics.suffix(1000))")
+    }
+    guard var result = try JSONSerialization.jsonObject(with:data) as? [String:Any] else { throw BridgeError("Capture helper returned invalid JSON") }
+    result["capture_backend"] = "serialized-one-shot"
+    return result
+}
 func writeResponse(_ response: [String: Any]) {
     let data = try! JSONSerialization.data(withJSONObject: response, options: [.sortedKeys])
     FileHandle.standardOutput.write(data)

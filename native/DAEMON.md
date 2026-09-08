@@ -2,8 +2,8 @@
 
 Build `sh native/build-daemon.sh`; launch `native/astra-daemon` as a persistent
 child process. This builds a separate executable and does not replace the live
-`astra-bridge` CLI. The daemon initializes AppKit once and caches the PCSX2
-application reference, revalidating it when the emulator exits.
+`astra-bridge` CLI. The daemon initializes AppKit once. With multiple emulator instances, provide
+`pid` on every request; an omitted PID fails when selection is ambiguous.
 
 Send one JSON object per stdin line and read one JSON object per stdout line.
 Keep stdin open until responses have arrived. There is no startup banner.
@@ -27,7 +27,10 @@ An already-active emulator skips the focus call and its delay.
 
 Requests run sequentially, including timed holds. Inputs release at each action's
 end, so this prototype does not retain throttle during model inference. Capture
-requests wait for a preceding timed action. A received `release` interrupts active
+requests wait for a preceding timed action. ScreenCaptureKit runs in the adjacent
+short-lived `astra-bridge` helper under `~/.san-astra/capture.lock`, so several
+warm daemons do not keep conflicting replayd sessions alive. The lock covers the
+helper lifetime; the helper is terminated after five seconds or daemon shutdown. A received `release` interrupts active
 keys immediately, although its response may wait for the current action's sleep
 to finish. EOF, SIGINT, and SIGTERM release active keys and exit. EOF discards
 pending requests, so piping JSON through a command that immediately closes stdin
@@ -41,7 +44,15 @@ Only screenshot pixels and window metadata are read. No telemetry API is used.
 and signals without sending game controls. Actual game-control verification must
 be performed by the single operator who owns the active driving session.
 
-The first local read-only test on September 8 measured warm status responses at
-8–9 ms and two warm 786×610 PNG captures at 74–77 ms. These are individual samples,
-not throughput guarantees. Native action verification is separate from this
-read-only latency test.
+The first single-daemon read-only test on September 8 measured status responses at
+8–9 ms and two warm captures at 74–77 ms. That original in-process capture design
+failed when several persistent daemons connected to replayd. The serialized helper
+fix passed four concurrent clients with eight captures at 227–935 ms including
+queueing. These are individual samples, not throughput guarantees. Native action
+verification is separate from this read-only capture test.
+
+Reproduce the multi-process regression without game inputs:
+
+```
+python3 native/daemon-multiprocess-smoke.py --pids PID1 PID2 PID3 PID4
+```

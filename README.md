@@ -129,6 +129,8 @@ uv run python scripts/report.py "$RUN_DIR"
 
 The demonstrated configuration uses warm native-daemon and Codex app-server transports with 512-pixel RGB JPEG inputs. JPEG reduces bytes sent; fewer bytes alone do not establish lower vision-token usage. Raw PNGs remain available as evidence. The portable fallbacks are `--bridge-transport cli --policy-transport cli`.
 
+When a controller targets a PID (`SAN_ASTRA_PID` or its `pid` argument), input and frame stepping use `--no-focus` in both native transports, including recording hotkeys. This overrides an input caller's `--focus` flag and avoids changing application focus between emulator instances. The shared actuation mutex still serializes input; an explicit `focus` command remains available when activation is intentional.
+
 The earlier recorded run used the fixed 12-frame steering / 48-frame continuation policy; it is not retroactive evidence for the new model-selected phases. That completed 20-decision run requested 1,200 emulated frames and took 273.18 wall-clock seconds. Median model-decision latency was 7.48 seconds, with variable multi-second calls. This is a paused simulation experiment, not realtime wall-clock autonomous driving. See [the measured run summary](docs/TESTING.md).
 
 The runner stops at the decision limit, on a model stop decision, or on failure. Controls are released on exit, including Ctrl-C. Explicit release is also available:
