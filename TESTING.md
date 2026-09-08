@@ -9,8 +9,11 @@ Validated on this Mac with PCSX2 2.8.2, September 8, 2026.
 - The configured Cross input was exercised in the BIOS language screen alongside frame stepping.
 - CLI returns screenshot files and writes action/observation JSONL records.
 - MCP stdio initialization, tool listing, and `doctor` call pass against a real subprocess. Image response shape is covered in the test suite.
+- Real MCP `observe` returned a decodable 489×480 PNG with the 32-pixel titlebar removed. Evidence: `runs/mcp-smoke/result.json`.
+- Live stride checks sent 1, 5, and 10 VSync requests and returned screenshots. Two separate observations taken while paused had identical pixel hashes. Evidence: `runs/stride-smoke/result.json`.
 - Live Astra image inference succeeded using the bundled Codex CLI, `gpt-6-astra`, with a structured decision in 7.36 seconds. Evidence is in `runs/vision-smoke/`.
 - The older system Codex CLI rejected Astra. The runner now selects the newer app-bundled CLI; `SAN_ASTRA_CODEX` overrides this.
+- A three-decision Astra loop operated the BIOS preferences menus from screenshots, including language confirmation. Evidence: `runs/bios-control/`.
 
 ## Remaining gameplay gate
 

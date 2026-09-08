@@ -37,7 +37,7 @@ At NTSC 59.94 VSyncs/second, strides 1, 5, and 10 correspond nominally to 59.94,
 
 ## Drive with Astra
 
-The automated runner uses the existing authenticated Codex CLI with `gpt-6-astra`; it does not require a separate API key. Each decision receives the latest two screenshots and its own previous actions. Tools and web access are disabled for the decision process.
+The automated runner uses the existing authenticated Codex CLI with `gpt-6-astra`; it does not require a separate API key. It prefers the newer app-bundled CLI when available; set `SAN_ASTRA_CODEX` to choose another executable. Each decision receives the latest two screenshots and its own previous actions. Tools and web access are disabled for the decision process.
 
 ```sh
 uv run python scripts/autodrive.py \
@@ -62,6 +62,8 @@ uv run san-astra release
 
 For realtime input while the emulator is running, use `action --duration-ms 150 --throttle`. Unlike `step`, realtime actions allow the world to continue during inference. Space in the emulator toggles its pause state; Start is the game's own pause/menu button.
 
+For repeated menu confirmations, insert an empty `step` between presses so the game can sample the released button. Consecutive driving steps can keep accelerating or steering. `--crop-top 32` removes the titlebar by default; use `--crop-top 0` for fullscreen, or set `SAN_ASTRA_CROP_TOP`.
+
 `.codex/config.toml` registers this repository's MCP server for a new trusted Codex session. The current session can use the CLI immediately. MCP exposes `observe`, `step`, `action`, `release`, and `doctor`, with PNG image content returned inline by observation tools. Update the absolute paths if you move this checkout.
 
 | Driving control | PS2 button | Current keyboard |
@@ -79,6 +81,14 @@ The Python controller reads keyboard mappings from the isolated profile when pre
 ## Evidence and evaluation
 
 Each action and screenshot is saved beneath `runs/` with timestamps, requested frames, actual wall time, input buttons, and image paths. Autonomous runs also include validated model decisions, model latency, and the fixed stride. Keep a saved driving scenario for comparisons; PCSX2 supports launching it with `--statefile` through `setup_emulator.py`.
+
+Autonomous runs write `run_manifest.json` and `run_summary.json` with the model, goal, stride, outcome, requested frame counts, and latency. `--scenario-state PATH` records the initial scenario's provenance; it does not load that state or expose it to the model. Generate a local screenshot gallery with:
+
+```sh
+uv run python scripts/report.py runs/<autodrive-run>
+# Optional manual observations keyed by decision number:
+uv run python scripts/report.py runs/<autodrive-run> --annotations ratings.json
+```
 
 Judge road following, visible collisions, pedestrian avoidance, recovery, and task completion from screenshots or a human review. Logs do not contain ground-truth collision counts or distances, and model self-reports are not objective scores. Save state resets are emulator controls only; the policy never receives save-state contents.
 
