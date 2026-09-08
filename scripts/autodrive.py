@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -13,6 +14,8 @@ import time
 from typing import Callable
 
 SCHEMA = Path(__file__).with_name("decision.schema.json")
+LESSONS_PATH = Path(__file__).resolve().parents[1] / "docs/driving-lessons.md"
+LESSONS_TEXT = LESSONS_PATH.read_text()
 BUTTONS = frozenset(json.loads(SCHEMA.read_text())["properties"]["buttons"]["items"]["enum"])
 # Valid flags discovered using this machine's `codex features list`.
 DISABLED_FEATURES = (
@@ -156,10 +159,10 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
     route_note = next((decision["route_note"] for decision in reversed(history) if decision.get("route_note")),
                       "No prior route state: identify visible starting landmarks and intended first turn.")
     dynamics_note = next((decision["dynamics_note"] for decision in reversed(history) if decision.get("dynamics_note")),
-                         "Uncalibrated: infer motion from screenshots before assuming a stopping or steering response.")
+                         "No motion observations yet in this attempt; use transferable lessons as tentative priors and verify them visually.")
     return (
         "You are Astra driving GTA San Andreas in a PS2 emulator for a visual autonomy evaluation. "
-        "Use ONLY the attached game screenshots and your own prior actions below. Do not call tools, "
+        "Use ONLY the attached game screenshots, your own prior actions and supplied visual lessons below. Do not call tools, "
         "inspect files, search the web, or obtain game telemetry. Return the required JSON decision. "
         f"There are {image_count} screenshots in supplied order; the final one is current. "
         + timing +
@@ -253,7 +256,7 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         "forward useful response estimates instead of erasing them with each maneuver. This is "
         "qualitative visual evidence, not exact speed telemetry. "
         "Rationale must be a visible-scene explanation within120characters, not hidden reasoning. Use terse concrete observations. Avoid repeating unchanged landmarks in dynamics_note.\n"
-        f"Goal: {goal}\nPrevious visual route note: {route_note}\nPrevious visual dynamics note: {dynamics_note}\nOwn previous decisions: {json.dumps(history[-5:])}\n"
+        f"Transferable lessons (not current state):\n{LESSONS_TEXT}\nGoal: {goal}\nPrevious visual route note: {route_note}\nPrevious visual dynamics note: {dynamics_note}\nOwn previous decisions: {json.dumps(history[-5:])}\n"
     )
 
 
@@ -335,6 +338,8 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                 "emulator_fps": emulator_fps, "steer_pulse_frames": steer_pulse_frames,
                 "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
                 "steps_limit": steps, "scenario_state": scenario_state,
+                "driving_lessons": LESSONS_TEXT,
+                "driving_lessons_sha256": hashlib.sha256(LESSONS_TEXT.encode()).hexdigest(),
                 "scenario_state_note": "Provenance label only; runner does not load this state",
                 "resume_from": str(resume_from) if resume_from else None,
                 "resume_decision_count": len(resume_history),

@@ -1,0 +1,222 @@
+{
+  "purpose": "Input-display persistence diagnostic only; no throttle or steering; not a route attempt",
+  "checks": [
+    {
+      "name": "new_key_at_finish",
+      "burst": {
+        "action": {
+          "type": "burst",
+          "segments": [
+            {
+              "buttons": [],
+              "frames": 60
+            }
+          ],
+          "native_segments": [
+            {
+              "keys": [],
+              "frames": 60
+            }
+          ],
+          "thinking_buttons": [
+            "r1"
+          ],
+          "thinking_keys": [
+            "e"
+          ],
+          "frames": 60,
+          "fps": 59.94,
+          "nominal_duration_ms": 1001.001,
+          "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+          "native": {
+            "elapsedMs": 1021.10025,
+            "fps": 59.94,
+            "frames": 60,
+            "ok": true,
+            "pauseToggleSent": false,
+            "pid": 90202,
+            "requestedDurationMs": 1001.0010010010011,
+            "requestedFrames": 60,
+            "runningElapsedMs": 1008.287792,
+            "segments": 1,
+            "slowMotionToggleSent": true,
+            "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+          },
+          "elapsed_ms": 1110.74
+        },
+        "observation": {
+          "type": "observation",
+          "image_path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908803837378000.png",
+          "capture_ms": 189.95,
+          "native": {
+            "cropTop": 32,
+            "height": 623,
+            "ok": true,
+            "path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908803837378000.png",
+            "pid": 90202,
+            "timestamp": "2026-09-08T23:06:44Z",
+            "title": "Grand Theft Auto - San Andreas",
+            "width": 861,
+            "windowId": 131107
+          },
+          "capture_attempts": 1,
+          "capture_errors": []
+        }
+      },
+      "after_2_seconds": {
+        "type": "observation",
+        "image_path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908806031472000.png",
+        "capture_ms": 186.92,
+        "native": {
+          "cropTop": 32,
+          "height": 623,
+          "ok": true,
+          "path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908806031472000.png",
+          "pid": 90202,
+          "timestamp": "2026-09-08T23:06:46Z",
+          "title": "Grand Theft Auto - San Andreas",
+          "width": 861,
+          "windowId": 131107
+        },
+        "capture_attempts": 1,
+        "capture_errors": []
+      }
+    },
+    {
+      "name": "already_held_in_action",
+      "burst": {
+        "action": {
+          "type": "burst",
+          "segments": [
+            {
+              "buttons": [
+                "r1"
+              ],
+              "frames": 60
+            }
+          ],
+          "native_segments": [
+            {
+              "keys": [
+                "e"
+              ],
+              "frames": 60
+            }
+          ],
+          "thinking_buttons": [
+            "r1"
+          ],
+          "thinking_keys": [
+            "e"
+          ],
+          "frames": 60,
+          "fps": 59.94,
+          "nominal_duration_ms": 1001.001,
+          "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames",
+          "native": {
+            "elapsedMs": 1019.984333,
+            "fps": 59.94,
+            "frames": 60,
+            "ok": true,
+            "pauseToggleSent": false,
+            "pid": 90202,
+            "requestedDurationMs": 1001.0010010010011,
+            "requestedFrames": 60,
+            "runningElapsedMs": 1007.10125,
+            "segments": 1,
+            "slowMotionToggleSent": true,
+            "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+          },
+          "elapsed_ms": 1091.27
+        },
+        "observation": {
+          "type": "observation",
+          "image_path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908807312774000.png",
+          "capture_ms": 202.92,
+          "native": {
+            "cropTop": 32,
+            "height": 623,
+            "ok": true,
+            "path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908807312774000.png",
+            "pid": 90202,
+            "timestamp": "2026-09-08T23:06:47Z",
+            "title": "Grand Theft Auto - San Andreas",
+            "width": 861,
+            "windowId": 131107
+          },
+          "capture_attempts": 1,
+          "capture_errors": []
+        }
+      },
+      "after_2_seconds": {
+        "type": "observation",
+        "image_path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908809516778000.png",
+        "capture_ms": 190.88,
+        "native": {
+          "cropTop": 32,
+          "height": 623,
+          "ok": true,
+          "path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908809516778000.png",
+          "pid": 90202,
+          "timestamp": "2026-09-08T23:06:49Z",
+          "title": "Grand Theft Auto - San Andreas",
+          "width": 861,
+          "windowId": 131107
+        },
+        "capture_attempts": 1,
+        "capture_errors": []
+      }
+    },
+    {
+      "name": "native_process_alive",
+      "observation": {
+        "type": "observation",
+        "image_path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908810716450000.png",
+        "capture_ms": 207.83,
+        "native": {
+          "cropTop": 32,
+          "height": 623,
+          "ok": true,
+          "path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908810716450000.png",
+          "pid": 90202,
+          "timestamp": "2026-09-08T23:06:50Z",
+          "title": "Grand Theft Auto - San Andreas",
+          "width": 861,
+          "windowId": 131107
+        },
+        "capture_attempts": 1,
+        "capture_errors": []
+      }
+    }
+  ],
+  "alive_input_result": {
+    "durationMs": 4000,
+    "elapsedMs": 4229.481583,
+    "frames": 0,
+    "keys": "e",
+    "ok": true,
+    "pid": 90202,
+    "requestedDurationMs": 4000
+  },
+  "released": {
+    "type": "observation",
+    "image_path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908814509854000.png",
+    "capture_ms": 212.18,
+    "native": {
+      "cropTop": 32,
+      "height": 623,
+      "ok": true,
+      "path": "/Users/pz/w/oaihackathon/runs/input-persistence-check/20260908-160642-b18cc66c/frame-1788908814509854000.png",
+      "pid": 90202,
+      "timestamp": "2026-09-08T23:06:54Z",
+      "title": "Grand Theft Auto - San Andreas",
+      "width": 861,
+      "windowId": 131107
+    },
+    "capture_attempts": 1,
+    "capture_errors": []
+  },
+  "master": "/Users/pz/w/oaihackathon/.runtime/main-flow/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908160642.mkv",
+  "visual_result": "R1 displayed after both bridge-return cases and while native process alive; no R1 after release. Normal persistence verified; braking strength not tested.",
+  "native_frames": 413
+}

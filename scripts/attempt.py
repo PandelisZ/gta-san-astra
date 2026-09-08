@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run and record an autonomous, approximately one-minute simulation attempt.
+"""Run and record an autonomous, bounded simulation attempt.
 
 Before default reset, quit PCSX2. With --no-reset the caller must have restored
 the paused baseline and stopped recording. This script never chooses driving
@@ -105,8 +105,8 @@ def attempt(args) -> dict:
         raise ValueError("mode must be stepped, burst or flow")
     if args.mode in ("burst", "flow") and args.bridge_transport != "cli":
         raise ValueError("burst mode requires --bridge-transport cli")
-    if not 1 <= args.target_recorded_frames <= 3597:
-        raise ValueError("target recorded frames must be between 1 and 3597")
+    if not 1 <= args.target_recorded_frames <= 7193:
+        raise ValueError("target recorded frames must be between 1 and 7193")
     if args.resume_from is not None and not args.no_reset:
         raise ValueError("Visual continuation requires --no-reset; stale context cannot follow a baseline reset")
     start_reference = args.start_reference
@@ -305,14 +305,14 @@ def main():
     parser.add_argument("--pid", type=int, default=int(os.environ["SAN_ASTRA_PID"]) if os.environ.get("SAN_ASTRA_PID") else None)
     parser.add_argument("--allow-multiple", action="store_true", help="Permit other instances using different profiles; --no-reset also requires an explicit PID")
     parser.add_argument("--no-reset", action="store_true", help="Caller already restored paused baseline and ensured recording is OFF")
-    parser.add_argument("--steps", type=int, default=120, help="Decision safety cap; recording target is3597 stored frames")
+    parser.add_argument("--steps", type=int, default=120, help="Decision safety cap; duration is controlled by --target-recorded-frames")
     parser.add_argument("--frame-stride", type=int, default=60, help="Requested VSyncs per decision, 1..120 (default: 60)")
     parser.add_argument("--mode", choices=("stepped", "burst", "flow"), default="stepped", help="stepped frames, paused burst decisions, or flow with half-speed inference")
     parser.add_argument("--vision-max-edge", type=int, default=512)
     parser.add_argument("--bridge-transport", choices=("cli", "daemon"), default="daemon")
     parser.add_argument("--resume-from", type=Path, help="Continue visual context only; never replay controls")
     parser.add_argument("--start-reference", type=Path, help="Optional original starting screenshot; inherited from the resume manifest and fixed for this attempt")
-    parser.add_argument("--target-recorded-frames", type=int, default=3597, help="Stored-frame target; reduce for same-game continuation")
+    parser.add_argument("--target-recorded-frames", type=int, default=3597, help="Stored-frame target (3597 about one minute; 7193 about two minutes)")
     parser.add_argument("--timeout", type=float, default=120)
     parser.add_argument("--goal", default="Drive around one city block and return visibly to the starting landmark and orientation. Choose all driving actions autonomously from screenshots; avoid obstacles and pedestrians and recover when necessary.")
     args = parser.parse_args()
