@@ -13,26 +13,34 @@ let application = NSApplication.shared
 application.setActivationPolicy(.prohibited)
 var argv: [String] = []
 func option(_ name: String) -> String? { guard let i = argv.firstIndex(of: name), i + 1 < argv.count else { return nil }; return argv[i + 1] }
-func emulator() throws -> NSRunningApplication {
+struct EmulatorTarget {
+    let processIdentifier: pid_t
+    let application: NSRunningApplication?
+    var localizedName: String? { application?.localizedName }
+    var isActive: Bool { application?.isActive ?? false }
+    func activate(options: NSApplication.ActivationOptions) throws -> Bool {
+        guard let application else { throw BridgeError("PCSX2 PID \(processIdentifier) is running but macOS application metadata is unavailable for focus; use --no-focus for PID-scoped input") }
+        return application.activate(options: options)
+    }
+}
+func emulator() throws -> EmulatorTarget {
     if let p = option("--pid") {
-        // LaunchServices metadata can go stale in a warm process when several
-        // instances share a bundle identifier. Check the live executable on each
-        // request, which also avoids trusting a PID after the process exits.
-        guard let pid = Int32(p), pid > 0 else { throw BridgeError("--pid must identify a running PCSX2 application") }
+        guard let pid = Int32(p), pid > 0 else { throw BridgeError("--pid must be a positive process ID") }
+        // Validate the live executable without requiring LaunchServices metadata.
+        // Same-bundle instances may temporarily lack NSRunningApplication objects.
         // PROC_PIDPATHINFO_MAXSIZE is an expression macro unavailable to Swift.
         var path = [CChar](repeating: 0, count: 4 * Int(MAXPATHLEN))
-        guard proc_pidpath(pid, &path, UInt32(path.count)) > 0,
-              URL(fileURLWithPath: String(cString: path)).lastPathComponent.lowercased() == "pcsx2",
-              let app = NSRunningApplication(processIdentifier: pid) else { throw BridgeError("--pid must identify a running PCSX2 application") }
-        return app
+        guard proc_pidpath(pid, &path, UInt32(path.count)) > 0 else { throw BridgeError("Could not read executable path for PID \(pid): \(String(cString: strerror(errno)))") }
+        guard URL(fileURLWithPath: String(cString: path)).lastPathComponent.lowercased() == "pcsx2" else { throw BridgeError("PID \(pid) executable is not PCSX2") }
+        return EmulatorTarget(processIdentifier: pid, application: NSRunningApplication(processIdentifier: pid))
     }
     let candidates = NSWorkspace.shared.runningApplications.filter { ($0.bundleIdentifier ?? "").lowercased().contains("pcsx2") || ($0.localizedName ?? "").lowercased().contains("pcsx2") }
     guard !candidates.isEmpty else { throw BridgeError("PCSX2 is not running. Launch the emulator first.") }
     guard candidates.count == 1 else { throw BridgeError("Multiple PCSX2 applications are running; specify --pid for this operation") }
     let app = candidates[0]
-    return app
+    return EmulatorTarget(processIdentifier: app.processIdentifier, application: app)
 }
-func windows(_ app: NSRunningApplication) -> [[String: Any]] {
+func windows(_ app: EmulatorTarget) -> [[String: Any]] {
     let list = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] ?? []
     return list.filter { ($0[kCGWindowOwnerPID as String] as? Int32) == app.processIdentifier && ($0[kCGWindowLayer as String] as? Int) == 0 }.compactMap { w in
         guard let id = w[kCGWindowNumber as String] as? UInt32, let bounds = w[kCGWindowBounds as String] as? [String: Any] else { return nil }
@@ -69,7 +77,7 @@ func run() async throws {
     case "status": output(["ok":true,"pid":app.processIdentifier,"app":app.localizedName ?? "PCSX2","screenRecording":CGPreflightScreenCaptureAccess(),"accessibility":AXIsProcessTrusted(),"windows":windows(app)])
     case "windows": output(["ok":true,"windows":windows(app)])
     case "focus":
-        let activated = app.activate(options: [.activateAllWindows])
+        let activated = try app.activate(options: [.activateAllWindows])
         output(["ok":activated,"pid":app.processIdentifier])
     case "capture":
         var arguments = argv
@@ -92,7 +100,7 @@ func run() async throws {
         try session.register(active)
         defer { active.clear(); session.unregister(active) }
         if !argv.contains("--no-focus") && (argv.contains("--focus") || command == "step") && !app.isActive {
-            _ = app.activate(options:[.activateAllWindows])
+            _ = try app.activate(options:[.activateAllWindows])
             try await Task.sleep(for:.milliseconds(100))
         }
         let started = DispatchTime.now().uptimeNanoseconds
