@@ -4,6 +4,7 @@ import ScreenCaptureKit
 import Foundation
 import ImageIO
 import UniformTypeIdentifiers
+import Darwin
 
 struct BridgeError: Error, CustomStringConvertible { let description: String; init(_ message: String) { description = message } }
 func output(_ value: [String: Any]) { let data = try! JSONSerialization.data(withJSONObject: value, options: [.sortedKeys]); print(String(data: data, encoding: .utf8)!) }
@@ -12,7 +13,14 @@ let argv = Array(CommandLine.arguments.dropFirst())
 func option(_ name: String) -> String? { guard let i = argv.firstIndex(of: name), i + 1 < argv.count else { return nil }; return argv[i + 1] }
 func emulator() throws -> NSRunningApplication {
     if let p = option("--pid") {
-        guard let pid = Int32(p), let app = NSRunningApplication(processIdentifier: pid), (app.bundleIdentifier ?? "").lowercased().contains("pcsx2") || (app.localizedName ?? "").lowercased().contains("pcsx2") else { throw BridgeError("--pid must identify a running PCSX2 application") }
+        // Same-bundle instances can have stale LaunchServices metadata. Validate
+        // the live executable instead of bundleIdentifier or localizedName.
+        guard let pid = Int32(p), pid > 0 else { throw BridgeError("--pid must identify a running PCSX2 application") }
+        // PROC_PIDPATHINFO_MAXSIZE is an expression macro unavailable to Swift.
+        var path = [CChar](repeating: 0, count: 4 * Int(MAXPATHLEN))
+        guard proc_pidpath(pid, &path, UInt32(path.count)) > 0,
+              URL(fileURLWithPath: String(cString: path)).lastPathComponent.lowercased() == "pcsx2",
+              let app = NSRunningApplication(processIdentifier: pid) else { throw BridgeError("--pid must identify a running PCSX2 application") }
         return app
     }
     let candidates = NSWorkspace.shared.runningApplications.filter { ($0.bundleIdentifier ?? "").lowercased().contains("pcsx2") || ($0.localizedName ?? "").lowercased().contains("pcsx2") }
