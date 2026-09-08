@@ -24,6 +24,16 @@ https://github.com/user-attachments/assets/00848160-b974-4c03-a24c-a454d153272a
 
 [Driving review](docs/streams/flow-minute-01-review.md) · [Upload provenance](docs/evidence/flow-minute-01-upload.json)
 
+Recent flow trials preserve both the complete simulation recording and a video of real elapsed time:
+
+| Trial | Simulation / elapsed time | Observed result |
+| --- | --- | --- |
+| [Flow 01](docs/streams/flow-minute-01-review.md) | 60.36 / 109.68 seconds | Zero turns; curb and traffic constraints |
+| [Flow 02](docs/streams/flow-minute-02-review.md) | 61.44 / 111.83 seconds | Zero turns; inference controls and four-image context verified |
+| [Flow 03](docs/streams/flow-minute-03-review.md) | 60.84 / 110.70 seconds | Zero turns; shorter responses and trial budget context, apparent carjacking |
+
+The [paired response comparison](docs/streams/flow-policy-latency.md) measured lower offline latency with shorter outputs. The live driving result remains incomplete.
+
 **Single-game attempt 03 — interrupted at30.03seconds by Astra usage limits, one rightturn with pole collision and recovery, incomplete loop.**
 
 https://github.com/user-attachments/assets/2551e731-6d48-4544-8c19-7d59acb5656a
