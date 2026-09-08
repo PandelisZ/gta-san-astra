@@ -76,6 +76,9 @@ class Controller:
         self.default_frame_stride = frame_stride if frame_stride is not None else int(os.environ.get("SAN_ASTRA_FRAME_STRIDE", "60"))
         if isinstance(self.default_frame_stride, bool) or not isinstance(self.default_frame_stride, int) or not 1 <= self.default_frame_stride <= 120:
             raise ValueError("frame_stride must be an integer between 1 and 120")
+        self.frame_interval_ms = int(os.environ.get("SAN_ASTRA_FRAME_INTERVAL_MS", "90"))
+        if not 10 <= self.frame_interval_ms <= 1000:
+            raise ValueError("SAN_ASTRA_FRAME_INTERVAL_MS must be between 10 and 1000")
         self.bridge = Path(bridge or os.environ.get("SAN_ASTRA_BRIDGE", Path(__file__).resolve().parents[2] / "native/astra-bridge"))
         self.run_dir = Path(run_dir or os.environ.get("SAN_ASTRA_RUN_DIR", "runs"))
         self.window_id = window_id or (int(os.environ["SAN_ASTRA_WINDOW_ID"]) if os.environ.get("SAN_ASTRA_WINDOW_ID") else None)
@@ -118,11 +121,16 @@ class Controller:
             yield
 
     def _call_native(self, *args: str) -> dict:
+        timeout = 15.0
+        if args and args[0] == "step":
+            frames = int(args[args.index("--frames") + 1]) if "--frames" in args else 1
+            interval = int(args[args.index("--frame-interval-ms") + 1]) if "--frame-interval-ms" in args else 90
+            timeout = max(timeout, min(132.0, frames * (interval + 10) / 1000 + 10))
         try:
             with subprocess.Popen([str(self.bridge), *args], text=True,
                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
                 try:
-                    stdout, stderr = process.communicate(timeout=15)
+                    stdout, stderr = process.communicate(timeout=timeout)
                 except (subprocess.TimeoutExpired, KeyboardInterrupt):
                     # The native bridge handles SIGTERM by releasing active keys.
                     # Give that cleanup a bounded chance before forced termination.
@@ -198,10 +206,25 @@ class Controller:
         if self.window_id is not None:
             args.extend(["--window-id", str(self.window_id)])
         started = time.monotonic()
-        native = self.call(*args)
-        if not output.is_file():
-            raise ControlError(f"Bridge did not create screenshot: {output}")
-        data = {"type": "observation", "image_path": str(output), "capture_ms": round((time.monotonic() - started) * 1000, 2), "native": native}
+        capture_errors = []
+        for attempt in range(1, 4):
+            try:
+                native = self.call(*args)
+                if not output.is_file():
+                    raise ControlError(f"Bridge did not create screenshot: {output}")
+                break
+            except ControlError as exc:
+                capture_errors.append(str(exc))
+                self.record({"type": "capture_error", "capture_attempt": attempt,
+                             "error": str(exc), "retrying": attempt < 3})
+                if attempt == 3:
+                    raise
+                # Retry only observation; never replay the preceding game action.
+                time.sleep((0.1, 0.25)[attempt - 1])
+                output = directory / f"frame-{time.time_ns()}.png"
+                args[args.index("--output") + 1] = str(output)
+        data = {"type": "observation", "image_path": str(output), "capture_ms": round((time.monotonic() - started) * 1000, 2), "native": native,
+                "capture_attempts": attempt, "capture_errors": capture_errors}
         self.record(data)
         return data
 
@@ -259,7 +282,7 @@ class Controller:
                 else:
                     event.update(type="step", frames=frames)
                     event.pop("duration_ms")
-                    event["native"] = self.call("step", "--keys", ",".join(keys), "--frames", str(frames), "--frame-key", "n", "--frame-interval-ms", "90")
+                    event["native"] = self.call("step", "--keys", ",".join(keys), "--frames", str(frames), "--frame-key", "n", "--frame-interval-ms", str(self.frame_interval_ms))
             except BaseException as exc:
                 event["error"] = str(exc)
                 # A failed or interrupted bridge may leave remapped keys down.

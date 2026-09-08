@@ -99,6 +99,21 @@ def attempt(args) -> dict:
         raise ValueError("Attempt name already exists; choose a new name to preserve previous evidence")
     if not 1 <= args.steps <= 10000:
         raise ValueError("steps must be between 1 and 10000")
+    if not 1 <= args.frame_stride <= 120:
+        raise ValueError("frame stride must be between 1 and 120")
+    if not 1 <= args.target_recorded_frames <= 3597:
+        raise ValueError("target recorded frames must be between 1 and 3597")
+    if args.resume_from is not None and not args.no_reset:
+        raise ValueError("Visual continuation requires --no-reset; stale context cannot follow a baseline reset")
+    start_reference = args.start_reference
+    if start_reference is None and args.resume_from is not None:
+        prior_manifest = args.resume_from.expanduser().resolve() / "run_manifest.json"
+        if prior_manifest.is_file():
+            start_reference = json.loads(prior_manifest.read_text()).get("start_reference")
+    if start_reference is not None:
+        start_reference = Path(start_reference).expanduser().resolve()
+        if not start_reference.is_file():
+            raise ValueError(f"Starting screenshot reference does not exist: {start_reference}")
     existing = subprocess.run(["pgrep", "-fl", r"(^|[ /])autodrive\.py([ ]|$)"], capture_output=True, text=True)
     target_pid = args.pid
     if existing.returncode == 0 and not (target_pid is not None or args.allow_multiple):
@@ -117,11 +132,13 @@ def attempt(args) -> dict:
     manifest = {"name": args.name, "started_at": time.time(), "status": "preparing",
                 "goal": args.goal, "scenario": args.scenario, "reset": not args.no_reset,
                 "target_pid": target_pid, "profile": str(profile),
-                "steps_budget": args.steps, "frames_per_decision": 60,
-                "requested_vsync_budget": args.steps * 60,
-                "nominal_seconds_budget": round(args.steps * 60 / 59.94, 3),
-                "target_recorded_frames": 3597, "clip_seconds_limit": 60,
-                "duration_note": "Stop after a whole burst crosses3597 stored frames (about one minute), with120 decisions as a safety cap. Live count is buffered, so the full recording can exceed one minute. Git replay contains its first60 real seconds with no padding; actual frame count and duration are measured.",
+                "steps_budget": args.steps, "frames_per_decision": args.frame_stride,
+                "requested_vsync_budget": args.steps * args.frame_stride,
+                "nominal_seconds_budget": round(args.steps * args.frame_stride / 59.94, 3),
+                "target_recorded_frames": args.target_recorded_frames, "clip_seconds_limit": 60,
+                "duration_note": "Stop after a whole burst crosses the configured stored-frame target, with a decision safety cap. Live count is buffered, so full recording can exceed the target. Git replay contains up to its first60 real seconds with no padding; actual frame count and duration are measured.",
+                "resume_from": str(args.resume_from.resolve()) if args.resume_from else None,
+                "start_reference": str(start_reference) if start_reference else None,
                 "logic_sha256": {str(path.relative_to(ROOT)): file_sha256(path) for path in
                                  (ROOT / "scripts/autodrive.py", ROOT / "src/san_astra/policy.py")},
                 "autonomy": "Astra chooses every driving control phase. Wrapper only handles reset, recording and export.",
@@ -162,16 +179,20 @@ def attempt(args) -> dict:
         write_json(manifest_path, manifest)
         print(json.dumps({"status": "driving", "run": str(directory), "master": str(source)}), flush=True)
         command = [sys.executable, str(ROOT / "scripts/autodrive.py"), "--run-dir", str(directory),
-                   "--steps", str(args.steps), "--frame-stride", "60", "--mode", "stepped",
+                   "--steps", str(args.steps), "--frame-stride", str(args.frame_stride), "--mode", "stepped",
                    "--model", "gpt-6-astra", "--reasoning-effort", "low", "--service-tier", "fast",
                    "--policy-transport", "app-server", "--bridge-transport", args.bridge_transport,
                    "--vision-max-edge", str(args.vision_max_edge), "--goal", args.goal,
                    "--scenario-state", str(statefile), "--timeout", str(args.timeout),
-                   "--recording-master", str(source), "--target-recorded-frames", "3597"]
+                   "--recording-master", str(source), "--target-recorded-frames", str(args.target_recorded_frames)]
         environment = {**os.environ, "SAN_ASTRA_PCSX2_INI": str(profile / "inis/PCSX2.ini")}
         if target_pid is not None:
             command.extend(["--pid", str(target_pid)])
             environment["SAN_ASTRA_PID"] = str(target_pid)
+        if args.resume_from is not None:
+            command.extend(["--resume-from", str(args.resume_from.resolve())])
+        if start_reference is not None:
+            command.extend(["--start-reference", str(start_reference)])
         manifest["driver_exit_code"] = drive(command, directory / "driver.stdout", environment)
         summary_path = directory / "run_summary.json"
         if summary_path.is_file():
@@ -212,7 +233,7 @@ def attempt(args) -> dict:
             manifest.update(export=exported, decoded_frame_count=exported["decoded_frame_count"],
                             measured_video_duration_seconds=duration, video_sha256=checksum,
                             full_recording_duration_seconds=full_duration,
-                            recorded_target_reached=exported["decoded_frame_count"] >= 3597,
+                            recorded_target_reached=exported["decoded_frame_count"] >= args.target_recorded_frames,
                             git_video_frame_count=recording.count_frames(video),
                             measured_duration_source="MP4 container duration reported by FFmpeg",
                             status="failed" if failure else "completed", ended_at=time.time())
@@ -245,10 +266,13 @@ def main():
     parser.add_argument("--allow-multiple", action="store_true", help="Permit other instances using different profiles; --no-reset also requires an explicit PID")
     parser.add_argument("--no-reset", action="store_true", help="Caller already restored paused baseline and ensured recording is OFF")
     parser.add_argument("--steps", type=int, default=120, help="Decision safety cap; recording target is3597 stored frames")
+    parser.add_argument("--frame-stride", type=int, default=60, help="Requested VSyncs per decision, 1..120 (default: 60)")
     parser.add_argument("--vision-max-edge", type=int, default=512)
+    parser.add_argument("--bridge-transport", choices=("cli", "daemon"), default="daemon")
+    parser.add_argument("--resume-from", type=Path, help="Continue visual context only; never replay controls")
+    parser.add_argument("--start-reference", type=Path, help="Optional original starting screenshot; inherited from the resume manifest and fixed for this attempt")
+    parser.add_argument("--target-recorded-frames", type=int, default=3597, help="Stored-frame target; reduce for same-game continuation")
     parser.add_argument("--timeout", type=float, default=120)
-    parser.add_argument("--bridge-transport", choices=("daemon", "cli"), default="daemon",
-                        help="Native capture/control transport; CLI can recover daemon startup failures")
     parser.add_argument("--goal", default="Drive around one city block and return visibly to the starting landmark and orientation. Choose all driving actions autonomously from screenshots; avoid obstacles and pedestrians and recover when necessary.")
     args = parser.parse_args()
     profile_key = hashlib.sha256(str(args.profile.expanduser().resolve()).encode()).hexdigest()[:16]

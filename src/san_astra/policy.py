@@ -147,7 +147,7 @@ class CodexPolicy:
 
     def decide(self, images: list[Path], prompt: str, output_schema: dict):
         # Retry the same observation and instruction; this class never applies controls.
-        images = [Path(image) for image in images[-2:]]
+        images = [Path(image) for image in images[-3:]]
         started = time.monotonic()
         for retry in range(3):
             try:
@@ -180,8 +180,8 @@ class CodexPolicy:
         raise AssertionError("Unreachable retry state")
 
     def _decide_once(self, images: list[Path], prompt: str, output_schema: dict):
-        if not images or any(not Path(image).is_file() for image in images[-2:]):
-            raise ValueError("Policy requires one or two existing game screenshots")
+        if not images or any(not Path(image).is_file() for image in images[-3:]):
+            raise ValueError("Policy requires one to three existing game screenshots")
         started = time.monotonic()
         if self.last_turn_id is not None:
             deadline = time.monotonic() + self.timeout
@@ -206,7 +206,7 @@ class CodexPolicy:
         thread_id = self.thread_id
         self.pending.clear()
         turn = self._request("turn/start", {"threadId": thread_id,
-            "input": [{"type": "text", "text": prompt}] + [{"type": "localImage", "path": str(Path(image).resolve())} for image in images[-2:]],
+            "input": [{"type": "text", "text": prompt}] + [{"type": "localImage", "path": str(Path(image).resolve())} for image in images[-3:]],
             "effort": self.effort, "summary": "none", "serviceTier": self.service_tier,
             "outputSchema": output_schema, "environments": []})
         turn_id = turn["turn"]["id"]

@@ -1,0 +1,670 @@
+{
+  "source_main_commit": "58f9a40",
+  "summary": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "low",
+    "service_tier": "fast",
+    "goal": "Prepare a new stationary reset baseline near the current distinctive junction with yellow hillside buildings and a signal ahead. Choose every gameplay control from screenshots. Safely stop fully within the RIGHT lane, parallel to the local road edges, clear of the intersection, sidewalks, traffic and pedestrians. Identify two distinctive fixed landmarks and their left/right relationship to the present heading. Do not try to complete a block or return to the original garden wall during this preparation. Confirm standstill by comparing fixed landmarks across consecutive observations separated by your chosen control phase; a Paused overlay alone does not prove zero vehicle motion. Set stop=true only when visible standstill, road alignment, right-lane position and clearance agree. If the bounded preparation ends without that evidence, report incomplete rather than claim readiness.",
+    "frame_stride": 30,
+    "target_pid": 69729,
+    "frame_interval_ms": 350,
+    "emulator_fps": 59.94,
+    "steer_pulse_frames": 12,
+    "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
+    "steps_limit": 12,
+    "scenario_state": null,
+    "scenario_state_note": "Provenance label only; runner does not load this state",
+    "resume_from": null,
+    "resume_decision_count": 0,
+    "resume_image_path": null,
+    "start_reference": null,
+    "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
+    "recording_master": null,
+    "target_recorded_frames": null,
+    "recording_budget_note": "Live stored-frame count is a buffered lower bound. Final bursts are at least15 requests where possible; stopped recording can exceed the target.",
+    "started_at": 1788902523.908869,
+    "status": "stopped",
+    "mode": "stepped",
+    "hold_ms": null,
+    "policy_transport": "app-server",
+    "bridge_transport": "cli",
+    "vision_max_edge": 640,
+    "vision_quality": 65,
+    "vision_colormode": "rgb",
+    "ended_at": 1788902638.704621,
+    "elapsed_wall_seconds": 114.794,
+    "decision_count": 7,
+    "action_count": 6,
+    "actions_requested": 6,
+    "game_frames_requested": 180,
+    "frames_in_completed_actions": 180,
+    "recorded_frames_lower_bound": null,
+    "recording_target_reached": null,
+    "realtime_hold_ms_requested": null,
+    "frames_note": "Requested VSync counts, not independent game-state measurements",
+    "decision_latency_median_ms": 6160.87,
+    "capture_latency_median_ms": 234.51,
+    "action_and_capture_median_ms": 11539.920791517943,
+    "measured_decisions_per_wall_second": 0.060978685891184846,
+    "error": null,
+    "release_error": null
+  },
+  "snapshot": {
+    "scenario": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction",
+    "manifest": {
+      "schema_version": 1,
+      "name": "right-lane-junction",
+      "created_at": 1788902680.267332,
+      "state_file": "state.p2s",
+      "state_sha256": "c4a8ed54b666481f70f29546dfabfc04a68a224bd4a3dfdc189d04fec17ba01f",
+      "state_bytes": 18842771,
+      "source_slot_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/sstates/SLUS-20946 (2C6BE434).01.p2s",
+      "frame_file": "frame.png",
+      "config_filename": "PCSX2.ini",
+      "config_sha256": "dd524016594491a797ae54c8efe024e6fdc65f259360e7d14aa828a954877c1a",
+      "game_filename": "Grand Theft Auto - San Andreas (USA) (v3.00).iso",
+      "capture_precondition": "Caller paused emulation and visually positioned the scene; no paused state or stationary speed inferred from memory.",
+      "pixel_only_invariant": "Savestate is an opaque reset artifact. Never parse its contents or provide it to the driving policy. Policy observations are game screenshots only."
+    }
+  },
+  "decisions": [
+    {
+      "step": 0,
+      "timestamp": 1788902531.785588,
+      "decision": {
+        "buttons": [
+          "square"
+        ],
+        "rationale": "Car is near the right curb, approximately parallel to the lane edges, before the junction. Motion is unverified; briefly brake, then observe. Yellow hillside buildings are ahead-left; a red-orange corner building is right.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "square"
+            ],
+            "frames": 8
+          },
+          {
+            "buttons": [],
+            "frames": 22
+          }
+        ],
+        "route_note": "Baseline preparation at signalized junction: yellow hillside buildings ahead-left and red-orange corner building right. Car in right lane before crossing; no turns attempted. Remain on this approach, clear of junction.",
+        "dynamics_note": "Single observation: motion and standstill unverified. Right side is close to curb; crossing is ahead. Request 8 frames braking then 22 neutral to limit reverse risk; compare signal pole, curb and building positions next view. Alignment appears approximate, not confirmed."
+      },
+      "decision_latency_ms": 7666.98,
+      "frame_stride": 30,
+      "recorded_frames_before": null,
+      "nominal_observations_per_game_second": 1.998,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 8
+        },
+        {
+          "buttons": [],
+          "frames": 22
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902523909276000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902523909276000-1788902524075324930-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902523909276000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902523909276000-1788902524075324930-640-65-rgb.jpg",
+          "source_dimensions": [
+            500,
+            396
+          ],
+          "dimensions": [
+            500,
+            396
+          ],
+          "source_bytes": 320197,
+          "bytes": 19484,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 13.8
+        }
+      ],
+      "image_labels": [
+        "current"
+      ]
+    },
+    {
+      "step": 1,
+      "timestamp": 1788902549.610145,
+      "decision": {
+        "buttons": [
+          "r1"
+        ],
+        "rationale": "Car remains near the right curb, roughly parallel to the road and short of the junction. Pole and curb shifted slightly, so standstill is unconfirmed. Yellow hillside buildings are ahead-left; red-orange building is right.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 30
+          }
+        ],
+        "route_note": "Preparing baseline before signalized junction; yellow hillside buildings ahead-left, red-orange corner building right. Still on original approach in right lane; zero turns. Verify stationary position and curb clearance here.",
+        "dynamics_note": "After 8 brake +22 neutral frames, small pole/curb shifts leave motion uncertain; no substantial advance or yaw observed. Car body remains road-side of nearby curb, intersection ahead. Apply handbrake for30 frames to arrest residual motion without inducing reverse; compare fixed landmarks again."
+      },
+      "decision_latency_ms": 6080.65,
+      "frame_stride": 30,
+      "recorded_frames_before": null,
+      "nominal_observations_per_game_second": 1.998,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 30
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902523909276000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902543347418000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902523909276000-1788902524075324930-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902543347418000-1788902543519756408-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902523909276000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902523909276000-1788902524075324930-640-65-rgb.jpg",
+          "source_dimensions": [
+            500,
+            396
+          ],
+          "dimensions": [
+            500,
+            396
+          ],
+          "source_bytes": 320197,
+          "bytes": 19484,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 13.8
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902543347418000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902543347418000-1788902543519756408-640-65-rgb.jpg",
+          "source_dimensions": [
+            500,
+            396
+          ],
+          "dimensions": [
+            500,
+            396
+          ],
+          "source_bytes": 317206,
+          "bytes": 19361,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.96
+        }
+      ],
+      "image_labels": [
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 2,
+      "timestamp": 1788902568.192076,
+      "decision": {
+        "buttons": [],
+        "rationale": "Car remains at the right edge of its lane, approximately parallel to the curb and centerline, before the crossing. Landmarks appear nearly unchanged despite image scaling; verify standstill with controls released. Yellow buildings are ahead-left, red-orange building right.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [],
+            "frames": 30
+          }
+        ],
+        "route_note": "Baseline at signalized junction: yellow hillside buildings ahead-left, red-orange corner building right. Original approach, zero turns; car near right curb before crossing. Final stationary and clearance verification pending; right door remains open.",
+        "dynamics_note": "30 handbrake frames produced no clear displacement against pole and curb after accounting for changed image scale. Standstill likely but not yet certain. Release controls for30 frames; expect unchanged position if settled. Body appears within road, but open right door extends toward sidewalk."
+      },
+      "decision_latency_ms": 7076.81,
+      "frame_stride": 30,
+      "recorded_frames_before": null,
+      "nominal_observations_per_game_second": 1.998,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [],
+          "frames": 30
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902543347418000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902560906585000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902543347418000-1788902543519756408-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902560906585000-1788902561092613141-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902543347418000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902543347418000-1788902543519756408-640-65-rgb.jpg",
+          "source_dimensions": [
+            500,
+            396
+          ],
+          "dimensions": [
+            500,
+            396
+          ],
+          "source_bytes": 317206,
+          "bytes": 19361,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.96
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902560906585000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902560906585000-1788902561092613141-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 1012217,
+          "bytes": 27448,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.71
+        }
+      ],
+      "image_labels": [
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 3,
+      "timestamp": 1788902585.828487,
+      "decision": {
+        "buttons": [
+          "r1"
+        ],
+        "rationale": "Car is near the right curb, roughly parallel to the road, with the crossing ahead. Curb and pole positions changed during neutral, so standstill remains unconfirmed. Yellow hillside buildings are ahead-left; red-orange building is right.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 30
+          }
+        ],
+        "route_note": "Baseline preparation remains on original right-lane approach before signalized junction; zero turns. Yellow hillside buildings ahead-left, red-orange corner building right. Readiness incomplete: verify standstill and right-side clearance; door partly open.",
+        "dynamics_note": "After30 neutral frames, car size and pole/curb positions shifted; residual travel versus camera settling remains uncertain. Door swung inward. No confirmed standstill; curb clearance remains tight. Hold handbrake30 frames without throttle or steering, expecting residual motion to cease before another comparison."
+      },
+      "decision_latency_ms": 6105.58,
+      "frame_stride": 30,
+      "recorded_frames_before": null,
+      "nominal_observations_per_game_second": 1.998,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 30
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902560906585000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902579460022000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902560906585000-1788902561092613141-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902579460022000-1788902579699230182-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902560906585000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902560906585000-1788902561092613141-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 1012217,
+          "bytes": 27448,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.71
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902579460022000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902579460022000-1788902579699230182-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 1010704,
+          "bytes": 27713,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.39
+        }
+      ],
+      "image_labels": [
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 4,
+      "timestamp": 1788902604.334838,
+      "decision": {
+        "buttons": [
+          "r1"
+        ],
+        "rationale": "Car is near the right curb, approximately parallel to the road edges and right of the centerline, before the crossing. Car and fixed-pole positions still differ between views; standstill is unconfirmed. Yellow hillside buildings are ahead-left; red-orange building is right.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 30
+          }
+        ],
+        "route_note": "Stationary baseline preparation on original approach before signalized junction; zero turns. Yellow hillside buildings ahead-left, red-orange corner building right. Car near right curb, short of crossing. Readiness incomplete pending stable landmarks and confirmed curb clearance.",
+        "dynamics_note": "Last30 handbrake frames show changed car size and slight pole/curb shifts; camera settling versus residual movement remains uncertain. Right door has moved inward; curb clearance remains tight. Maintain handbrake30 with no throttle or steering, expecting no travel; verify against fixed poles next view."
+      },
+      "decision_latency_ms": 6861.53,
+      "frame_stride": 30,
+      "recorded_frames_before": null,
+      "nominal_observations_per_game_second": 1.998,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 30
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902579460022000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902597181298000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902579460022000-1788902579699230182-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902597181298000-1788902597449638198-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902579460022000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902579460022000-1788902579699230182-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 1010704,
+          "bytes": 27713,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.39
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902597181298000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902597181298000-1788902597449638198-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 1009109,
+          "bytes": 27830,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.62
+        }
+      ],
+      "image_labels": [
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 5,
+      "timestamp": 1788902622.0507572,
+      "decision": {
+        "buttons": [],
+        "rationale": "Car remains near the right curb, roughly parallel to the curb and centerline, clear of the crossing. Fixed poles still shift slightly between views, so standstill is uncertain. Yellow hillside buildings are ahead-left; the red-orange building is right.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [],
+            "frames": 30
+          }
+        ],
+        "route_note": "Baseline preparation on original right-lane approach before signalized junction; zero turns. Yellow hillside buildings ahead-left, red-orange corner building right. No turn planned. Readiness incomplete until standstill and tight right-curb clearance are verified.",
+        "dynamics_note": "Last30 handbrake frames again changed car scale and pole positions slightly, without clear forward travel or yaw; camera settling remains possible. Car appears road-side of curb and short of crossing. Release controls30 frames to compare settled landmarks; expect negligible travel, not yet confirmed."
+      },
+      "decision_latency_ms": 6160.87,
+      "frame_stride": 30,
+      "recorded_frames_before": null,
+      "nominal_observations_per_game_second": 1.998,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [],
+          "frames": 30
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902597181298000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902615632115000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902597181298000-1788902597449638198-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902615632115000-1788902615867317965-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902597181298000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902597181298000-1788902597449638198-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 1009109,
+          "bytes": 27830,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.62
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902615632115000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902615632115000-1788902615867317965-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 1010892,
+          "bytes": 27797,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.59
+        }
+      ],
+      "image_labels": [
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 6,
+      "timestamp": 1788902638.5854678,
+      "decision": {
+        "buttons": [],
+        "rationale": "Car and fixed poles/curb remain unchanged after 30 neutral frames, confirming standstill. Car is fully in the right lane, parallel to local road edges, beside but clear of the curb and before the empty crossing. Yellow hillside buildings are ahead-left; red-orange corner building is right.",
+        "scene": "driving",
+        "stop": true,
+        "segments": null,
+        "route_note": "Stationary baseline ready on original right-lane approach before signalized junction; zero turns. Yellow hillside buildings ahead-left and red-orange corner building right identify the location. Car aligned with road, clear of sidewalk and intersection; no turn planned.",
+        "dynamics_note": "After30 neutral frames, car, signal poles and nearby curb positions remain unchanged, confirming standstill with controls released. Earlier shifts have settled. Right-side clearance is narrow but visible; no nearby traffic or pedestrian conflict. No further movement requested."
+      },
+      "decision_latency_ms": 4971.43,
+      "frame_stride": 30,
+      "recorded_frames_before": null,
+      "nominal_observations_per_game_second": 1.998,
+      "mode": "stepped",
+      "action_plan": [],
+      "images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902615632115000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902633359984000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902615632115000-1788902615867317965-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902633359984000-1788902633590159476-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902615632115000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902615632115000-1788902615867317965-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 1010892,
+          "bytes": 27797,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.59
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/20260908-142203-afbb1da2/frame-1788902633359984000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-prep-01/model-frames/frame-1788902633359984000-1788902633590159476-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.62
+        }
+      ],
+      "image_labels": [
+        "previous",
+        "current"
+      ]
+    }
+  ],
+  "restore": {
+    "scenario": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction",
+    "statefile": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/state.p2s",
+    "launcher_output": "{\n  \"profile\": \"/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2\",\n  \"ini\": \"/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/inis/PCSX2.ini\",\n  \"command\": [\n    \"/Applications/PCSX2-v2.8.2.app/Contents/MacOS/PCSX2\",\n    \"-datapath\",\n    \"/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route\",\n    \"-statefile\",\n    \"/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/state.p2s\",\n    \"-fastboot\",\n    \"--\",\n    \"/Users/pz/Documents/Games/Grand Theft Auto - San Andreas (USA) (v3.00).iso\"\n  ],\n  \"frame_advance\": \"n\",\n  \"starts_paused\": true,\n  \"pid\": 68968,\n  \"log\": \"/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/launch.log\"\n}",
+    "pid": 68968,
+    "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2"
+  },
+  "redraw": {
+    "action": {
+      "type": "step",
+      "buttons": [],
+      "keys": [],
+      "frames": 60,
+      "native": {
+        "durationMs": 21600,
+        "elapsedMs": 22476.55175,
+        "frames": 60,
+        "keys": "",
+        "ok": true,
+        "pid": 68968,
+        "requestedDurationMs": 21600
+      },
+      "elapsed_ms": 22560.87
+    },
+    "observation": {
+      "type": "observation",
+      "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-restore/20260908-142531-dc99234f/frame-1788902754282370000.png",
+      "capture_ms": 255.31,
+      "native": {
+        "cropTop": 32,
+        "height": 682,
+        "ok": true,
+        "path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/stream-route-baseline-restore/20260908-142531-dc99234f/frame-1788902754282370000.png",
+        "pid": 68968,
+        "timestamp": "2026-09-08T21:25:54Z",
+        "title": "Grand Theft Auto - San Andreas",
+        "width": 924,
+        "windowId": 130205
+      },
+      "capture_attempts": 1,
+      "capture_errors": []
+    }
+  },
+  "restore_review": "Same visible car position, lane alignment and landmarks after 60 neutral redraw requests; clock18:25 to18:26. Not a bit-exact replay claim; coordinator review pending."
+}
