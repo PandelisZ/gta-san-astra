@@ -106,8 +106,8 @@ class DaemonController(Controller):
         index = 1
         while index < len(args):
             flag = args[index]
-            if flag == "--focus":
-                fields["focus"] = True
+            if flag in ("--focus", "--no-focus"):
+                fields[flag.removeprefix("--").replace("-", "_")] = True
                 index += 1
                 continue
             name = flag.removeprefix("--").replace("-", "_")

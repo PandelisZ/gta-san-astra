@@ -1,0 +1,1286 @@
+{
+  "attempt": "stream-junction-minute-02",
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "service_tier": "fast",
+  "bridge_transport": "cli",
+  "target_pid": 69942,
+  "profile": "/Users/pz/.codex/worktrees/9143/oaihackathon/.runtime/stream-junction/pcsx2",
+  "summary": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "low",
+    "service_tier": "fast",
+    "goal": "Drive on the RIGHT side of the road around a compact city block and return near this garden wall opposite orange Jefferson Motel facing the SAME direction. Start in blue Tahoma partly on left curb, garden wall and hedges left, orange motel across road right, signal gantry ahead. Choose a feasible visible street route. Rejoin the right lane first and enter the right-hand lane after every turn. Confirm a real street opening in the latest image before turning: continuous walls, curbs, sidewalks, and parking lots are not road junctions. If an opening has passed, continue to another feasible junction. Keep controlled forward progress on clear streets, slow before uncertain corners, and avoid vehicles, pedestrians, and poles. Track actual completed turns and landmarks. All driving phases must come from your own current screenshot assessment, never a memorized sequence. Stop near the original location only when the loop and heading are visibly matched; otherwise continue until the one-minute attempt ends.",
+    "frame_stride": 60,
+    "target_pid": 69942,
+    "emulator_fps": 59.94,
+    "steer_pulse_frames": 12,
+    "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
+    "steps_limit": 120,
+    "scenario_state": "/Users/pz/w/oaihackathon/.runtime/scenarios/quiet-tahoma/state.p2s",
+    "scenario_state_note": "Provenance label only; runner does not load this state",
+    "resume_from": null,
+    "resume_decision_count": 0,
+    "resume_image_path": null,
+    "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
+    "recording_master": "/Users/pz/.codex/worktrees/9143/oaihackathon/.runtime/stream-junction/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133715.mkv",
+    "target_recorded_frames": 3597,
+    "recording_budget_note": "Live stored-frame count is a buffered lower bound. Final bursts are at least15 requests where possible; stopped recording can exceed the target.",
+    "started_at": 1788899836.1096199,
+    "status": "recording_target_reached",
+    "mode": "stepped",
+    "hold_ms": null,
+    "policy_transport": "app-server",
+    "bridge_transport": "cli",
+    "vision_max_edge": 640,
+    "vision_quality": 65,
+    "vision_colormode": "rgb",
+    "ended_at": 1788901722.887483,
+    "elapsed_wall_seconds": 1886.753,
+    "decision_count": 79,
+    "action_count": 79,
+    "actions_requested": 79,
+    "game_frames_requested": 4631,
+    "frames_in_completed_actions": 4631,
+    "recorded_frames_lower_bound": 3599,
+    "recording_target_reached": true,
+    "realtime_hold_ms_requested": null,
+    "frames_note": "Requested VSync counts, not independent game-state measurements",
+    "decision_latency_median_ms": 5892.24,
+    "capture_latency_median_ms": 247.475,
+    "action_and_capture_median_ms": 14579.411749728024,
+    "measured_decisions_per_wall_second": 0.04187087669711791,
+    "error": null,
+    "release_error": null
+  },
+  "recording": {
+    "decoded_frame_count": 3608,
+    "full_recording_duration_seconds": 60.19,
+    "git_video_frame_count": 3597,
+    "measured_video_duration_seconds": 60.01,
+    "video_sha256": "ca7c294a7a6f0de78a7054c30655730ba6dc4bfba5640974a67067ea4b36ff95",
+    "export": {
+      "master": "/Users/pz/.codex/worktrees/9143/oaihackathon/.runtime/stream-junction/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133715.mkv",
+      "master_sha256": "d8be061a39ff613e30347545135d71af589c6cc0a5df2c98e28f2ca4fa5569f4",
+      "master_bytes": 1516294127,
+      "frames_directory": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/recording/frames",
+      "decoded_frame_count": 3608,
+      "playback": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/recording/playback.mp4",
+      "playback_bytes": 21068388,
+      "export_elapsed_seconds": 32.063,
+      "timing": "Playback preserves the capture's simulation timestamps; no desktop wall-time or inferred FPS is substituted.",
+      "provenance": "Master retained unchanged; PNGs decode every stored frame. Completeness depends on successful PCSX2 native capture."
+    }
+  },
+  "decision_events": [
+    {
+      "step": 0,
+      "timestamp": 1788899841.2596638,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Tahoma straddles the left curb, roughly parallel to the road; initial motion is unknown. Move gently right onto asphalt. No verified corner mouth is visible ahead, so no turn yet.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 18
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 24
+          },
+          {
+            "buttons": [
+              "steer_left"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [],
+            "frames": 6
+          }
+        ],
+        "route_note": "Start: garden wall/hedges left, orange Jefferson Motel right, gantry ahead. Tahoma partly on left curb; rejoining roadway toward right lane. 0 completed turns. Next: inspect street junction ahead. Initial 18f right steering then 12f left correction; displacement/response not yet observed."
+      },
+      "decision_latency_ms": 4917.17,
+      "frame_stride": 60,
+      "recorded_frames_before": 0,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 18
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 24
+        },
+        {
+          "buttons": [
+            "steer_left"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [],
+          "frames": 6
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788899836110077000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788899836110077000-1788899836301177562-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788899836110077000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788899836110077000-1788899836301177562-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 283064,
+          "bytes": 20397,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 13.74
+        }
+      ]
+    },
+    {
+      "step": 3,
+      "timestamp": 1788899928.1465652,
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "Now in the right lane close to the centerline, roughly aligned with road edges after clear forward/right movement past the wall. Motel-side curb remains continuous; the distant corner boundaries are unclear. Proceed straight toward a better junction view.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 35
+          },
+          {
+            "buttons": [],
+            "frames": 25
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel, heading toward gantry. 0 completed turns. Right lane reached near centerline, approximately aligned. Last 12f right/16f left plus 38f throttle gave substantial forward/right travel. Next inspect gantry junction; motel curb still continuous, no confirmed turn clearance."
+      },
+      "decision_latency_ms": 5190.24,
+      "frame_stride": 60,
+      "recorded_frames_before": 167,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 35
+        },
+        {
+          "buttons": [],
+          "frames": 25
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788899900214786000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788899922469986000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788899900214786000-1788899900466727057-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788899922469986000-1788899922757456068-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788899900214786000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788899900214786000-1788899900466727057-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 288428,
+          "bytes": 20982,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 5.04
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788899922469986000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788899922469986000-1788899922757456068-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 286351,
+          "bytes": 21503,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 5.3
+        }
+      ]
+    },
+    {
+      "step": 13,
+      "timestamp": 1788900110.640193,
+      "decision": {
+        "buttons": [],
+        "rationale": "Car is stationary relative to the pole, within the right lane and nearly parallel to its edges. One crossing car has moved left, but the dark car still blocks the front. The rounded pole-side corner remains ahead; clearance for an all-asphalt sweep is still obscured. Continue yielding.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [],
+            "frames": 60
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 0 completed turns. Right lane, nearly aligned. 60f coast left car stationary relative to pole; brown traffic moved left but dark car still blocks front. Right mouth ahead at rounded pole-side curb; far boundary/sweep uncertain. Yield another 60f, then reassess cleared approach."
+      },
+      "decision_latency_ms": 5075.02,
+      "frame_stride": 60,
+      "recorded_frames_before": 767,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [],
+          "frames": 60
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900080918146000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900105159346000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900080918146000-1788900081183628769-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900105159346000-1788900105355993115-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900080918146000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900080918146000-1788900081183628769-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 302815,
+          "bytes": 24025,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.79
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900105159346000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900105159346000-1788900105355993115-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 297114,
+          "bytes": 23960,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.6
+        }
+      ]
+    },
+    {
+      "step": 27,
+      "timestamp": 1788900443.656445,
+      "decision": {
+        "buttons": [],
+        "rationale": "Advanced past the pole with little yaw, still near the right edge and parallel to the centerline. The rounded pole-side near corner is now alongside; the far curb by the pedestrians is partly obscured, and full-car sweep clearance remains uncertain. Coast forward for a clearer view before steering.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [],
+            "frames": 60
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 0 completed turns. Throttle16/coast44 advanced noticeably with little yaw; right lane near curb. Rounded pole-side corner now alongside, possible street extends right; far curb by pedestrians partly hidden. Coast60 to approach sweep position without added speed; no turn yet. Loop incomplete."
+      },
+      "decision_latency_ms": 7105.49,
+      "frame_stride": 60,
+      "recorded_frames_before": 1607,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [],
+          "frames": 60
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900412120583000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900435734797000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900412120583000-1788900412477401395-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900435734797000-1788900435978891020-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900412120583000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900412120583000-1788900412477401395-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 302519,
+          "bytes": 23125,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 8.69
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900435734797000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900435734797000-1788900435978891020-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 302429,
+          "bytes": 23260,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 5.14
+        }
+      ]
+    },
+    {
+      "step": 29,
+      "timestamp": 1788900506.4345138,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Advanced past the pole, still aligned near the right lane\u2019s outer edge. The street mouth is alongside: the rounded near curb is behind the nose, and asphalt extends right beneath the shop-side far curb. There is room to begin a slow right sweep clear of the sidewalk.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 20
+          },
+          {
+            "buttons": [
+              "steer_right"
+            ],
+            "frames": 40
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 0 completed turns. Throttle20/coast40 advanced clearly with little yaw. Right street mouth alongside; rounded near curb behind nose, far curb beneath shops visible. Begin right turn throttle+right20/right40; verify heading and destination right lane next. Loop incomplete."
+      },
+      "decision_latency_ms": 7513.72,
+      "frame_stride": 60,
+      "recorded_frames_before": 1727,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 20
+        },
+        {
+          "buttons": [
+            "steer_right"
+          ],
+          "frames": 40
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900470631176000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900498467687000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900470631176000-1788900470875910034-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900498467687000-1788900498667332721-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900470631176000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900470631176000-1788900470875910034-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 301851,
+          "bytes": 23305,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 5.71
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900498467687000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900498467687000-1788900498667332721-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 301563,
+          "bytes": 23249,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 6.76
+        }
+      ]
+    },
+    {
+      "step": 30,
+      "timestamp": 1788900521.6473339,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "The car advanced and yawed right, now diagonal across the right lane\u2019s edge into the mouth. The rounded near corner is behind; the shop-side far curb bounds clear asphalt to the right. Continue the slow sweep, staying off the pedestrian sidewalk.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 24
+          },
+          {
+            "buttons": [
+              "steer_right"
+            ],
+            "frames": 36
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 0 completed turns; first right underway. Throttle+right20/right40 gave forward movement and partial right yaw, not destination alignment. Near corner behind; clear asphalt right below shop-side curb. Continue throttle+right24/right36, then reassess right-lane alignment. Loop incomplete."
+      },
+      "decision_latency_ms": 5512.99,
+      "frame_stride": 60,
+      "recorded_frames_before": 1787,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 24
+        },
+        {
+          "buttons": [
+            "steer_right"
+          ],
+          "frames": 36
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900498467687000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900515653293000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900498467687000-1788900498667332721-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900515653293000-1788900515888464768-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900498467687000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900498467687000-1788900498667332721-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 301563,
+          "bytes": 23249,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 6.76
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900515653293000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900515653293000-1788900515888464768-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 299528,
+          "bytes": 22776,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.68
+        }
+      ]
+    },
+    {
+      "step": 31,
+      "timestamp": 1788900543.947092,
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "The car has moved around the pole-side corner and now points nearly along the uphill street, on its right-hand side near the centerline. The near corner is behind and the whole car remains on asphalt. Release the tight steering and advance gently to verify alignment.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 16
+          },
+          {
+            "buttons": [],
+            "frames": 44
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. First right appears nearly complete; count remains 0 pending aligned view. Throttle+right24/right36 produced strong yaw into uphill street, near centerline on right side, corner cleared. Release steering: throttle16/coast44 to verify lane/heading. Next seek feasible right junction; loop incomplete."
+      },
+      "decision_latency_ms": 10387.82,
+      "frame_stride": 60,
+      "recorded_frames_before": 1835,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 16
+        },
+        {
+          "buttons": [],
+          "frames": 44
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900515653293000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900533094063000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900515653293000-1788900515888464768-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900533094063000-1788900533307409577-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900515653293000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900515653293000-1788900515888464768-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 299528,
+          "bytes": 22776,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.68
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900533094063000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900533094063000-1788900533307409577-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 296659,
+          "bytes": 22665,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.97
+        }
+      ]
+    },
+    {
+      "step": 32,
+      "timestamp": 1788900566.6244879,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_left"
+        ],
+        "rationale": "The car advanced beyond the rounded corner and straddles the centerline, angled right relative to the uphill road edges. Brief left steering should align it as it enters the right lane. The previous corner is behind; no new street mouth is visible.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_left"
+            ],
+            "frames": 8
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 22
+          },
+          {
+            "buttons": [],
+            "frames": 30
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 1 right turn visibly completed into uphill street. Throttle16/coast44 advanced past corner; car near/straddling centerline, heading diagonally toward right lane. Apply left8/throttle22/coast30 to align. Next seek real right street opening; continuous curb ahead, loop incomplete."
+      },
+      "decision_latency_ms": 12383.12,
+      "frame_stride": 60,
+      "recorded_frames_before": 1895,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 8
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 22
+        },
+        {
+          "buttons": [],
+          "frames": 30
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900533094063000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900553781042000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900533094063000-1788900533307409577-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900553781042000-1788900553992744801-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900533094063000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900533094063000-1788900533307409577-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 296659,
+          "bytes": 22665,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.97
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900553781042000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900553781042000-1788900553992744801-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 289189,
+          "bytes": 20877,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.52
+        }
+      ]
+    },
+    {
+      "step": 37,
+      "timestamp": 1788900768.353952,
+      "decision": {
+        "buttons": [
+          "square"
+        ],
+        "rationale": "The car is now inside the right lane, nearly parallel to its edges, and has advanced substantially toward the red signal. The orange wall\u2019s near corner is ahead, but the right street mouth and far curb remain hidden; slow before assessing sweep clearance.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "square"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [],
+            "frames": 48
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 1 completed right; uphill orange-wall leg, nearing red signal. Right12/throttle18/left12/coast18 advanced substantially and placed car inside right lane, nearly aligned. Brake12/coast48 for slower junction view. Orange-wall corner ahead; right mouth/far curb unconfirmed. Loop incomplete."
+      },
+      "decision_latency_ms": 7375.46,
+      "frame_stride": 60,
+      "recorded_frames_before": 2147,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [],
+          "frames": 48
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900706107985000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900760499198000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900706107985000-1788900706299917941-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900760499198000-1788900760715155299-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900706107985000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900706107985000-1788900706299917941-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 268253,
+          "bytes": 16820,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.48
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900760499198000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900760499198000-1788900760715155299-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 271045,
+          "bytes": 16991,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.69
+        }
+      ]
+    },
+    {
+      "step": 44,
+      "timestamp": 1788900924.884167,
+      "decision": {
+        "buttons": [],
+        "rationale": "The car is nearly stationary against the signal pole, parallel to the road near the left edge of the right lane. The rounded near corner remains ahead; full asphalt sweep clearance is uncertain. Cross traffic remains present and our signal is red, so wait.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [],
+            "frames": 60
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 1 completed right; uphill orange-wall leg at red signal. Brake12/coast48 nearly stopped car without yaw, near left edge of right lane. Cross traffic continues; coast60 to wait. Rounded near corner/pole ahead; destination lane and sweep clearance unconfirmed. Loop incomplete."
+      },
+      "decision_latency_ms": 8471.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 2459,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [],
+          "frames": 60
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900892612370000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900915905941000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900892612370000-1788900892862379629-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900915905941000-1788900916147160985-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900892612370000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900892612370000-1788900892862379629-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 273800,
+          "bytes": 17994,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.3
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788900915905941000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788900915905941000-1788900916147160985-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 273718,
+          "bytes": 17931,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.5
+        }
+      ]
+    },
+    {
+      "step": 69,
+      "timestamp": 1788901478.061863,
+      "decision": {
+        "buttons": [],
+        "rationale": "Stationary relative to the pole, parallel to the road near the right lane\u2019s left edge. Red persists with a pedestrian ahead moving right. The pole-side near corner remains ahead; whole-car asphalt sweep clearance is uncertain, so wait.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [],
+            "frames": 60
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 1 completed right; uphill orange-wall leg at red signal. Coast60 held position beside pole without yaw; waiting, not blocked. Pedestrian moving right ahead; red persists. Wait60. Pole-side corner ahead; destination lane/full-car sweep uncertain. Loop incomplete."
+      },
+      "decision_latency_ms": 5229.43,
+      "frame_stride": 60,
+      "recorded_frames_before": 3347,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [],
+          "frames": 60
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901440494796000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901472328570000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901440494796000-1788901440783669594-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901472328570000-1788901472540915952-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901440494796000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901440494796000-1788901440783669594-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 272079,
+          "bytes": 18025,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 7.55
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901472328570000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901472328570000-1788901472540915952-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 273589,
+          "bytes": 17914,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.44
+        }
+      ]
+    },
+    {
+      "step": 75,
+      "timestamp": 1788901667.5058298,
+      "decision": {
+        "buttons": [],
+        "rationale": "Coasting forward past the gantry, aligned with the centerline near the right lane\u2019s left edge. The rounded pole-side corner is just ahead; asphalt connects to the cross street below its far curb, but the front needs more clearance before a full-car right sweep.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [],
+            "frames": 60
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 1 completed right; uphill orange-wall leg, green. Coast60 maintained clear forward motion without yaw. Right mouth just ahead: rounded near curb and far cross-street curb visible; front needs more clearance. Coast60 straight before reassessing right sweep; pedestrian at corner. Loop incomplete."
+      },
+      "decision_latency_ms": 6716.9,
+      "frame_stride": 60,
+      "recorded_frames_before": 3527,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [],
+          "frames": 60
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901644085983000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901660249508000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901644085983000-1788901644421351361-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901660249508000-1788901660494584507-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901644085983000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901644085983000-1788901644421351361-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 276326,
+          "bytes": 18971,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 6.0
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901660249508000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901660249508000-1788901660494584507-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 274970,
+          "bytes": 18977,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.68
+        }
+      ]
+    },
+    {
+      "step": 76,
+      "timestamp": 1788901684.7823732,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Car is parallel to the centerline near the right lane\u2019s left edge, advancing relative to the signal pole. The rounded pole-side near corner is now alongside, behind the front; connecting asphalt and the far curb show room for a broad right sweep away from the sidewalk pedestrian.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 24
+          },
+          {
+            "buttons": [
+              "steer_right"
+            ],
+            "frames": 10
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 1 completed right; uphill orange-wall leg. Coast60 advanced straight; rounded right corner now alongside and front beyond curb end. Begin second right with cross+right24/right10; verify destination right-lane alignment next. Pedestrian on near sidewalk. Loop incomplete."
+      },
+      "decision_latency_ms": 7212.71,
+      "frame_stride": 34,
+      "recorded_frames_before": 3563,
+      "nominal_observations_per_game_second": 1.7629411764705882,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 24
+        },
+        {
+          "buttons": [
+            "steer_right"
+          ],
+          "frames": 10
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901660249508000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901677063154000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901660249508000-1788901660494584507-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901677063154000-1788901677271106031-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901660249508000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901660249508000-1788901660494584507-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 274970,
+          "bytes": 18977,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.68
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901677063154000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901677063154000-1788901677271106031-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 274962,
+          "bytes": 18355,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.77
+        }
+      ]
+    },
+    {
+      "step": 78,
+      "timestamp": 1788901719.328777,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_right"
+        ],
+        "rationale": "Near the right lane\u2019s left edge, the car has advanced relative to the pole and yawed slightly right, but remains oblique to the cross street. The rounded pole-side corner is alongside, with asphalt room for the front\u2019s sweep and the pedestrian remaining on the sidewalk.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_right"
+            ],
+            "frames": 15
+          }
+        ],
+        "route_note": "Start garden wall left/opposite orange Jefferson Motel toward gantry. 1 completed right; second right underway from uphill leg. Cross+right22 produced visible forward movement and increased right yaw, no blockage. Rounded near corner alongside; continue cross+right15 toward cross-street right lane, then reassess alignment. Loop incomplete."
+      },
+      "decision_latency_ms": 6545.65,
+      "frame_stride": 15,
+      "recorded_frames_before": 3587,
+      "nominal_observations_per_game_second": 3.996,
+      "mode": "stepped",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_right"
+          ],
+          "frames": 15
+        }
+      ],
+      "images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901701945712000.png",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901712203930000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901701945712000-1788901702211100971-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901712203930000-1788901712476372305-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901701945712000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901701945712000-1788901702211100971-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 277005,
+          "bytes": 18397,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 5.42
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/20260908-133716-d85b8e0f/frame-1788901712203930000.png",
+          "image_path": "/Users/pz/.codex/worktrees/9143/oaihackathon/runs/stream-junction-minute-02/model-frames/frame-1788901712203930000-1788901712476372305-640-65-rgb.jpg",
+          "source_dimensions": [
+            455,
+            396
+          ],
+          "dimensions": [
+            455,
+            396
+          ],
+          "source_bytes": 277502,
+          "bytes": 18349,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 4.8
+        }
+      ]
+    }
+  ],
+  "review": {
+    "method": "Inspected15 evenly/milestone-spaced stored frames including first turn before/during/after and final frame. Sample review is not an exhaustive no-collision audit.",
+    "right_lane": "Entered right lane from left-curb baseline; later straddled centerline after first turn before settling right.",
+    "turns": "One right turn completed at roughly31-33seconds; second right begins at minute end, still oblique to destination road.",
+    "traffic": "Traffic crowds the car around firstjunction, including light car immediately behind; no collision-free claim.",
+    "goal": "Block loop and return to original landmark/heading incomplete.",
+    "lesson": "Near/far-curb and sweep guidance coincides with a real street turn without visible sidewalk shortcut in reviewed turn frames; one trial does not establish causation. Long waits and slow alignment consumed most remaining time.",
+    "next": "After coordinated neutral timing calibration, consider clearer visual separation of lane position, turn readiness, and traffic occupancy to reduce hesitation without accepting an unverified opening."
+  }
+}

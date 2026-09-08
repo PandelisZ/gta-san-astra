@@ -164,7 +164,7 @@ def attempt(args) -> dict:
         command = [sys.executable, str(ROOT / "scripts/autodrive.py"), "--run-dir", str(directory),
                    "--steps", str(args.steps), "--frame-stride", "60", "--mode", "stepped",
                    "--model", "gpt-6-astra", "--reasoning-effort", "low", "--service-tier", "fast",
-                   "--policy-transport", "app-server", "--bridge-transport", "daemon",
+                   "--policy-transport", "app-server", "--bridge-transport", args.bridge_transport,
                    "--vision-max-edge", str(args.vision_max_edge), "--goal", args.goal,
                    "--scenario-state", str(statefile), "--timeout", str(args.timeout),
                    "--recording-master", str(source), "--target-recorded-frames", "3597"]
@@ -246,6 +246,7 @@ def main():
     parser.add_argument("--no-reset", action="store_true", help="Caller already restored paused baseline and ensured recording is OFF")
     parser.add_argument("--steps", type=int, default=120, help="Decision safety cap; recording target is3597 stored frames")
     parser.add_argument("--vision-max-edge", type=int, default=512)
+    parser.add_argument("--bridge-transport", choices=("cli", "daemon"), default="daemon")
     parser.add_argument("--timeout", type=float, default=120)
     parser.add_argument("--goal", default="Drive around one city block and return visibly to the starting landmark and orientation. Choose all driving actions autonomously from screenshots; avoid obstacles and pedestrians and recover when necessary.")
     args = parser.parse_args()
