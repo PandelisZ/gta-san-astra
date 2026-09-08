@@ -39,3 +39,9 @@ This confirms the host can carry model-selected controls through inference and p
 Before another trial, review the geometry around the front corner and rear vehicle and whether the model is choosing sufficiently useful, visually justified clearance maneuvers. Keep the next change narrow and fixed for its trial. No further prompt changes, manual driving, baseline relocation, or reset were made here.
 
 ![Read-only final paused verification](flow-minute-02-final.png)
+
+### Additional next-trial hypotheses for coordinator review
+
+The current goal does not expose the one-minute/reset budget. Providing remaining actual recorded frames and approximate simulation seconds would let the model assess how much route progress is feasible, without inventing a completed loop. This is a missing task constraint, not evidence that budget pressure alone will solve the junction. Inference time also consumes that budget in flow mode; concise output could reduce this cost, but requires measurement with the same low/fast policy.
+
+Clearance guidance grounded in this run: identify whether the front-right corner is touching or merely near the curb/pole, whether the pole is ahead of the bumper or beside the rear, and whether an actual gap into the lane interior has appeared after a maneuver. Steps3 and5 repeated straight acceleration with little displacement; step6 finally treated the geometry as a constraint, and subsequent recovery gained yaw. Repeating forward pulses without confirming the front corner's path spent much of the minute near the same pole. Require a visually justified clearance target, then compare the observed gap and heading change before escalating duration. Distinguish moving cross traffic from a car waiting nearby, and verify the street mouth in the newest image. These are proposed perception/control checks, not a scripted steering sequence. No new prompt or trial was implemented here.
