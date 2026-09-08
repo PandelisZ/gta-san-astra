@@ -1,5 +1,5 @@
 {
-  "status": "Single-minute-03 authorized on sole emulator68968 after visual restore of right-lane-junction.30frame decisions/350ms pulse interval; fullblockunproven.",
+  "status": "single-minute-03 interrupted by Astra usageLimitExceeded after60decisions/1800recordedframes. Driver69404 and wrapper69397 exited; soleemulator68968 paused,captureOFF logconfirmed. Fullblockunproven.",
   "streams": [
     {
       "name": "lane",
@@ -39,7 +39,7 @@
       "task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
       "neutral_probe_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
       "neutral_probe_actual_frames": 0,
-      "process_state": "single-minute-03 driver starting"
+      "process_state": "paused;driver stopped at usage limit"
     }
   ],
   "qualification": "Warm-daemon stop for junction returned a stale application-identity error; fresh CLI finalized its0-frame capture. Use CLI fallback for next wave. No root driving controls; all probe controls neutral.",
@@ -76,7 +76,7 @@
       "decisions": 83
     }
   },
-  "next_step": "Route task runs one fullminute, records allframes, then reviews and pauses before another attempt.",
+  "next_step": "Preserve interrupted video. Resume samegame and unchangedworktreepolicy only once Astra low/Fast usage is available, with remaining1797recordedframes target and resume-from single-minute-03; no input replay or reset. Otherwise remain paused.",
   "execution_mode": "single",
   "active_task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
   "timing": {
@@ -85,5 +85,14 @@
     "evidence": "calibration-wave02.md",
     "qualification": "60/60 recorded neutral pulses in single focused scene; verify actual increments during driving."
   },
-  "active_baseline": "right-lane-junction"
+  "active_baseline": "right-lane-junction",
+  "interrupted_attempt": {
+    "run": "single-minute-03",
+    "recorded_frames": 1800,
+    "requested_frames": 1800,
+    "duration_seconds": 30.03,
+    "stop_reason": "usageLimitExceeded",
+    "completed_turns": 1,
+    "full_block_proven": false
+  }
 }
