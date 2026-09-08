@@ -15,9 +15,13 @@ Validated on this Mac with PCSX2 2.8.2, September 8, 2026.
 - The older system Codex CLI rejected Astra. The runner now selects the newer app-bundled CLI; `SAN_ASTRA_CODEX` overrides this.
 - A three-decision Astra loop operated the BIOS preferences menus from screenshots, including language confirmation. Evidence: `runs/bios-control/`.
 
-## Remaining gameplay gate
+## Gameplay progress
 
-The San Andreas image is still downloading at this checkpoint. Full GTA boot, vehicle control, and autonomous driving validation will be recorded here after the image is ready. BIOS control and a vision smoke test do not establish driving performance.
+The completed ISO was moved to `~/Documents/Games` and San Andreas booted successfully. Astra low navigated CJ to a car and entered a red Blista Compact using screenshot observations and frame-step controls. A stationary snapshot was captured at `.runtime/scenarios/stationary-car`, including its screenshot and integrity checksum.
+
+Live testing found that PCSX2 focus transitions could clear held input during frame stepping. Reasserting controls for every requested frame fixed movement; the low-reasoning driver then completed car entry. A warm native daemon also captured full frames in 74–77 ms in two read-only samples.
+
+The driver is now preparing a cleaner location. Snapshot replay and the optimized low/Fast model loop remain to be verified; no benchmark driving score is claimed.
 
 ## Reproduce
 

@@ -1,0 +1,10 @@
+{
+  "name": "stationary-car",
+  "created_at": 1788890306.970454,
+  "state_sha256": "5c53a345a15ed42570ee6ef73b6311ada31e4517a852697c0ea2625870513c8e",
+  "state_bytes": 16883868,
+  "game_filename": "Grand Theft Auto - San Andreas (USA) (v3.00).iso",
+  "pixel_only_invariant": "Savestate is an opaque reset artifact. Never parse its contents or provide it to the driving policy. Policy observations are game screenshots only.",
+  "screenshot": "gta-stationary-car.png",
+  "replay_verified": false
+}

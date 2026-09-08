@@ -10,13 +10,13 @@ Astra builds the experiment and becomes its driving policy. The question is conc
 
 ## What works today
 
-The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, and evidence recorder are implemented. Live checks have exercised screenshot capture, paused stepping at strides 1/5/10, Astra image recognition, and an Astra-controlled PS2 BIOS menu loop. San Andreas has booted into its opening sequence.
+The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, and evidence recorder are implemented. Astra low has navigated the playable San Andreas world, entered a Blista Compact, and prepared a stationary-car snapshot. Live checks also cover screenshot capture, paused stepping at strides 1/5/10, and Astra's screenshot-to-control decisions.
 
-**The stationary-car starting scenario is being prepared. Autonomous driving performance has not yet been demonstrated.** BIOS navigation proves the perception-to-control integration; the driving evaluation is the next gate. The repository keeps recorded observations separate from claims about driving quality.
+**A cleaner driving location, snapshot replay verification, and latency tuning are in progress.** The repository keeps recorded observations separate from claims about driving quality. No driving benchmark score is claimed.
 
-![Actual PS2 BIOS screenshot captured through the bridge](docs/evidence/bios-language.png)
+![Astra entered a Blista Compact and prepared a stationary starting scene](docs/evidence/gta-stationary-car.png)
 
-*Recorded integration evidence: PS2 BIOS language screen. This image demonstrates the capture path, not driving performance.*
+*Actual game screenshot after Astra low entered the car. The named snapshot and its checksum are recorded locally; replay verification is the next gate.*
 
 ## The loop
 
