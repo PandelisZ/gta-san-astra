@@ -1,5 +1,5 @@
 {
-  "status": "Lane, junction, and route minute02 completed; one right turn each, second underway for lane/junction. Recovery part3 still active. Full block unproven. All completed PIDs paused.",
+  "status": "User requested one game at a time. Only route PID69729 remains; lane/junction/recovery processes closed after finalized recordings. Full block unproven.",
   "streams": [
     {
       "name": "lane",
@@ -8,7 +8,8 @@
       "pid": 69702,
       "task_id": "01a082b2-fde7-7b20-b878-a1f2c6daf193",
       "neutral_probe_master": "/Users/pz/.codex/worktrees/7cd5/oaihackathon/.runtime/stream-lane/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133446.mkv",
-      "neutral_probe_actual_frames": 60
+      "neutral_probe_actual_frames": 60,
+      "process_state": "closed after recording finalized"
     },
     {
       "name": "junction",
@@ -17,7 +18,8 @@
       "pid": 69942,
       "task_id": "01a082b3-083c-7471-9f4a-0c9bba095ece",
       "neutral_probe_master": "/Users/pz/.codex/worktrees/9143/oaihackathon/.runtime/stream-junction/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
-      "neutral_probe_actual_frames": 0
+      "neutral_probe_actual_frames": 0,
+      "process_state": "closed after recording finalized"
     },
     {
       "name": "recovery",
@@ -26,7 +28,8 @@
       "pid": 69719,
       "task_id": "01a082b3-11ff-7bd0-a763-158b407294d2",
       "neutral_probe_master": "/Users/pz/.codex/worktrees/a761/oaihackathon/.runtime/stream-recovery/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
-      "neutral_probe_actual_frames": 0
+      "neutral_probe_actual_frames": 0,
+      "process_state": "closed after recording finalized"
     },
     {
       "name": "route",
@@ -35,7 +38,8 @@
       "pid": 69729,
       "task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
       "neutral_probe_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
-      "neutral_probe_actual_frames": 0
+      "neutral_probe_actual_frames": 0,
+      "process_state": "live paused/model preparation"
     }
   ],
   "qualification": "Warm-daemon stop for junction returned a stale application-identity error; fresh CLI finalized its0-frame capture. Use CLI fallback for next wave. No root driving controls; all probe controls neutral.",
@@ -65,7 +69,20 @@
       "requested_frames": 4658,
       "flushed_frames": 3611,
       "decisions": 80
+    },
+    "recovery": {
+      "requested_frames": 4883,
+      "flushed_frames": 3604,
+      "decisions": 83
     }
   },
-  "next_step": "After recovery driver stops, root neutral calibration on route PID69729. No new driving waves until timing checked. Prepared next-wave motion memory, optional start reference, clear right-on-red game policy."
+  "next_step": "Route task owns69729 and is preparing a visually stopped right-lane baseline using screenshot-only Astra low/Fast,350ms pulse interval and30-frame decisions. Root must review baseline before fullminute.",
+  "execution_mode": "single",
+  "active_task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
+  "timing": {
+    "frame_interval_ms": 350,
+    "frame_stride": 30,
+    "evidence": "calibration-wave02.md",
+    "qualification": "60/60 recorded neutral pulses in single focused scene; verify actual increments during driving."
+  }
 }
