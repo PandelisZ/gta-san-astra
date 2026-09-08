@@ -1,0 +1,208 @@
+[
+  {
+    "pair": 0,
+    "source_step": 0,
+    "variant": "original",
+    "latency_ms": 9756.4,
+    "decision": {
+      "buttons": [
+        "cross"
+      ],
+      "rationale": "Car is near the right curb, roughly aligned with the road, with no clear displacement between images. The cross-street mouth is ahead; advance cautiously before attempting a right turn around the corner poles.",
+      "scene": "driving",
+      "stop": false,
+      "segments": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 20
+        },
+        {
+          "buttons": [],
+          "frames": 30
+        },
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 10
+        }
+      ],
+      "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner building right. Approaching starting intersection in right lane; 0 completed turns. Next: verify right cross-street lane and corner clearance before first right.",
+      "dynamics_note": "Images show essentially unchanged position relative to right curb and poles; initially stationary or motion uncertain. No prior control calibration. Short acceleration then coast/brake tests advance toward junction; stopping is not yet verified. Corner remains ahead.",
+      "thinking_buttons": []
+    }
+  },
+  {
+    "pair": 0,
+    "source_step": 0,
+    "variant": "compact",
+    "latency_ms": 4767.9,
+    "decision": {
+      "buttons": [
+        "cross"
+      ],
+      "rationale": "Near right curb, aligned with lane; unchanged by poles. Junction ahead; advance gently before turning.",
+      "scene": "driving",
+      "stop": false,
+      "segments": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 25
+        },
+        {
+          "buttons": [],
+          "frames": 25
+        },
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 10
+        }
+      ],
+      "route_note": "Start: yellow hillside ahead-left, red-orange corner right. Initial approach; 0 turns complete. Next: right at starting junction after curb clearance.",
+      "dynamics_note": "Apparently stationary against curb and poles across images; no prior controls. Brief acceleration tests travel toward junction, then braking; stopping and turn clearance require verification.",
+      "thinking_buttons": []
+    }
+  },
+  {
+    "pair": 1,
+    "source_step": 5,
+    "variant": "compact",
+    "latency_ms": 7104.17,
+    "decision": {
+      "buttons": [
+        "cross"
+      ],
+      "rationale": "Near right curb, roughly road-aligned; fixed poles confirm stopped. Pedestrian cleared left; mouth ahead.",
+      "scene": "driving",
+      "stop": false,
+      "segments": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 35
+        },
+        {
+          "buttons": [],
+          "frames": 10
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 15
+        }
+      ],
+      "route_note": "Start: yellow hillside ahead-left, red-orange corner right. Initial approach; 0 turns. Right street mouth ahead; advance to curb end, verify lane before turning.",
+      "dynamics_note": "60 handbrake held position against poles; pedestrian cleared left. Prior 25 throttle gave little advance. Increase to 35 straight throttle, then coast10/brake15; curb close, no turn yet.",
+      "thinking_buttons": [
+        "r1"
+      ]
+    }
+  },
+  {
+    "pair": 1,
+    "source_step": 5,
+    "variant": "original",
+    "latency_ms": 7412.8,
+    "decision": {
+      "buttons": [
+        "cross"
+      ],
+      "rationale": "Car is at the right lane\u2019s curb edge, roughly parallel to the road and stationary against the poles. The pedestrian has cleared left; the street mouth remains ahead. Advance straight before turning.",
+      "scene": "driving",
+      "stop": false,
+      "segments": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 35
+        },
+        {
+          "buttons": [],
+          "frames": 10
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 15
+        }
+      ],
+      "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner right. Initial approach; 0 completed turns. Right street mouth still ahead. Pedestrian cleared left; advance to curb end and verify destination lane before first right.",
+      "dynamics_note": "60 handbrake plus inference hold showed no displacement against poles, confirming standstill. Earlier 25 throttle gave little advance; no definite obstruction visible ahead, though right wheels hug curb. Increase straight throttle to 35 frames, coast 10, handbrake 15; verify actual clearance and motion before steering.",
+      "thinking_buttons": [
+        "r1"
+      ]
+    }
+  },
+  {
+    "pair": 2,
+    "source_step": 10,
+    "variant": "original",
+    "latency_ms": 6372.87,
+    "decision": {
+      "buttons": [
+        "r1"
+      ],
+      "rationale": "Car remains at the right curb, roughly parallel to the road, with little movement past the signal pole. The right-turn mouth is ahead, but crossing traffic and a police car alongside limit clearance; hold position.",
+      "scene": "driving",
+      "stop": false,
+      "segments": [
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 60
+        }
+      ],
+      "route_note": "Start: yellow hillside buildings ahead-left, red-orange corner right. Initial approach; 0 completed turns. Right street mouth remains ahead. Crossing traffic and police car alongside constrain recovery; establish curb clearance before first right.",
+      "dynamics_note": "15 forward-left/45 handbrake produced little advance relative to the pole and no clear additional yaw; right side remains near curb. Police car now occupies left-side clearance. Hold handbrake through action and inference; reassess traffic before moving.",
+      "thinking_buttons": [
+        "r1"
+      ]
+    }
+  },
+  {
+    "pair": 2,
+    "source_step": 10,
+    "variant": "compact",
+    "latency_ms": 5501.96,
+    "decision": {
+      "buttons": [
+        "cross",
+        "steer_left"
+      ],
+      "rationale": "At right curb, nearly parallel to road; slight advance past pole. Mouth ahead; ease left before crossing traffic.",
+      "scene": "driving",
+      "stop": false,
+      "segments": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 25
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 35
+        }
+      ],
+      "route_note": "Start: yellow hillside ahead-left, red-orange corner right. Initial approach; 0 turns. Right mouth ahead; gain curb clearance and verify crossing traffic before first right.",
+      "dynamics_note": "15 forward-left/45 handbrake gave slight advance but little yaw; still curb-adjacent. Increase correction to 25 frames, then hold; crossing traffic and left-side police car limit travel.",
+      "thinking_buttons": [
+        "r1"
+      ]
+    }
+  }
+]

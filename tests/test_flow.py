@@ -160,3 +160,18 @@ def test_controller_passes_model_thinking_controls_to_native(tmp_path):
     assert "--continuous" in calls[0]
     assert calls[0][calls[0].index("--thinking-keys") + 1] == '["e"]'
     assert result["action"]["thinking_buttons"] == ["r1"]
+
+
+def test_trial_budget_uses_recording_lower_bound(tmp_path, monkeypatch):
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+    import recording
+    monkeypatch.setattr(recording, "count_frames", lambda _: 1800)
+    def decide(*args):
+        assert "resets after approximately 60.0 game seconds" in args[3]
+        assert "At least 30.0 game seconds" in args[3]
+        assert "at most approximately 30.0 game seconds remain" in args[3]
+        assert "upper estimate" in args[3]
+        return {"buttons": [], "rationale": "Done", "scene": "driving", "stop": True}, 1
+    autodrive.run(FakeWorld(), steps=1, goal="Drive", model="gpt-6-astra", directory=tmp_path,
+                  mode="flow", emulator_fps=60, decision_fn=decide,
+                  recording_master=tmp_path / "capture.mkv", target_recorded_frames=3600)
