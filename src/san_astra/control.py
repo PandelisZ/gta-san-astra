@@ -85,16 +85,28 @@ class Controller:
 
     def call(self, *args: str) -> dict:
         args = self.target_args(args)
+        if args and args[0] == "capture":
+            # Match the native daemon's lock without locking its RPC path twice.
+            # ScreenCaptureKit helpers must run one at a time across transports.
+            with self._file_lock(Path.home() / ".san-astra/capture.lock"):
+                return self._call_native(*args)
         with self.actuation_lock(args):
             return self._call_native(*args)
 
     def target_args(self, args):
+        args = tuple(args)
         if "--pid" in args:
             index = args.index("--pid")
             if index + 1 >= len(args) or (self.pid is not None and int(args[index + 1]) != self.pid):
                 raise ControlError("Native PID conflicts with this controller's target")
-            return tuple(args)
-        return (*args, "--pid", str(self.pid)) if self.pid is not None else tuple(args)
+        elif self.pid is not None:
+            args = (*args, "--pid", str(self.pid))
+        # PID delivery does not need application activation. Avoid focus changes
+        # during scoped input, including recording hotkeys and frame advance.
+        if "--pid" in args and args[0] in ("input", "step"):
+            args = tuple(arg for arg in args if arg not in ("--focus", "--no-focus"))
+            args = (*args, "--no-focus")
+        return args
 
     @contextmanager
     def actuation_lock(self, args):

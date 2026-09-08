@@ -31,3 +31,16 @@ Root instructed all streams to pause. Wrapper has exited and capture is finalize
 Focused autodrive tests: 4 passed, 6 failed (11 subtests passed). Failures occur while serializing the mock controller PID before policy execution; the prompt-only change does not touch that manifest code. Global focus and per-PID locks were preserved.
 
 Lesson: a policy trial needs evidence that only its requested controls advance its game; recording duration alone cannot establish autonomous driving. Next improvement should verify paused observation/capture and process isolation across simultaneous instances before retrying this unchanged recovery prompt. Block completion and effective reversing remain untested.
+
+## Minute02: same-game continuation in progress
+
+Root reset/warmed a new owned PID **69719** and verified four-game neutral input isolation. Imported shared `control.py`/`daemon.py` from `90149e5`; explicit PID input avoids activation and CLI captures share a lock. Added wrapper options for CLI transport, visual resume context, and remaining recorded-frame targets.
+
+The unchanged recovery prompt ran on CLI transport with Astra low/fast:
+
+1. `stream-recovery-minute-02`: 96 actual frames, 2 decisions. Screenshot failed after successful 12-frame steering phase with a false PID-validation error; final 24-frame phase never executed.
+2. After root rebuilt shared CLI with `a31368e`, resumed the same game without replay/reset as `stream-recovery-minute-02-part2`, targeting3501 frames. Six more decisions produced360 actual frames. Screenshot failed again after the final18-frame handbrake phase. **456 total actual frames retained;3141 remain.**
+
+Part2 visibly backed away from the motel curb across toward the garden curb. The model explicitly retained pending recovery and worked on heading alignment. Screenshot `runs/stream-recovery-minute-02-part2/20260908-133955-ca6e1abc/frame-1788900098673600000.png` confirms the car transverse to the road with its rear near the garden sidewalk. Effective reverse travel is demonstrated; a right-lane recovery and block completion are not yet proven.
+
+Both errors occurred in capture after successful input, so no prior control is safe to replay. Every native action and PNG is retained. PID69719 remained alive. Root is coordinating a transport fix before the next same-game continuation. Policy/model unchanged.
