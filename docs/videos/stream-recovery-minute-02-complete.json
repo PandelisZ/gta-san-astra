@@ -1,0 +1,43 @@
+{
+  "name": "stream-recovery-minute-02-complete",
+  "target_pid": 69719,
+  "model": "gpt-6-astra",
+  "reasoning_effort": "low",
+  "service_tier": "fast",
+  "policy_unchanged": true,
+  "game_reset_between_parts": false,
+  "controls_replayed": false,
+  "total_recorded_frames": 3604,
+  "total_requested_frames": 4883,
+  "total_decisions": 83,
+  "parts": [
+    {
+      "name": "stream-recovery-minute-02",
+      "recorded_frames": 96,
+      "requested_frames": 96,
+      "master": "/Users/pz/.codex/worktrees/a761/oaihackathon/.runtime/stream-recovery/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133717.mkv",
+      "master_sha256": "dd0803517715971a38ba801b4f7f67b5a9055036ccf620f696910381bc246ddb",
+      "frames_directory": "/Users/pz/.codex/worktrees/a761/oaihackathon/runs/stream-recovery-minute-02/recording/frames"
+    },
+    {
+      "name": "stream-recovery-minute-02-part2",
+      "recorded_frames": 360,
+      "requested_frames": 360,
+      "master": "/Users/pz/.codex/worktrees/a761/oaihackathon/.runtime/stream-recovery/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133955.mkv",
+      "master_sha256": "7b64a6103e485596f538bffc0996d9865de915926d81c89a709fde06a51a2ccc",
+      "frames_directory": "/Users/pz/.codex/worktrees/a761/oaihackathon/runs/stream-recovery-minute-02-part2/recording/frames"
+    },
+    {
+      "name": "stream-recovery-minute-02-part3",
+      "recorded_frames": 3148,
+      "requested_frames": 4427,
+      "master": "/Users/pz/.codex/worktrees/a761/oaihackathon/.runtime/stream-recovery/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908134549.mkv",
+      "master_sha256": "0a39ea0643c716d95afe504cf3166343604d3575011150a381d418b4dececb37",
+      "frames_directory": "/Users/pz/.codex/worktrees/a761/oaihackathon/runs/stream-recovery-minute-02-part3/recording/frames"
+    }
+  ],
+  "git_video_frame_count": 3597,
+  "video_sha256": "46610613faf57b4395a0073911ad34d62050043b8cbc5bd2808698d287f2c16f",
+  "route_complete": false,
+  "note": "First60seconds across successive recordings of the same paused game. Transport failures interrupted capture, no game reset or input replay. Every source frame retained. Partial first/second actions are preserved as actually executed."
+}
