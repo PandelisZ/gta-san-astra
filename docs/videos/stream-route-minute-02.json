@@ -1,0 +1,25 @@
+{
+  "name": "stream-route-minute-02",
+  "goal": "Drive on the RIGHT around a compact connected street block and return to the starting garden wall and orange Jefferson Motel landmark with the same heading. Choose every driving control from screenshots. Verify the start fingerprint and heading before claiming completion.",
+  "scenario": "quiet-tahoma",
+  "target_pid": 69729,
+  "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2",
+  "autonomy": "Astra chooses every driving control phase. Wrapper only handles reset, recording and export.",
+  "requested_vsync_budget": 7200,
+  "nominal_seconds_budget": 120.12,
+  "decoded_frame_count": 3611,
+  "target_recorded_frames": 3597,
+  "recorded_target_reached": true,
+  "full_recording_duration_seconds": 60.24,
+  "clip_seconds_limit": 60,
+  "git_video_frame_count": 3597,
+  "logic_sha256": {
+    "scripts/autodrive.py": "e865345aea34317572f3d2fb28cfe114cfad7240d15cc750e3c8197bb731bf2f",
+    "src/san_astra/policy.py": "2c1463a9f12d736eeb5f77dd36c06519d77ba8419d3811dc7bd5a25d788bf033"
+  },
+  "measured_video_duration_seconds": 60.01,
+  "measured_duration_source": "MP4 container duration reported by FFmpeg",
+  "duration_note": "Stop after a whole burst crosses3597 stored frames (about one minute), with120 decisions as a safety cap. Live count is buffered, so the full recording can exceed one minute. Git replay contains its first60 real seconds with no padding; actual frame count and duration are measured.",
+  "video_sha256": "6426a5cb66b2325be8bc3955d10decd7caa09d2aec219c47001c510b91a3239d",
+  "status": "completed"
+}
