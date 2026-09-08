@@ -1,0 +1,57 @@
+{
+  "source_run": "runs/bios-control",
+  "before_image": "bios-language.png",
+  "intermediate_image": "bios-timezone.png",
+  "later_mcp_image": "bios-daylight-mcp.png",
+  "decisions": [
+    {
+      "step": 0,
+      "timestamp_utc": "2026-09-08T17:23:59.185300+00:00",
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "English is selected on the User Preferences language screen; confirm to continue setup.",
+        "scene": "menu",
+        "stop": false
+      },
+      "decision_latency_ms": 5773.79,
+      "frames_requested": 120,
+      "action_wall_ms": 6595.92,
+      "native_input_elapsed_ms": 5319.629917
+    },
+    {
+      "step": 1,
+      "timestamp_utc": "2026-09-08T17:24:12.045536+00:00",
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "English remains selected with an X Enter prompt; confirm the language.",
+        "scene": "menu",
+        "stop": false
+      },
+      "decision_latency_ms": 6069.87,
+      "frames_requested": 120,
+      "action_wall_ms": 6585.3,
+      "native_input_elapsed_ms": 5304.832167
+    },
+    {
+      "step": 2,
+      "timestamp_utc": "2026-09-08T17:24:24.638927+00:00",
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "The Time Zone setup shows Kabul selected and X Enter; confirm to continue.",
+        "scene": "menu",
+        "stop": false
+      },
+      "decision_latency_ms": 5794.93,
+      "frames_requested": 120,
+      "action_wall_ms": 6629.52,
+      "native_input_elapsed_ms": 5349.022083
+    }
+  ],
+  "scope": "PS2 BIOS menus only; not a GTA driving trial."
+}

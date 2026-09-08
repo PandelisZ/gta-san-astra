@@ -1,0 +1,19 @@
+{
+  "source_run": "runs/mcp-smoke",
+  "ok": true,
+  "server_name": "GTA San Astra",
+  "tools_observed_at_test": [
+    "observe",
+    "action",
+    "step",
+    "release",
+    "doctor"
+  ],
+  "mime": "image/png",
+  "width": 489,
+  "height": 480,
+  "image": "bios-daylight-mcp.png",
+  "capture_ms": 196.39,
+  "timestamp_utc": "2026-09-08T17:24:35Z",
+  "mutations": "none; observe only"
+}

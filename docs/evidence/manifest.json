@@ -1,0 +1,26 @@
+{
+  "captured_on": "2026-09-08",
+  "image_processing": "Copied captured PNG bytes unchanged. Existing captures already remove 32 pixels of emulator window chrome.",
+  "images": [
+    {
+      "artifact": "bios-language.png",
+      "source_run": "runs/bios-control",
+      "sha256": "ba19500440711e3f036916cacd8fbebde5888589e19d55f13a23b895532fd139"
+    },
+    {
+      "artifact": "bios-timezone.png",
+      "source_run": "runs/bios-control",
+      "sha256": "4c779234b4f5138e3bf157212a32549ef668b1f53a9fdb927c648aef50e474c3"
+    },
+    {
+      "artifact": "bios-daylight-mcp.png",
+      "source_run": "runs/mcp-smoke",
+      "sha256": "f1c68bb8cf02aef0108e11c23e039809f4a03e24f358bb325301659749f7bc63"
+    }
+  ],
+  "development_snapshot": {
+    "head": "a405c93",
+    "commit_count": 6,
+    "scope": "Repository commit history at this snapshot; later judging documentation is excluded."
+  }
+}

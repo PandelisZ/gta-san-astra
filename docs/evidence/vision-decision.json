@@ -1,0 +1,14 @@
+{
+  "source_run": "runs/vision-smoke",
+  "timestamp_utc": "2026-09-08T17:22:51.762377+00:00",
+  "decision": {
+    "buttons": [],
+    "rationale": "The window title reads \u201cPS2 BIOS (USA)\u201d and displays the PlayStation boot logo.",
+    "scene": "menu",
+    "stop": true
+  },
+  "decision_latency_ms": 7361.26,
+  "input_image_sha256": "6d9c2d74cd0e33ee6ae944dd14f48f40826bd95983062d136590cd8fe73260a4",
+  "controls_applied": false,
+  "note": "Final structured decision only. The original boot-logo input is not included in this compact image selection."
+}

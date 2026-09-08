@@ -205,3 +205,30 @@ def test_failure_releases_remapped_key_only(controller):
     with pytest.raises(ControlError, match="bridge crashed"):
         controller.action(throttle=True)
     assert controller.calls[-1] == ("release", "--keys", "z")
+
+
+@pytest.mark.parametrize("responsive", [True, False])
+def test_bridge_timeout_attempts_graceful_cleanup_before_kill(monkeypatch, responsive):
+    import subprocess
+    events = []
+    class Process:
+        returncode = None
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            return False
+        def communicate(self, timeout=None):
+            events.append(("communicate", timeout))
+            if timeout == 15 or (timeout == 1 and not responsive):
+                raise subprocess.TimeoutExpired("bridge", timeout)
+            self.returncode = 143
+            return "", ""
+        def terminate(self):
+            events.append("terminate")
+        def kill(self):
+            events.append("kill")
+    monkeypatch.setattr("san_astra.control.subprocess.Popen", lambda *a, **kw: Process())
+    with pytest.raises(ControlError, match="Native bridge failed"):
+        Controller().call("input", "--keys", "k")
+    assert events[:3] == [("communicate", 15), "terminate", ("communicate", 1)]
+    assert ("kill" in events) == (not responsive)

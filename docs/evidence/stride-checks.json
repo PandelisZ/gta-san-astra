@@ -1,0 +1,33 @@
+{
+  "source_run": "runs/stride-smoke",
+  "paused_image_stable": true,
+  "pause_check": "The first two paused captures are byte-identical.",
+  "paused_image_sha256": "d8e28fdf116d8a9817e6608e854b75e6705be2031888d75c3a5b33047f62edd4",
+  "checks": [
+    {
+      "stride": 1,
+      "frames_requested": 1,
+      "action_wall_ms": 1252.81,
+      "native_input_elapsed_ms": 56.885417,
+      "result_capture_ms": 198.77,
+      "result_image_sha256": "a87673f1dbdf7875bd0f19dad0eae2d60755e73d7ee3395823af2b1bbda4b57c"
+    },
+    {
+      "stride": 5,
+      "frames_requested": 5,
+      "action_wall_ms": 1432.6,
+      "native_input_elapsed_ms": 246.802459,
+      "result_capture_ms": 199.78,
+      "result_image_sha256": "2d5c80bf3fc34c9224efdea463ac79203d2bc7ff57be5fa12a19e72552f7d413"
+    },
+    {
+      "stride": 10,
+      "frames_requested": 10,
+      "action_wall_ms": 1656.64,
+      "native_input_elapsed_ms": 473.893167,
+      "result_capture_ms": 200.31,
+      "result_image_sha256": "877d0773164726c5ce6b7e6e7d76ab200937b7e74b0a0548639d2e131ef56978"
+    }
+  ],
+  "limitations": "Request counts are not verified unique rendered frames. Action wall time excludes the subsequent screenshot and model inference."
+}

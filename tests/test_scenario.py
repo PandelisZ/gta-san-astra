@@ -125,3 +125,32 @@ def test_launch_refuses_modified_state(tmp_path, monkeypatch):
     (target / "state.p2s").write_bytes(b"modified")
     with pytest.raises(ControlError, match="integrity"):
         scenario.launch("stationary-car", iso, target.parent)
+
+
+def test_failed_replacement_preserves_previous_scenario(scene, monkeypatch):
+    controller, scenarios, states, calls = scene
+    target = scenarios / "stationary-car"
+    target.mkdir(parents=True)
+    (target / "state.p2s").write_bytes(b"previous intact state")
+    normal_copy = scenario.shutil.copy2
+    def changing_copy(source, destination):
+        result = normal_copy(source, destination)
+        if Path(source).suffix == ".p2s":
+            Path(source).write_bytes(b"changed during snapshot copy")
+        return result
+    monkeypatch.setattr(scenario.shutil, "copy2", changing_copy)
+    with pytest.raises(ControlError, match="changed while copying"):
+        scenario.capture(controller, scenarios=scenarios, replace=True)
+    assert (target / "state.p2s").read_bytes() == b"previous intact state"
+    assert list(scenarios.iterdir()) == [target]
+
+
+def test_launch_wrong_game_filename_fails_before_process_check(tmp_path, monkeypatch):
+    target, iso = saved_scenario(tmp_path)
+    wrong_iso = tmp_path / "other-game.iso"
+    wrong_iso.write_bytes(b"other game")
+    def forbidden(*args, **kwargs):
+        pytest.fail("Should not launch a mismatched game")
+    monkeypatch.setattr(scenario.subprocess, "run", forbidden)
+    with pytest.raises(ValueError, match="Game filename differs"):
+        scenario.launch("stationary-car", wrong_iso, target.parent)

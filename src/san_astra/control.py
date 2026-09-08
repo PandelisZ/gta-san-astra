@@ -80,15 +80,29 @@ class Controller:
 
     def call(self, *args: str) -> dict:
         try:
-            result = subprocess.run([str(self.bridge), *args], text=True, capture_output=True, timeout=15)
+            with subprocess.Popen([str(self.bridge), *args], text=True,
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE) as process:
+                try:
+                    stdout, stderr = process.communicate(timeout=15)
+                except (subprocess.TimeoutExpired, KeyboardInterrupt):
+                    # The native bridge handles SIGTERM by releasing active keys.
+                    # Give that cleanup a bounded chance before forced termination.
+                    process.terminate()
+                    try:
+                        process.communicate(timeout=1)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+                        process.communicate()
+                    raise
+                returncode = process.returncode
         except (OSError, subprocess.TimeoutExpired) as exc:
             raise ControlError(f"Native bridge failed: {exc}") from exc
-        if result.returncode:
-            raise ControlError(result.stderr.strip() or result.stdout.strip() or f"Bridge exited {result.returncode}")
+        if returncode:
+            raise ControlError(stderr.strip() or stdout.strip() or f"Bridge exited {returncode}")
         try:
-            return json.loads(result.stdout)
+            return json.loads(stdout)
         except json.JSONDecodeError as exc:
-            raise ControlError(f"Bridge returned invalid JSON: {result.stdout[:200]}") from exc
+            raise ControlError(f"Bridge returned invalid JSON: {stdout[:200]}") from exc
 
     @contextmanager
     def lock(self):

@@ -10,7 +10,6 @@ import argparse
 import configparser
 import hashlib
 import json
-import os
 from pathlib import Path
 import re
 import shutil
@@ -74,6 +73,8 @@ def capture(controller: Controller, name: str = "stationary-car", scenarios: Pat
     if config.get("Hotkeys", "SaveStateToSlot", fallback="").strip().lower() != "keyboard/f1":
         raise ControlError("Capture requires SaveStateToSlot = Keyboard/F1 in the selected profile")
     profile = controller.config_path.resolve().parent.parent
+    if profile == (Path.home() / "Library/Application Support/PCSX2").resolve():
+        raise ControlError("Capture requires the isolated experiment profile; run setup first")
     folder = Path(config.get("Folders", "Savestates", fallback="sstates")).expanduser()
     folder = (folder if folder.is_absolute() else profile / folder).resolve()
     if not folder.is_relative_to(profile):
@@ -84,7 +85,14 @@ def capture(controller: Controller, name: str = "stationary-car", scenarios: Pat
     scenarios.mkdir(parents=True, exist_ok=True)
     with controller.lock():
         before = state_files(folder)
-        controller.call("input", "--keys", "f1", "--duration-ms", "80", "--focus")
+        try:
+            controller.call("input", "--keys", "f1", "--duration-ms", "80", "--focus")
+        except BaseException:
+            try:
+                controller.call("release", "--keys", "f1")
+            except ControlError:
+                pass
+            raise
         source = wait_for_save(folder, before, timeout)
         staging = Path(tempfile.mkdtemp(prefix=f".{name}-", dir=scenarios))
         try:
