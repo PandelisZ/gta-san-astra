@@ -229,18 +229,18 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         "Set stop=true only when the route goal is visibly complete or the situation "
         "is truly unrecoverable; ordinary uncertainty or traffic is not completion. No buttons are "
         "applied on a stop decision. "
-        "Update route_note in at most400characters: starting landmark, current leg, visually completed "
+        "Update route_note in at most180characters: starting landmark, current leg, visually completed "
         "turn count and next turn/landmark. Carry forward still-relevant "
         "facts from the previous note. Count a completed turn only after the images show it happened, "
         "never because a turn was commanded. Mark uncertain facts uncertain. For an around-the-block goal, "
         "success requires visibly returning to the starting landmark/road orientation; turn count alone "
         "does not prove completion. This note is your own visual navigation memory, never telemetry. "
-        "Update dynamics_note in at most400characters: observed direction or standstill/uncertainty, "
+        "Update dynamics_note in at most220characters: observed direction or standstill/uncertainty, "
         "last action effect versus expectation, remaining clearance, and the next control expectation. "
         "Keep requested braking/countersteering separate from observed stopping/alignment. Carry "
         "forward useful response estimates instead of erasing them with each maneuver. This is "
         "qualitative visual evidence, not exact speed telemetry. "
-        "Rationale must be a short visible-scene explanation, not hidden reasoning.\n"
+        "Rationale must be a visible-scene explanation within120characters, not hidden reasoning. Use terse concrete observations. Avoid repeating unchanged landmarks in dynamics_note.\n"
         f"Goal: {goal}\nPrevious visual route note: {route_note}\nPrevious visual dynamics note: {dynamics_note}\nOwn previous decisions: {json.dumps(history[-5:])}\n"
     )
 
@@ -441,6 +441,14 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                         "The first pair separates motion during inference; the last pair brackets the action. "
                         "Do not attribute all displacement to the short action or treat released controls as braking. ")
             decision_started = time.time()
+            if target_recorded_frames is not None:
+                duration_context += (
+                    f" This trial resets after approximately {target_recorded_frames / emulator_fps:.1f} game seconds. "
+                    f"At least {recorded_frames / emulator_fps:.1f} game seconds have been recorded; "
+                    f"at most approximately {max(0, target_recorded_frames - recorded_frames) / emulator_fps:.1f} "
+                    "game seconds remain (buffered capture makes this an upper estimate). "
+                    "Budget includes inference-time world motion. Make useful progress when the visible path "
+                    "supports it; the deadline never justifies a collision or a false completion claim. ")
             decision, latency = decision_fn(model, selected_images, history,
                 goal + image_context + (duration_context +
                         " Select control segments whose frame counts sum exactly to that total. "

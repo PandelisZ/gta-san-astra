@@ -50,7 +50,7 @@
     "rationale": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 800
+      "maxLength": 120
     },
     "scene": {
       "type": "string",
@@ -129,13 +129,13 @@
     "route_note": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 400,
+      "maxLength": 180,
       "description": "Carry forward visual navigation state: starting landmark and heading, current leg, observed completed turns, next turn. Do not infer progress from commands alone."
     },
     "dynamics_note": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 400,
+      "maxLength": 220,
       "description": "Visual motion memory: observed forward/reverse/standstill or uncertainty, last input duration and observed displacement relative to fixed road features, prediction error, and resulting control expectation. Never claim a requested stop or heading correction happened without image evidence."
     },
     "thinking_buttons": {
