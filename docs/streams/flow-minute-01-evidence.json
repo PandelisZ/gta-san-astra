@@ -1,0 +1,1540 @@
+{
+  "source_main_commit": "1fa50c4",
+  "summary": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "low",
+    "service_tier": "fast",
+    "goal": "Drive on the RIGHT around a connected compact street block and visibly return to THIS starting intersection with yellow hillside buildings ahead-LEFT and red-orange corner building RIGHT, with the same heading. Use the attached starting reference to verify return. Choose every control solely from screenshots; verify actual completed turns, avoid curbs, collisions, traffic and pedestrians. Do not count seeing the landmark from another heading as completion.",
+    "frame_stride": 60,
+    "target_pid": 79892,
+    "frame_interval_ms": 350,
+    "emulator_fps": 59.94,
+    "steer_pulse_frames": 12,
+    "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
+    "steps_limit": 240,
+    "scenario_state": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/state.p2s",
+    "scenario_state_note": "Provenance label only; runner does not load this state",
+    "resume_from": null,
+    "resume_decision_count": 0,
+    "resume_image_path": null,
+    "start_reference": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+    "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
+    "recording_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908151537.mkv",
+    "target_recorded_frames": 3597,
+    "recording_budget_note": "Live stored-frame count is a buffered lower bound. Final bursts are at least15 requests where possible; stopped recording can exceed the target.",
+    "started_at": 1788905738.276088,
+    "status": "recording_target_reached",
+    "mode": "flow",
+    "hold_ms": null,
+    "policy_transport": "app-server",
+    "bridge_transport": "cli",
+    "vision_max_edge": 640,
+    "vision_quality": 65,
+    "vision_colormode": "rgb",
+    "ended_at": 1788905847.469186,
+    "elapsed_wall_seconds": 109.193,
+    "decision_count": 12,
+    "action_count": 12,
+    "actions_requested": 12,
+    "game_frames_requested": 720,
+    "frames_in_completed_actions": 720,
+    "recorded_frames_lower_bound": 3599,
+    "recording_target_reached": true,
+    "realtime_hold_ms_requested": null,
+    "frames_note": "Nominal frame budgets for timed bursts, not delivered frames; recording count measures actual output",
+    "decision_latency_median_ms": 7284.205,
+    "capture_latency_median_ms": 232.5,
+    "action_and_capture_median_ms": 1347.1637084148824,
+    "measured_decisions_per_wall_second": 0.10989742351143121,
+    "error": null,
+    "release_error": null
+  },
+  "capture": {
+    "master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908151537.mkv",
+    "master_sha256": "8d283513758f499e0e809a90980b44a9eb29dba87a2fb5c311a95e049a2031e3",
+    "master_bytes": 1445318145,
+    "frames_directory": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/recording/frames",
+    "decoded_frame_count": 3618,
+    "playback": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/recording/playback.mp4",
+    "playback_bytes": 9942362,
+    "export_elapsed_seconds": 17.834,
+    "timing": "Playback preserves the capture's simulation timestamps; no desktop wall-time or inferred FPS is substituted.",
+    "provenance": "Master retained unchanged; PNGs decode every stored frame. Completeness depends on successful PCSX2 native capture."
+  },
+  "screen_recorder_pid": 80128,
+  "wall_clock_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/wall-clock.mov",
+  "outcome": "Zero turns; original approach curb/pole clearance unresolved. No loop or return proven.",
+  "observation_age_seconds": {
+    "invocation_min": 0.23988628387451172,
+    "invocation_median": 0.48385095596313477,
+    "invocation_max": 0.5382630825042725,
+    "decision_return_min": 6.488709926605225,
+    "decision_return_median": 7.7815598249435425,
+    "decision_return_max": 9.167436122894287
+  },
+  "decisions": [
+    {
+      "step": 0,
+      "timestamp": 1788905745.489314,
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "Car is near the right curb, roughly parallel to the lane edges; motion is unverified. The cross-street mouth is ahead, beyond the corner poles. Approach gently without turning yet.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 20
+          },
+          {
+            "buttons": [],
+            "frames": 40
+          }
+        ],
+        "route_note": "Starting approach: yellow hillside buildings ahead-left, red-orange corner building right. In right lane before starting intersection; 0 completed turns. Next: verify right-turn curb clearance and destination lane.",
+        "dynamics_note": "Initial motion unverified; baseline is not a motion sample. Near right curb with junction ahead. Request 20 frames acceleration then 40 coast to assess displacement; no steering until front clearance around the corner is visible. Coasting may continue during inference."
+      },
+      "decision_latency_ms": 6719.56,
+      "decision_started_at": 1788905738.7693682,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 0,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 20
+        },
+        {
+          "buttons": [],
+          "frames": 40
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905738529482000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905738529482000-1788905738745083054-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905738529482000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905738529482000-1788905738745083054-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 948747,
+          "bytes": 29525,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.41
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "current"
+      ]
+    },
+    {
+      "step": 1,
+      "timestamp": 1788905753.625404,
+      "decision": {
+        "buttons": [
+          "square"
+        ],
+        "rationale": "Car advanced toward the corner, still close to the right curb and aligned with the approach. The street mouth remains ahead; crossing cars occupy it under our red light. Brake and yield.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "square"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [],
+            "frames": 48
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Still approaching starting junction in right lane; 0 completed turns. Next: right turn after crossing traffic clears and near curb clearance is verified.",
+        "dynamics_note": "20 throttle + 40 coast produced visible forward travel relative to corner poles, without yaw; current speed uncertain. Front remains before crossing, with limited approach clearance. Request 12 brake frames then release to avoid sustained reverse; stopping not yet verified."
+      },
+      "decision_latency_ms": 6422.58,
+      "decision_started_at": 1788905747.202484,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 275,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [],
+          "frames": 48
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905738529482000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905746750527000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905738529482000-1788905738745083054-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905746750527000-1788905746992491909-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905738529482000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905738529482000-1788905738745083054-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 948747,
+          "bytes": 29525,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.41
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905746750527000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905746750527000-1788905746992491909-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 976637,
+          "bytes": 27698,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.88
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 2,
+      "timestamp": 1788905763.7489972,
+      "decision": {
+        "buttons": [
+          "r1"
+        ],
+        "rationale": "Car remains near the right curb, parallel to the approach, with little displacement relative to the corner pole. The mouth is ahead and crossing traffic remains; a person is beside the open right door. Hold position and reassess occupancy.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 60
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. At starting junction approach, right lane; 0 completed turns. Right turn pending crossing clearance and verified curb opening. Open right door/person nearby; occupancy needs reassessment.",
+        "dynamics_note": "12 brake + 48 coast resulted in little net displacement relative to pole; standstill or very slow motion, not confirmed reverse. Vehicle behind is close, crossing car ahead, person on right sidewalk. Handbrake requested to prevent drift while checking interaction."
+      },
+      "decision_latency_ms": 8550.39,
+      "decision_started_at": 1788905755.1982772,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 551,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 60
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905746750527000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905754758457000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905746750527000-1788905746992491909-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905754758457000-1788905754979401268-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905746750527000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905746750527000-1788905746992491909-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 976637,
+          "bytes": 27698,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.88
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905754758457000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905754758457000-1788905754979401268-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 972179,
+          "bytes": 28184,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.42
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 3,
+      "timestamp": 1788905772.500763,
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "Car is stationary by the right curb and aligned with the road. The right-turn mouth is still ahead; the nearby person has moved toward the corner. Creep straight toward the opening, without committing across traffic.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 18
+          },
+          {
+            "buttons": [],
+            "frames": 30
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 12
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Starting junction approach in right lane; 0 completed turns. Next right turn remains ahead, pending front clearance past near curb and clear crossing. Right door open; chase view remains vehicle-centered.",
+        "dynamics_note": "60 handbrake frames held car essentially fixed against curb/pole, supporting standstill. Nearby person moved forward away from door. Request 18 throttle, 30 coast, then 12 handbrake for a bounded straight approach; first 20-frame throttle produced useful travel. No yaw calibrated yet."
+      },
+      "decision_latency_ms": 7073.86,
+      "decision_started_at": 1788905765.4264572,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 887,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 18
+        },
+        {
+          "buttons": [],
+          "frames": 30
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 12
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905754758457000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905764965722000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905754758457000-1788905754979401268-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905764965722000-1788905765195772586-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905754758457000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905754758457000-1788905754979401268-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 972179,
+          "bytes": 28184,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.42
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905764965722000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905764965722000-1788905765195772586-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 963522,
+          "bytes": 28087,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.47
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 4,
+      "timestamp": 1788905782.828674,
+      "decision": {
+        "buttons": [
+          "r1"
+        ],
+        "rationale": "Car remains tight against the right curb, roughly parallel to the centerline, with little travel relative to the corner pole. The street mouth is ahead; a pedestrian is crossing immediately in front and traffic remains in the junction. Yield.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 60
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Still on starting approach in right lane; 0 completed turns. Right-turn mouth ahead, not yet cleared. Wait for pedestrian immediately ahead and crossing traffic; right door remains open.",
+        "dynamics_note": "18 throttle + 30 coast + 12 handbrake produced little displacement against corner pole, less than expected; possible curb restriction, not proven. Pedestrian now crosses immediately ahead, vehicle close behind. Hold handbrake; once clear reassess curb clearance rather than repeat ineffective straight throttle."
+      },
+      "decision_latency_ms": 8700.69,
+      "decision_started_at": 1788905774.1259441,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 1175,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 60
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905764965722000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905773661238000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905764965722000-1788905765195772586-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905773661238000-1788905773885495924-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905764965722000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905764965722000-1788905765195772586-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 963522,
+          "bytes": 28087,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.47
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905773661238000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905773661238000-1788905773885495924-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 967943,
+          "bytes": 28098,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.6
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 5,
+      "timestamp": 1788905791.897372,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_left"
+        ],
+        "rationale": "Car is stationary beside the right curb, nearly parallel to the centerline. The pedestrian has cleared left; the street mouth remains ahead beyond the poles. Gently move away from the curb before approaching the turn.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_left"
+            ],
+            "frames": 14
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 20
+          },
+          {
+            "buttons": [],
+            "frames": 10
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 16
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Starting approach, tight to right curb; 0 completed turns. Pedestrian cleared left. Next: free curb-side position and approach visible street mouth ahead before first right turn. Right door open.",
+        "dynamics_note": "60 handbrake frames left position unchanged relative to pole. Prior 18 throttle gave little travel, suggesting possible curb restriction. Rear car limits reversing. Try 14 throttle-left then 20 straight throttle to gain clearance; yaw uncalibrated, so end with handbrake and inspect before extending steering."
+      },
+      "decision_latency_ms": 7383.87,
+      "decision_started_at": 1788905784.513031,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 1511,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 14
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 20
+        },
+        {
+          "buttons": [],
+          "frames": 10
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 16
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905773661238000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905784026245000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905773661238000-1788905773885495924-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905784026245000-1788905784257224683-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905773661238000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905773661238000-1788905773885495924-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 967943,
+          "bytes": 28098,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.6
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905784026245000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905784026245000-1788905784257224683-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 975222,
+          "bytes": 27843,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.1
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 6,
+      "timestamp": 1788905800.9696,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_left"
+        ],
+        "rationale": "Car remains at the right edge of its lane, nearly aligned with the road, with minimal progress past the pole. The junction mouth is still ahead and the immediate path is clear. Increase the leftward clearance maneuver rather than push straight against the curb.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_left"
+            ],
+            "frames": 30
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 10
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 20
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Still at starting approach beside right curb; 0 completed turns. Street mouth remains ahead beyond corner poles. Next: clear possible curb/pole restriction, then approach first right turn. Right door open.",
+        "dynamics_note": "14 throttle-left + 20 throttle + 10 coast + 16 handbrake gave minimal forward displacement and little yaw; possible front-right curb/pole restriction persists. Rear vehicle prevents safe reverse. Increase moving-left phase to 30 frames, then brake; expect stronger yaw if freed, not a full turn."
+      },
+      "decision_latency_ms": 7390.03,
+      "decision_started_at": 1788905793.579155,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 1811,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 30
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 10
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 20
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905784026245000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905793098239000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905784026245000-1788905784257224683-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905793098239000-1788905793320223339-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905784026245000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905784026245000-1788905784257224683-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 975222,
+          "bytes": 27843,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.1
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905793098239000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905793098239000-1788905793320223339-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 976016,
+          "bytes": 27727,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.3
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 7,
+      "timestamp": 1788905810.3816981,
+      "decision": {
+        "buttons": [
+          "square"
+        ],
+        "rationale": "Car is tight to the right curb and slightly angled toward it, with almost no progress relative to the front-right pole. The street mouth remains ahead. Forward steering has not freed the nose; try a very short straight reverse, limited by the nearby rear car.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "square"
+            ],
+            "frames": 18
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 42
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Starting approach; 0 completed turns. Nose appears restricted near right curb/pole, street mouth still ahead. Next: establish front clearance before approaching first right turn. Right door open; rear car close.",
+        "dynamics_note": "30 throttle-left + 10 throttle + 20 handbrake shifted rear slightly left but barely advanced nose relative to pole: likely obstruction, not useful steering response. Change to 18 straight reverse then handbrake; rear-left car permits only a small test. Reverse travel and front clearance must be verified."
+      },
+      "decision_latency_ms": 7695.84,
+      "decision_started_at": 1788905802.685388,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 2123,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "square"
+          ],
+          "frames": 18
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 42
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905793098239000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905802185874000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905793098239000-1788905793320223339-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905802185874000-1788905802416621201-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905793098239000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905793098239000-1788905793320223339-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 976016,
+          "bytes": 27727,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.3
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905802185874000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905802185874000-1788905802416621201-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 975383,
+          "bytes": 27886,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.51
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 8,
+      "timestamp": 1788905819.326643,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_left"
+        ],
+        "rationale": "Car remains at the right lane edge, angled toward the curb. Reverse changed its position slightly relative to the pole, but traffic now crowds the rear-left. The street mouth is ahead; attempt forward-left clearance rather than reverse into traffic.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_left"
+            ],
+            "frames": 24
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 24
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Still starting approach; 0 completed turns. Junction mouth ahead beyond pole; nose clearance uncertain. Next: move off curb before first right. Right door open; rear-left vehicle now very close.",
+        "dynamics_note": "18 reverse + 42 handbrake produced slight movement relative to pole, not verified front clearance. Rear-left vehicle now constrains further reverse. Try 24 forward-left + 12 forward, then 24 handbrake; expect possible stronger yaw if freed, but prior forward attempts barely moved."
+      },
+      "decision_latency_ms": 7184.54,
+      "decision_started_at": 1788905812.141711,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 2435,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 24
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 24
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905802185874000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905811634650000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905802185874000-1788905802416621201-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905811634650000-1788905811864481927-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905802185874000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905802185874000-1788905802416621201-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 975383,
+          "bytes": 27886,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.51
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905811634650000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905811634650000-1788905811864481927-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 983630,
+          "bytes": 28963,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.32
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 9,
+      "timestamp": 1788905827.03039,
+      "decision": {
+        "buttons": [
+          "cross",
+          "steer_left"
+        ],
+        "rationale": "Car has advanced relative to the curb and pole and is now more parallel to the road, but remains at the right lane edge. The junction mouth is still ahead; add a brief left correction to clear the pole before approaching.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross",
+              "steer_left"
+            ],
+            "frames": 12
+          },
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 18
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 30
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Starting approach; 0 completed turns. Some forward progress, still beside right curb with pole near front-right. Street mouth ahead. Next: clear pole and approach first right; destination lane not yet verified. Right door open.",
+        "dynamics_note": "24 forward-left + 12 forward + 24 handbrake visibly advanced and improved alignment, unlike earlier blocked attempts. Rear-left car is farther back; front-right pole remains close. Movement now responds, so reduce left steering to 12 frames, advance 18 straight, then handbrake; stopping not yet verified."
+      },
+      "decision_latency_ms": 5977.56,
+      "decision_started_at": 1788905821.0523362,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 2723,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross",
+            "steer_left"
+          ],
+          "frames": 12
+        },
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 18
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 30
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905811634650000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905820541680000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905811634650000-1788905811864481927-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905820541680000-1788905820762207897-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905811634650000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905811634650000-1788905811864481927-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 983630,
+          "bytes": 28963,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.32
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905820541680000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905820541680000-1788905820762207897-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 996486,
+          "bytes": 29482,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.07
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 10,
+      "timestamp": 1788905835.4205801,
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "Car advanced past the pole\u2019s approach, remaining near the right curb and roughly parallel to the centerline. The corner opening is ahead, not yet alongside; creep straight for turning clearance, keeping clear of the taxi to the left.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 20
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 40
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Starting approach; 0 completed turns. Pole now alongside right side; corner mouth still ahead. Next: advance nose beyond near curb before first right, then verify destination lane. Door now appears closed.",
+        "dynamics_note": "12 throttle-left + 18 throttle + 30 handbrake gave clear forward travel relative to pole with little yaw; alignment roughly follows road. Forward response has increased versus blocked attempts. Corner clearance remains limited; use 20 straight throttle then 40 handbrake, without committing to turn."
+      },
+      "decision_latency_ms": 6641.8,
+      "decision_started_at": 1788905828.778233,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 2987,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 20
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 40
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905820541680000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905828254575000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905820541680000-1788905820762207897-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905828254575000-1788905828484353499-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905820541680000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905820541680000-1788905820762207897-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 996486,
+          "bytes": 29482,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.07
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905828254575000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905828254575000-1788905828484353499-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 999796,
+          "bytes": 30389,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.16
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    },
+    {
+      "step": 11,
+      "timestamp": 1788905845.398467,
+      "decision": {
+        "buttons": [
+          "cross"
+        ],
+        "rationale": "Car is near the right curb, roughly parallel to the road, with modest forward progress past the pole. The street mouth is just ahead; the person remains on the right sidewalk beside the open door. Move straight clear of them before turning.",
+        "scene": "driving",
+        "stop": false,
+        "segments": [
+          {
+            "buttons": [
+              "cross"
+            ],
+            "frames": 24
+          },
+          {
+            "buttons": [
+              "r1"
+            ],
+            "frames": 36
+          }
+        ],
+        "route_note": "Start: yellow hillside buildings ahead-left, red-orange building right. Starting approach; 0 completed turns. Pole beside rear-right, street mouth just ahead. Next: establish full front clearance then first right into verified roadway. Right door open again; person on adjacent sidewalk.",
+        "dynamics_note": "20 throttle + 40 handbrake produced modest forward displacement relative to pole, little yaw; current standstill uncertain. Pole remains beside car, pedestrian right of it limits turning now. Request 24 straight throttle then 36 handbrake to gain clearance without sweeping toward pedestrian."
+      },
+      "decision_latency_ms": 8192.8,
+      "decision_started_at": 1788905837.2052941,
+      "inference_world_speed": 0.5,
+      "frame_stride": 60,
+      "recorded_frames_before": 3275,
+      "nominal_observations_per_game_second": 0.999,
+      "mode": "flow",
+      "action_plan": [
+        {
+          "buttons": [
+            "cross"
+          ],
+          "frames": 24
+        },
+        {
+          "buttons": [
+            "r1"
+          ],
+          "frames": 36
+        }
+      ],
+      "images": [
+        "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905828254575000.png",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905836667031000.png"
+      ],
+      "model_images": [
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905828254575000-1788905828484353499-640-65-rgb.jpg",
+        "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905836667031000-1788905836891911934-640-65-rgb.jpg"
+      ],
+      "model_frame_metadata": [
+        {
+          "source_image_path": "/Users/pz/w/oaihackathon/.runtime/scenarios/right-lane-junction/frame.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788902680263013819-640-65-rgb.jpg",
+          "source_dimensions": [
+            924,
+            682
+          ],
+          "dimensions": [
+            640,
+            472
+          ],
+          "source_bytes": 998579,
+          "bytes": 27815,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 27.57
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905828254575000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905828254575000-1788905828484353499-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 999796,
+          "bytes": 30389,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 18.16
+        },
+        {
+          "source_image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/20260908-151538-5e3fee83/frame-1788905836667031000.png",
+          "image_path": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/runs/flow-minute-01/model-frames/frame-1788905836667031000-1788905836891911934-640-65-rgb.jpg",
+          "source_dimensions": [
+            901,
+            670
+          ],
+          "dimensions": [
+            640,
+            476
+          ],
+          "source_bytes": 1008090,
+          "bytes": 30632,
+          "format": "jpeg",
+          "quality": 65,
+          "colormode": "rgb",
+          "processing_ms": 17.76
+        }
+      ],
+      "image_labels": [
+        "baseline reference",
+        "previous",
+        "current"
+      ]
+    }
+  ]
+}
