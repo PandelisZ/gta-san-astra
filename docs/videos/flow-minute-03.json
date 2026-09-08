@@ -1,0 +1,27 @@
+{
+  "name": "flow-minute-03",
+  "goal": "Drive on the RIGHT around a connected compact street block and visibly return to THIS starting intersection with yellow hillside buildings ahead-LEFT and red-orange corner building RIGHT, with the same heading. Use the attached starting reference to verify return. Choose every control solely from screenshots; verify actual completed turns, avoid curbs, collisions, traffic and pedestrians. Do not count seeing the landmark from another heading as completion.",
+  "scenario": "right-lane-junction",
+  "target_pid": 85270,
+  "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2",
+  "autonomy": "Astra chooses every driving control phase. Wrapper only handles reset, recording and export.",
+  "requested_vsync_budget": 14400,
+  "nominal_seconds_budget": 240.24,
+  "decoded_frame_count": 3647,
+  "target_recorded_frames": 3597,
+  "recorded_target_reached": true,
+  "full_recording_duration_seconds": 60.84,
+  "clip_seconds_limit": null,
+  "git_video_frame_count": 3321,
+  "logic_sha256": {
+    "scripts/autodrive.py": "5beaf6c3e5c85e0553563c09c6c8249b5101101b1b37bbed82b92dfacc1e58f0",
+    "src/san_astra/policy.py": "01ace33393e8e6d3c831e685dd8bc5661e026f322b68781c08fe671d45432c19"
+  },
+  "measured_video_duration_seconds": 110.7,
+  "measured_duration_source": "MP4 container duration reported by FFmpeg",
+  "duration_note": "Full window recording preserves real elapsed time: 100% during actions and 50% during inference. Native GS capture separately preserves all emulator frames; its fixed-rate playback does not preserve slow motion.",
+  "video_sha256": "772d9a6fa4f873ad1d1308f62c4335f146fdbed1f4fb17d9317b8c03e38cec01",
+  "status": "completed",
+  "video_bytes": 6485651,
+  "share_encoding": "Full MOV ->1024wide30fpsCRF26; original CRF22 and MOV retained"
+}
