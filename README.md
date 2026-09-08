@@ -20,7 +20,7 @@ The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, a
 
 ## Preferred quiet starting snapshot
 
-`quiet-tahoma` is the new local baseline: a blue Tahoma stopped beside a garden wall opposite Jefferson Motel, with the immediate area clear. Astra recovered from a carjacking, drove here, and verified no visible motion after handbrake bursts. The old `stationary-car` snapshot remains available. This new snapshot has been captured with checksum verification; a fresh reload has not yet been checked.
+`quiet-tahoma` is the new local baseline: a blue Tahoma stopped beside a garden wall opposite Jefferson Motel, with the immediate area clear. Astra recovered from a carjacking, drove here, and verified no visible motion after handbrake bursts. The old `stationary-car` snapshot remains available. A fresh emulator process reloaded this snapshot and redrew the same car/location after 60 neutral frame requests; the displayed clock advanced one second.
 
 ![Quiet Tahoma starting scene](docs/evidence/quiet-tahoma.png)
 

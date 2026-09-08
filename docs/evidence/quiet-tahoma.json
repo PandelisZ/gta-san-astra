@@ -5,5 +5,6 @@
   "state_bytes": 18261484,
   "location": "Curb beside low garden wall opposite Jefferson Motel",
   "stationarity": "Two full handbrake bursts and successive visual observations showed no visible motion.",
-  "reload_verified": false
+  "reload_verified": true,
+  "reload_note": "Fresh process loaded saved state; 60 neutral frame requests redrew same car/location, clock17:18 to17:19. Not bit-exact displayed frame."
 }
