@@ -141,6 +141,13 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
                   "Choose thinking_buttons explicitly for the interval AFTER this action while the NEXT decision runs. "
                   "Empty means release/coast, not braking. Held steering, throttle or reverse may continue for several "
                   "game seconds, so forecast their entire trajectory and leave a stable controllable state. "
+                  "An observation boundary is not itself a reason to stop. When the images establish lane "
+                  "alignment, a clear forward corridor and enough room for the full inference interval, "
+                  "preserve useful motion instead of automatically ending every advance with handbrake. "
+                  "Choose braking for a visible conflict or insufficient clearance, not merely to wait for "
+                  "the next image. A short throttle phase followed by braking can produce little travel "
+                  "without a physical blockage: compare the separate action and inference images before "
+                  "diagnosing contact. An open door or entry/exit interaction can also interrupt motion. "
                   "No thinking controls are automatically chosen or shortened for you. ")
     if mode == "burst":
         timing = ("The emulator is paused while you decide. It resumes at normal speed for one short timed plan, "
