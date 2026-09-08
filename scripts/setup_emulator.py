@@ -7,6 +7,7 @@ import configparser
 import json
 from pathlib import Path
 import subprocess
+import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE = Path.home() / "Library/Application Support/PCSX2"
@@ -55,9 +56,24 @@ def prepare(source: Path, target: Path) -> Path:
     bios_dir = (bios_dir if bios_dir.is_absolute() else bios_base / bios_dir).resolve()
     bios = Path(bios_config.get("Filenames", "BIOS", fallback="")).expanduser()
     bios = (bios if bios.is_absolute() else bios_dir / bios).resolve()
+    isolated_bios_dir = (target / "bios").resolve()
+    if not isolated_bios_dir.is_relative_to(target):
+        raise ValueError("Isolated BIOS directory resolves outside profile")
+    configured_name = Path(config.get("Filenames", "BIOS", fallback=bios.name)).name
+    existing_copy = isolated_bios_dir / configured_name
+    if existing_copy.exists():
+        if not existing_copy.resolve().is_relative_to(target):
+            raise ValueError("Isolated BIOS file resolves outside profile")
+        bios = existing_copy
     if not bios.is_file() or bios.stat().st_size < 1024 * 1024:
         raise ValueError(f"Configured BIOS is missing or incomplete: {bios}")
-    folders = {"Bios": str(bios.parent)}
+    copy_bios = bios.parent != isolated_bios_dir
+    bios_files = [bios] + [entry for entry in bios.parent.iterdir()
+                           if entry.is_file() and entry != bios and entry.stem.lower() == bios.stem.lower()]
+    for entry in bios_files:
+        if not (isolated_bios_dir / entry.name).resolve().is_relative_to(target):
+            raise ValueError("Isolated BIOS sidecar resolves outside profile")
+    folders = {"Bios": str(isolated_bios_dir)}
     for name, default in WRITABLE_FOLDERS.items():
         current = Path(config.get("Folders", name, fallback=default)).expanduser()
         current = (current if current.is_absolute() else target / current).resolve()
@@ -95,6 +111,14 @@ def prepare(source: Path, target: Path) -> Path:
                     if not replacement.resolve().is_relative_to(target):
                         raise ValueError(f"Isolated memory card resolves outside profile: {replacement}")
                     config["MemoryCards"][name] = card.name
+    isolated_bios_dir.mkdir(parents=True, exist_ok=True)
+    if copy_bios:
+        for entry in bios_files:
+            destination = isolated_bios_dir / entry.name
+            if not destination.exists():
+                # Exclusive create preserves existing BIOS preferences and avoids samefile copies.
+                with entry.open("rb") as source_stream, destination.open("xb") as target_stream:
+                    shutil.copyfileobj(source_stream, target_stream)
     ini.parent.mkdir(parents=True, exist_ok=True)
     for name in WRITABLE_FOLDERS:
         Path(folders[name]).mkdir(parents=True, exist_ok=True)

@@ -71,7 +71,8 @@ def test_resolves_custom_bios_folder(profile, absolute):
     folder = str(custom) if absolute else "custom-bios"
     (source / "inis/PCSX2.ini").write_text(f"[Filenames]\nBIOS=test.bin\n[Folders]\nBios={folder}\n")
     result = config(setup.prepare(source, target))
-    assert result["Folders"]["Bios"] == str(custom)
+    assert result["Folders"]["Bios"] == str(target / "bios")
+    assert (target / "bios/test.bin").read_bytes() == (custom / "test.bin").read_bytes()
 
 
 def test_missing_bios_does_not_mutate_existing_profile(profile):
@@ -79,6 +80,7 @@ def test_missing_bios_does_not_mutate_existing_profile(profile):
     ini = setup.prepare(source, target)
     before = ini.read_bytes()
     (source / "bios/test.bin").unlink()
+    (target / "bios/test.bin").unlink()
     with pytest.raises(ValueError, match="BIOS"):
         setup.prepare(source, target)
     assert ini.read_bytes() == before
@@ -107,3 +109,30 @@ def test_refuses_symlink_config_directory_outside_profile(profile):
     with pytest.raises(ValueError, match="outside profile"):
         setup.prepare(source, target)
     assert (source / "inis/PCSX2.ini").read_bytes() == before
+
+
+def test_bios_sidecars_are_copied_once_and_isolated_changes_preserved(profile):
+    source, target = profile
+    (source / "bios/test.NVM").write_bytes(b"original nvm")
+    (source / "bios/test.MEC").write_bytes(b"original mec")
+    (source / "bios/unrelated.NVM").write_bytes(b"unrelated")
+    ini = setup.prepare(source, target)
+    assert (target / "bios/test.NVM").read_bytes() == b"original nvm"
+    assert (target / "bios/test.MEC").read_bytes() == b"original mec"
+    assert not (target / "bios/unrelated.NVM").exists()
+    (target / "bios/test.NVM").write_bytes(b"isolated prefs")
+    (source / "bios/test.NVM").write_bytes(b"changed original")
+    (source / "bios/test.bin").unlink()
+    setup.prepare(source, target)
+    assert (target / "bios/test.NVM").read_bytes() == b"isolated prefs"
+    assert (source / "bios/test.NVM").read_bytes() == b"changed original"
+    assert config(ini)["Folders"]["Bios"] == str(target / "bios")
+
+
+def test_existing_profile_without_source_reuses_own_bios(profile):
+    source, target = profile
+    setup.prepare(source, target)
+    (source / "inis/PCSX2.ini").unlink()
+    # Source now comes from the isolated configuration; copying to itself must be skipped.
+    setup.prepare(source, target)
+    assert (target / "bios/test.bin").stat().st_size == 1024 * 1024

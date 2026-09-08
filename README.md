@@ -16,7 +16,7 @@ uv run san-astra observe
 uv run san-astra --frame-stride 5 step --throttle
 ```
 
-The setup script creates an isolated profile under `.runtime/pcsx2`; the existing PCSX2 profile is preserved. It references the existing BIOS and creates separate memory cards/save states. It sets `StartPaused=true` and `FrameAdvance=Keyboard/N`. On macOS, PCSX2 appends `PCSX2` to the `-datapath` base directory.
+The setup script creates an isolated profile under `.runtime/pcsx2`; the existing PCSX2 profile is preserved. It copies the configured BIOS and its preference files once and creates separate memory cards/save states. It sets `StartPaused=true` and `FrameAdvance=Keyboard/N`. On macOS, PCSX2 appends `PCSX2` to the `-datapath` base directory.
 
 If `doctor` reports missing permissions, enable the host terminal/Codex app under macOS Privacy & Security → Accessibility and Screen & System Audio Recording. The emulator window must be visible, not minimized.
 
