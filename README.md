@@ -131,6 +131,8 @@ The demonstrated configuration uses warm native-daemon and Codex app-server tran
 
 When a controller targets a PID (`SAN_ASTRA_PID` or its `pid` argument), input and frame stepping use `--no-focus` in both native transports, including recording hotkeys. This overrides an input caller's `--focus` flag and avoids changing application focus between emulator instances. The shared actuation mutex still serializes input; an explicit `focus` command remains available when activation is intentional.
 
+For visual route comparison, optionally pass `--start-reference /absolute/path/to/original-start.png` to the driving runner. Each decision receives the labeled baseline followed by the previous/current screenshots, at most three images; an identical starting file is attached only once. This is screenshot context only. Continuations inherit the original reference path from the prior run manifest unless explicitly overridden. Keep that original file available; a continuation screenshot should not replace the route baseline. The option is off by default.
+
 The earlier recorded run used the fixed 12-frame steering / 48-frame continuation policy; it is not retroactive evidence for the new model-selected phases. That completed 20-decision run requested 1,200 emulated frames and took 273.18 wall-clock seconds. Median model-decision latency was 7.48 seconds, with variable multi-second calls. This is a paused simulation experiment, not realtime wall-clock autonomous driving. See [the measured run summary](docs/TESTING.md).
 
 The runner stops at the decision limit, on a model stop decision, or on failure. Controls are released on exit, including Ctrl-C. Explicit release is also available:

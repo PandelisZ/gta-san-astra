@@ -103,6 +103,15 @@ def attempt(args) -> dict:
         raise ValueError("target recorded frames must be between 1 and 3597")
     if args.resume_from is not None and not args.no_reset:
         raise ValueError("Visual continuation requires --no-reset; stale context cannot follow a baseline reset")
+    start_reference = args.start_reference
+    if start_reference is None and args.resume_from is not None:
+        prior_manifest = args.resume_from.expanduser().resolve() / "run_manifest.json"
+        if prior_manifest.is_file():
+            start_reference = json.loads(prior_manifest.read_text()).get("start_reference")
+    if start_reference is not None:
+        start_reference = Path(start_reference).expanduser().resolve()
+        if not start_reference.is_file():
+            raise ValueError(f"Starting screenshot reference does not exist: {start_reference}")
     existing = subprocess.run(["pgrep", "-fl", r"(^|[ /])autodrive\.py([ ]|$)"], capture_output=True, text=True)
     target_pid = args.pid
     if existing.returncode == 0 and not (target_pid is not None or args.allow_multiple):
@@ -127,6 +136,7 @@ def attempt(args) -> dict:
                 "target_recorded_frames": args.target_recorded_frames, "clip_seconds_limit": 60,
                 "duration_note": "Stop after a whole burst crosses the configured stored-frame target, with a decision safety cap. Live count is buffered, so full recording can exceed the target. Git replay contains up to its first60 real seconds with no padding; actual frame count and duration are measured.",
                 "resume_from": str(args.resume_from.resolve()) if args.resume_from else None,
+                "start_reference": str(start_reference) if start_reference else None,
                 "logic_sha256": {str(path.relative_to(ROOT)): file_sha256(path) for path in
                                  (ROOT / "scripts/autodrive.py", ROOT / "src/san_astra/policy.py")},
                 "autonomy": "Astra chooses every driving control phase. Wrapper only handles reset, recording and export.",
@@ -179,6 +189,8 @@ def attempt(args) -> dict:
             environment["SAN_ASTRA_PID"] = str(target_pid)
         if args.resume_from is not None:
             command.extend(["--resume-from", str(args.resume_from.resolve())])
+        if start_reference is not None:
+            command.extend(["--start-reference", str(start_reference)])
         manifest["driver_exit_code"] = drive(command, directory / "driver.stdout", environment)
         summary_path = directory / "run_summary.json"
         if summary_path.is_file():
@@ -255,6 +267,7 @@ def main():
     parser.add_argument("--vision-max-edge", type=int, default=512)
     parser.add_argument("--bridge-transport", choices=("cli", "daemon"), default="daemon")
     parser.add_argument("--resume-from", type=Path, help="Continue visual context only; never replay controls")
+    parser.add_argument("--start-reference", type=Path, help="Optional original starting screenshot; inherited from the resume manifest and fixed for this attempt")
     parser.add_argument("--target-recorded-frames", type=int, default=3597, help="Stored-frame target; reduce for same-game continuation")
     parser.add_argument("--timeout", type=float, default=120)
     parser.add_argument("--goal", default="Drive around one city block and return visibly to the starting landmark and orientation. Choose all driving actions autonomously from screenshots; avoid obstacles and pedestrians and recover when necessary.")

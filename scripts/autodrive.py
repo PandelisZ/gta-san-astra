@@ -118,7 +118,7 @@ def build_command(model: str, images: list[Path], output: Path, cwd: Path, *,
                "--cd", str(cwd.resolve()), "-m", model]
     for feature in DISABLED_FEATURES:
         command.extend(["--disable", feature])
-    for image in images[-2:]:
+    for image in images[-3:]:
         command.extend(["--image", str(image.resolve())])
     return command + ["-"]
 
@@ -138,7 +138,7 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         "You are Astra driving GTA San Andreas in a PS2 emulator for a visual autonomy evaluation. "
         "Use ONLY the attached game screenshots and your own prior actions below. Do not call tools, "
         "inspect files, search the web, or obtain game telemetry. Return the required JSON decision. "
-        f"There are {image_count} screenshots, oldest first; the final one is current. "
+        f"There are {image_count} screenshots in supplied order; the final one is current. "
         + timing +
         "Controls: cross accelerates; square brakes/reverses; steer_left/steer_right steer; r1 is "
         "handbrake; move_forward/move_backward move on foot; triangle enters/exits a vehicle; start pauses the game; d-pad navigates menus; "
@@ -229,7 +229,7 @@ def decide(model: str, images: list[Path], history: list[dict], goal: str,
     try:
         result = runner(build_command(model, images, output, model_cwd,
                                       reasoning_effort=reasoning_effort, service_tier=service_tier),
-                        input=make_prompt(goal, history, min(2, len(images)), mode),
+                        input=make_prompt(goal, history, min(3, len(images)), mode),
                         text=True, capture_output=True, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         for name, content in (("stdout", exc.stdout), ("stderr", exc.stderr)):
@@ -254,7 +254,8 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         vision_quality: int = 65, vision_colormode: str = "rgb",
         policy_transport: str = "cli", bridge_transport: str = "cli",
         steer_pulse_frames: int = 12, resume_from: Path | None = None,
-        recording_master: Path | None = None, target_recorded_frames: int | None = None) -> list[dict]:
+        recording_master: Path | None = None, target_recorded_frames: int | None = None,
+        start_reference: Path | None = None) -> list[dict]:
     if type(frame_stride) is not int or not 1 <= frame_stride <= 120:
         raise ValueError("frame_stride must be an integer between 1 and 120")
     if type(steer_pulse_frames) is not int or not 0 <= steer_pulse_frames <= 120:
@@ -277,6 +278,13 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         if (directory / "decisions.jsonl").exists():
             raise ValueError("Continuation output already contains decisions; choose a new --run-dir")
         resume_history, resume_image = load_resume(resume_from)
+        prior_manifest = resume_from / "run_manifest.json"
+        if start_reference is None and prior_manifest.is_file():
+            start_reference = json.loads(prior_manifest.read_text()).get("start_reference")
+    if start_reference is not None:
+        start_reference = Path(start_reference).expanduser().resolve()
+        if not start_reference.is_file():
+            raise ValueError(f"Starting screenshot reference does not exist: {start_reference}")
     directory.mkdir(parents=True, exist_ok=True)
     started_at, started_clock = time.time(), time.monotonic()
     manifest = {"model": model, "reasoning_effort": reasoning_effort, "service_tier": service_tier, "goal": goal, "frame_stride": frame_stride,
@@ -288,6 +296,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                 "resume_from": str(resume_from) if resume_from else None,
                 "resume_decision_count": len(resume_history),
                 "resume_image_path": str(resume_image) if resume_image else None,
+                "start_reference": str(start_reference) if start_reference else None,
                 "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
                 "recording_master": str(recording_master) if recording_master else None,
                 "target_recorded_frames": target_recorded_frames,
@@ -329,6 +338,13 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         del images[:-2], raw_images[:-2], prepared[:-2]
         record({"type": "model_frame", **metadata})
     try:
+        reference_metadata = None
+        if start_reference is not None:
+            add_observation({"image_path": str(start_reference)})
+            reference_metadata = prepared[-1]
+            images.clear()
+            raw_images.clear()
+            prepared.clear()
         if resume_history:
             record({"type": "resume_context", "resume_from": str(resume_from), "decisions": resume_history})
         if resume_image is not None:
@@ -343,8 +359,24 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                 break
             current_stride = (min(frame_stride, max(min(15, frame_stride), target_recorded_frames - recorded_frames))
                               if target_recorded_frames is not None else frame_stride)
-            decision, latency = decision_fn(model, images[-2:], history,
-                goal + (f" Each action lasts exactly {current_stride} requested VSyncs ({current_stride / emulator_fps:.3f} nominal game seconds)."
+            selected = list(prepared)
+            image_labels = ["previous", "current"][-len(selected):]
+            if reference_metadata is not None:
+                # The same initial file may also be the first current observation.
+                selected = [item for item in selected
+                            if Path(item["source_image_path"]).resolve() != start_reference]
+                if len(selected) == 2 and Path(selected[0]["source_image_path"]).resolve() == Path(selected[1]["source_image_path"]).resolve():
+                    selected = selected[-1:]
+                image_labels = ["previous", "current"][-len(selected):] if selected else []
+                selected.insert(0, reference_metadata)
+                image_labels.insert(0, "baseline reference" if len(selected) > 1 else "baseline reference and current")
+            selected_images = [Path(item["image_path"]) for item in selected]
+            image_context = (" Screenshot labels in supplied order: " + ", ".join(image_labels) +
+                             ". The baseline reference is the original starting screenshot for visual comparison only; "
+                             "it is not a recent motion sample or an instruction to replay an action. "
+                             if reference_metadata is not None else "")
+            decision, latency = decision_fn(model, selected_images, history,
+                goal + image_context + (f" Each action lasts exactly {current_stride} requested VSyncs ({current_stride / emulator_fps:.3f} nominal game seconds)."
                         " Select control segments whose frame counts sum exactly to that total. "
                         "Controls in each segment remain held for its chosen frames, including steering; "
                         "there is no automatic short steering cap on explicit segments. "
@@ -362,8 +394,9 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                      "decision_latency_ms": latency, "frame_stride": current_stride,
                      "recorded_frames_before": recorded_frames if recording_master else None,
                      "nominal_observations_per_game_second": emulator_fps / current_stride if mode == "stepped" else None,
-                     "mode": mode, "action_plan": segments, "images": [str(p) for p in raw_images[-2:]],
-                     "model_images": [str(p) for p in images[-2:]], "model_frame_metadata": list(prepared)}
+                     "mode": mode, "action_plan": segments, "images": [item["source_image_path"] for item in selected],
+                     "model_images": [str(p) for p in selected_images], "model_frame_metadata": selected,
+                     "image_labels": image_labels}
             record(event)
             print(json.dumps(event), flush=True)
             history.append(decision)
@@ -442,6 +475,7 @@ def main():
     parser.add_argument("--service-tier", default="fast", help="Codex service tier (default: fast)")
     parser.add_argument("--run-dir", type=Path, default=Path("runs") / time.strftime("autodrive-%Y%m%d-%H%M%S"))
     parser.add_argument("--resume-from", type=Path, help="Carry prior decisions/visual route note and last frame into a NEW run; does not reset or load the game")
+    parser.add_argument("--start-reference", type=Path, help="Optional original starting screenshot, attached as baseline before previous/current frames; inherited from the resume manifest")
     parser.add_argument("--scenario-state", help="Optional state path provenance label; does not load a save state")
     parser.add_argument("--recording-master", type=Path, help="Live native MKV to count after each burst")
     parser.add_argument("--target-recorded-frames", type=int, help="Stop at this stored-frame lower bound, subject to --steps safety cap")
@@ -479,7 +513,8 @@ def main():
             vision_quality=args.vision_quality, vision_colormode=args.vision_colormode,
             policy_transport=args.policy_transport, bridge_transport=args.bridge_transport,
             decision_fn=decision_fn, steer_pulse_frames=args.steer_pulse_frames, resume_from=args.resume_from,
-            recording_master=args.recording_master, target_recorded_frames=args.target_recorded_frames)
+            recording_master=args.recording_master, target_recorded_frames=args.target_recorded_frames,
+            start_reference=args.start_reference)
 
 
 
