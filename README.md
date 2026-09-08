@@ -18,6 +18,20 @@ The native input and screenshot bridge, CLI, MCP server, bounded Astra runner, a
 
 *Actual captured road baseline: the red Blista Compact at 16:56. The [snapshot evidence](docs/evidence/stationary-car.json) records its checksum and the visual replay check.*
 
+## Preferred quiet starting snapshot
+
+`quiet-tahoma` is the new local baseline: a blue Tahoma stopped beside a garden wall opposite Jefferson Motel, with the immediate area clear. Astra recovered from a carjacking, drove here, and verified no visible motion after handbrake bursts. The old `stationary-car` snapshot remains available. This new snapshot has been captured with checksum verification; a fresh reload has not yet been checked.
+
+![Quiet Tahoma starting scene](docs/evidence/quiet-tahoma.png)
+
+With PCSX2 stopped, restore it using:
+
+```sh
+uv run python scripts/scenario.py launch quiet-tahoma --iso "$GAME_ISO"
+```
+
+The state stays in `.runtime/scenarios/quiet-tahoma/`, outside Git. [Snapshot metadata](docs/evidence/quiet-tahoma.json) is retained as evidence. A full loop around the block is still unproven.
+
 ## The loop
 
 ```mermaid

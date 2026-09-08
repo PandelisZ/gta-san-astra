@@ -73,6 +73,35 @@ def action_plan(decision: dict, frame_stride: int, steer_pulse_frames: int = 12)
     return [{"buttons": buttons, "frames": frame_stride}]
 
 
+def load_resume(directory: Path) -> tuple[list[dict], Path | None]:
+    """Read prior visual decisions and one frame; never replay controls or load state."""
+    directory = Path(directory).expanduser().resolve()
+    log = directory / "decisions.jsonl"
+    if not log.is_file():
+        raise ValueError(f"Resume decision log does not exist: {log}")
+    history, last_frame = [], None
+    for number, line in enumerate(log.read_text().splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Resume log has incomplete JSON on line {number}; finish the prior run first") from exc
+        if event.get("type") == "resume_context":
+            history.extend(validate_decision(decision) for decision in event.get("decisions", []))
+        if "decision" in event:
+            history.append(validate_decision(event["decision"]))
+        if event.get("type") == "model_frame" and event.get("source_image_path"):
+            candidate = Path(event["source_image_path"])
+            if not candidate.is_absolute():
+                candidate = Path.cwd() / candidate
+            if candidate.is_file():
+                last_frame = candidate.resolve()
+    if not history:
+        raise ValueError("Resume run contains no prior decisions")
+    return history, last_frame
+
+
 def build_command(model: str, images: list[Path], output: Path, cwd: Path, *,
                   reasoning_effort: str = "low", service_tier: str = "fast") -> list[str]:
     bundled = Path("/Applications/ChatGPT.app/Contents/Resources/codex")
@@ -180,7 +209,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         mode: str = "stepped", hold_ms: int = 150, vision_max_edge: int | None = None,
         vision_quality: int = 65, vision_colormode: str = "rgb",
         policy_transport: str = "cli", bridge_transport: str = "cli",
-        steer_pulse_frames: int = 12) -> list[dict]:
+        steer_pulse_frames: int = 12, resume_from: Path | None = None) -> list[dict]:
     if type(frame_stride) is not int or not 1 <= frame_stride <= 120:
         raise ValueError("frame_stride must be an integer between 1 and 120")
     if type(steer_pulse_frames) is not int or not 0 <= steer_pulse_frames <= 120:
@@ -191,6 +220,14 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         raise ValueError("mode must be stepped or realtime; hold_ms must be 50..2000")
     if decision_fn is decide:
         decision_fn = partial(decide, reasoning_effort=reasoning_effort, service_tier=service_tier, mode=mode)
+    resume_history, resume_image = [], None
+    if resume_from is not None:
+        resume_from = Path(resume_from).expanduser().resolve()
+        if directory.resolve() == resume_from:
+            raise ValueError("Continuation needs a NEW --run-dir, different from --resume-from")
+        if (directory / "decisions.jsonl").exists():
+            raise ValueError("Continuation output already contains decisions; choose a new --run-dir")
+        resume_history, resume_image = load_resume(resume_from)
     directory.mkdir(parents=True, exist_ok=True)
     started_at, started_clock = time.time(), time.monotonic()
     manifest = {"model": model, "reasoning_effort": reasoning_effort, "service_tier": service_tier, "goal": goal, "frame_stride": frame_stride,
@@ -198,6 +235,10 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                 "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
                 "steps_limit": steps, "scenario_state": scenario_state,
                 "scenario_state_note": "Provenance label only; runner does not load this state",
+                "resume_from": str(resume_from) if resume_from else None,
+                "resume_decision_count": len(resume_history),
+                "resume_image_path": str(resume_image) if resume_image else None,
+                "resume_note": "Visual context only; no actions replayed, no game state loaded or reset. Emulator must already be at the continuation position.",
                 "started_at": started_at, "status": "running", "mode": mode,
                 "hold_ms": hold_ms if mode == "realtime" else None,
                 "policy_transport": policy_transport, "bridge_transport": bridge_transport,
@@ -208,7 +249,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
     actions_requested, actions_completed = 0, 0
     frames_requested, frames_completed = 0, 0
     latencies = []
-    history: list[dict] = []
+    history: list[dict] = list(resume_history)
     images: list[Path] = []
     raw_images: list[Path] = []
     prepared: list[dict] = []
@@ -234,6 +275,10 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         del images[:-2], raw_images[:-2], prepared[:-2]
         record({"type": "model_frame", **metadata})
     try:
+        if resume_history:
+            record({"type": "resume_context", "resume_from": str(resume_from), "decisions": resume_history})
+        if resume_image is not None:
+            add_observation({"image_path": str(resume_image)})
         add_observation(controller.observe())
         for index in range(steps):
             decision, latency = decision_fn(model, images[-2:], history,
@@ -288,7 +333,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
             record({"type": "release_error", "timestamp": time.time(), "error": str(exc)})
         summary = {**manifest, "status": outcome, "ended_at": time.time(),
                    "elapsed_wall_seconds": round(time.monotonic() - started_clock, 3),
-                   "decision_count": len(history), "action_count": actions_completed,
+                   "decision_count": len(history) - len(resume_history), "action_count": actions_completed,
                    "actions_requested": actions_requested,
                    "game_frames_requested": frames_requested if mode == "stepped" else None,
                    "frames_in_completed_actions": frames_completed if mode == "stepped" else None,
@@ -297,7 +342,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                    "decision_latency_median_ms": median(latencies) if latencies else None,
                    "capture_latency_median_ms": median(capture_latencies) if capture_latencies else None,
                    "action_and_capture_median_ms": median(action_latencies) if action_latencies else None,
-                   "measured_decisions_per_wall_second": len(history) / max(time.monotonic() - started_clock, 0.001),
+                   "measured_decisions_per_wall_second": (len(history) - len(resume_history)) / max(time.monotonic() - started_clock, 0.001),
                    "error": error or (str(release_error) if release_error is not None else None),
                    "release_error": str(release_error) if release_error is not None else None}
         (directory / "run_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
@@ -323,6 +368,7 @@ def main():
     parser.add_argument("--reasoning-effort", default="low", help="Codex reasoning effort (default: low)")
     parser.add_argument("--service-tier", default="fast", help="Codex service tier (default: fast)")
     parser.add_argument("--run-dir", type=Path, default=Path("runs") / time.strftime("autodrive-%Y%m%d-%H%M%S"))
+    parser.add_argument("--resume-from", type=Path, help="Carry prior decisions/visual route note and last frame into a NEW run; does not reset or load the game")
     parser.add_argument("--scenario-state", help="Optional state path provenance label; does not load a save state")
     parser.add_argument("--timeout", type=float, default=120)
     parser.add_argument("--frame-stride", type=int, default=60, help="Observe every N emulated VSyncs (1..120); game pauses during model latency")
@@ -357,7 +403,7 @@ def main():
             mode=args.mode, hold_ms=args.hold_ms, vision_max_edge=args.vision_max_edge,
             vision_quality=args.vision_quality, vision_colormode=args.vision_colormode,
             policy_transport=args.policy_transport, bridge_transport=args.bridge_transport,
-            decision_fn=decision_fn, steer_pulse_frames=args.steer_pulse_frames)
+            decision_fn=decision_fn, steer_pulse_frames=args.steer_pulse_frames, resume_from=args.resume_from)
 
 
 
