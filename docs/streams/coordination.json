@@ -1,5 +1,5 @@
 {
-  "status": "Minute02 wave remains active. Lane has visually completed one right turn; junction and route are turning; recovery continues part3 after transport failures. Full block return unproven.",
+  "status": "Lane, junction, and route minute02 completed; one right turn each, second underway for lane/junction. Recovery part3 still active. Full block unproven. All completed PIDs paused.",
   "streams": [
     {
       "name": "lane",
@@ -49,5 +49,23 @@
     "part3_target_frames": 3141,
     "run": "stream-recovery-minute-02-part3",
     "note": "Same game, unchanged policy, no controls replayed."
-  }
+  },
+  "completed_minute02": {
+    "lane": {
+      "requested_frames": 4838,
+      "flushed_frames": 3608,
+      "decisions": 83
+    },
+    "junction": {
+      "requested_frames": 4631,
+      "flushed_frames": 3608,
+      "decisions": 79
+    },
+    "route": {
+      "requested_frames": 4658,
+      "flushed_frames": 3611,
+      "decisions": 80
+    }
+  },
+  "next_step": "After recovery driver stops, root neutral calibration on route PID69729. No new driving waves until timing checked. Prepared next-wave motion memory, optional start reference, clear right-on-red game policy."
 }
