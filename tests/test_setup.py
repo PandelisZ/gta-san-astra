@@ -97,3 +97,13 @@ def test_refuses_symlink_writable_directory_outside_profile(profile, tmp_path):
     with pytest.raises(ValueError, match="outside profile"):
         setup.prepare(source, target)
     assert not (target / "inis/PCSX2.ini").exists()
+
+
+def test_refuses_symlink_config_directory_outside_profile(profile):
+    source, target = profile
+    target.mkdir(parents=True)
+    (target / "inis").symlink_to(source / "inis")
+    before = (source / "inis/PCSX2.ini").read_bytes()
+    with pytest.raises(ValueError, match="outside profile"):
+        setup.prepare(source, target)
+    assert (source / "inis/PCSX2.ini").read_bytes() == before

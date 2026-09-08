@@ -42,6 +42,8 @@ def prepare(source: Path, target: Path) -> Path:
     if target.name.lower() != "pcsx2":
         raise ValueError("On macOS --profile must end with PCSX2 (case insensitive)")
     ini = target / "inis/PCSX2.ini"
+    if not ini.resolve().is_relative_to(target):
+        raise ValueError("Isolated configuration resolves outside profile")
     original = source / "inis/PCSX2.ini"
     if not original.is_file() and not ini.is_file():
         raise ValueError(f"PCSX2 configuration missing: {original}. Complete PCSX2 setup first.")
@@ -89,6 +91,9 @@ def prepare(source: Path, target: Path) -> Path:
                 resolved = (card if card.is_absolute() else Path(folders["MemoryCards"]) / card).resolve()
                 if not resolved.is_relative_to(target):
                     # Never copy, overwrite, or point at an original user card.
+                    replacement = Path(folders["MemoryCards"]) / card.name
+                    if not replacement.resolve().is_relative_to(target):
+                        raise ValueError(f"Isolated memory card resolves outside profile: {replacement}")
                     config["MemoryCards"][name] = card.name
     ini.parent.mkdir(parents=True, exist_ok=True)
     for name in WRITABLE_FOLDERS:
