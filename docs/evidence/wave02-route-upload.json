@@ -1,0 +1,24 @@
+{
+  "trial": "stream-route-minute-02",
+  "source_video": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/docs/videos/stream-route-minute-02.mp4",
+  "attachment_url": "https://github.com/user-attachments/assets/e121dd83-1fbb-4ebd-b3b9-c692ec157c35",
+  "issue_comment_url": "https://github.com/PandelisZ/gta-san-astra/issues/1#issuecomment-5591906339",
+  "duration_seconds": 60.01,
+  "frames": 3597,
+  "bytes": 17263089,
+  "sha256": "6426a5cb66b2325be8bc3955d10decd7caa09d2aec219c47001c510b91a3239d",
+  "full_recording_duration_seconds": 60.24,
+  "driver_exit_code": 0,
+  "decisions": 80,
+  "outcome": "Recording target reached. Final policy note reports one observed right turn on leg 2; circuit and return to starting landmark and heading remain unverified. No completed-loop claim.",
+  "verification": {
+    "wrapper_status": "completed",
+    "driver_pid_71246_exited": true,
+    "source_sha256_matches_sidecar": true,
+    "persisted_issue_comment": true,
+    "unauthenticated_http_status": 206,
+    "content_type": "video/mp4",
+    "content_range": "bytes 0-0/17263089"
+  },
+  "uploaded_at": "2026-09-08T21:10:04.907090+00:00"
+}
