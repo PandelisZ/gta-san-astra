@@ -1,0 +1,81 @@
+{
+  "record_start": {
+    "toggle_sent": true,
+    "native": {
+      "durationMs": 80,
+      "elapsedMs": 93.018042,
+      "frames": 0,
+      "keys": "f12",
+      "ok": true,
+      "pid": 68968,
+      "requestedDurationMs": 80
+    },
+    "video_directory": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos",
+    "note": "F12 toggles capture. Inspect the recording indicator/files; no active-state telemetry is read."
+  },
+  "burst": {
+    "elapsedMs": 595.624083,
+    "fps": 59.94,
+    "frames": 30,
+    "ok": true,
+    "pauseToggleSent": true,
+    "pid": 68968,
+    "requestedDurationMs": 500.50050050050055,
+    "requestedFrames": 30,
+    "runningElapsedMs": 500.808208,
+    "segments": 1,
+    "timing": "Approximate wall-time burst; requested frames are not measured emulator frames"
+  },
+  "observation": {
+    "type": "observation",
+    "image_path": "/Users/pz/w/oaihackathon/runs/burst-neutral-check-01/20260908-145901-d8c3ab2c/frame-1788904742098143000.png",
+    "capture_ms": 188.69,
+    "native": {
+      "cropTop": 32,
+      "height": 677,
+      "ok": true,
+      "path": "/Users/pz/w/oaihackathon/runs/burst-neutral-check-01/20260908-145901-d8c3ab2c/frame-1788904742098143000.png",
+      "pid": 68968,
+      "timestamp": "2026-09-08T21:59:02Z",
+      "title": "Grand Theft Auto - San Andreas",
+      "width": 909,
+      "windowId": 130205
+    },
+    "capture_attempts": 1,
+    "capture_errors": []
+  },
+  "record_stop": {
+    "toggle_sent": true,
+    "native": {
+      "durationMs": 80,
+      "elapsedMs": 95.054042,
+      "frames": 0,
+      "keys": "f12",
+      "ok": true,
+      "pid": 68968,
+      "requestedDurationMs": 80
+    },
+    "video_directory": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos",
+    "note": "F12 toggles capture. Inspect the recording indicator/files; no active-state telemetry is read."
+  },
+  "masters": [
+    "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908145901.mkv"
+  ],
+  "recorded_frames": 30,
+  "export": {
+    "master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908145901.mkv",
+    "master_sha256": "156f5ed086289a03963dc8da3f0c22b6bc89b8cea349ad8498eb27fa8df6709f",
+    "master_bytes": 12048894,
+    "frames_directory": "/Users/pz/w/oaihackathon/runs/burst-neutral-check-01/recording/frames",
+    "decoded_frame_count": 30,
+    "playback": "/Users/pz/w/oaihackathon/runs/burst-neutral-check-01/recording/playback.mp4",
+    "playback_bytes": 253869,
+    "export_elapsed_seconds": 0.206,
+    "timing": "Playback preserves the capture's simulation timestamps; no desktop wall-time or inferred FPS is substituted.",
+    "provenance": "Master retained unchanged; PNGs decode every stored frame. Completeness depends on successful PCSX2 native capture."
+  },
+  "visual_pause_verified": true,
+  "stored_samples": 30,
+  "consecutive_distinct_rgb_images": 16,
+  "fps_note": "30 VSync samples across about0.5s contained16 distinct successive pixel images, consistent with about30 rendered gameFPS; not a long-run performance benchmark."
+}

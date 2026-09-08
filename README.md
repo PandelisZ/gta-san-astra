@@ -146,6 +146,12 @@ Set `SAN_ASTRA_FRAME_INTERVAL_MS=350` for the pulse spacing validated in the cur
 
 At NTSC 59.94 VSyncs/second, strides 1/5/10 nominally yield 59.94/11.99/5.99 observations per **game second**. Wall-clock cadence includes model and bridge latency. Requested VSyncs are not independent proof of delivered frames, and consecutive screenshots may contain the same rendered game image.
 
+### Normal-speed demo bursts
+
+Use `--mode burst --bridge-transport cli --frame-stride 30` with the attempt wrapper. The game runs at normal speed for roughly half a second, executes Astra's chosen control phases, then pauses for the next screenshot and decision. A local neutral check took0.596seconds including pause cleanup and recorded30VSync samples; the final screenshot visibly showed Paused. Timing is approximate and recordings measure the actual output.
+
+The NTSC emulator timing is59.94VSyncs/second. Our half-second sample contained16distinct successive game images, consistent with roughly30 rendered gameFPS. VSync samples and newly rendered game images are different counts. [Live check](docs/evidence/burst-neutral-check.json) · [PCSX2 timing documentation](https://wiki.pcsx2.net/Setting_up_Windows_version)
+
 ### Start an Astra run
 
 Start from a paused driving scene. The runner defaults to authenticated Codex with `gpt-6-astra`, low reasoning effort, and fast mode, preferring the app-bundled CLI; no separate API key is needed. `SAN_ASTRA_CODEX` overrides the executable.

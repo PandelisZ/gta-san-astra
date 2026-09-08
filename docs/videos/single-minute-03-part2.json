@@ -1,0 +1,25 @@
+{
+  "name": "single-minute-03-part2",
+  "goal": "Drive on the RIGHT around a connected compact street block and visibly return to THIS starting intersection with yellow hillside buildings ahead-LEFT and red-orange corner building RIGHT, with the same heading. Use the attached starting reference to verify return. Choose every control solely from screenshots; verify actual completed turns, avoid curbs, collisions, traffic and pedestrians. Do not count seeing the landmark from another heading as completion.",
+  "scenario": "right-lane-junction",
+  "target_pid": 68968,
+  "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2",
+  "autonomy": "Astra chooses every driving control phase. Wrapper only handles reset, recording and export.",
+  "requested_vsync_budget": 5400,
+  "nominal_seconds_budget": 90.09,
+  "decoded_frame_count": 150,
+  "target_recorded_frames": 1797,
+  "recorded_target_reached": false,
+  "full_recording_duration_seconds": 2.5,
+  "clip_seconds_limit": 60,
+  "git_video_frame_count": 150,
+  "logic_sha256": {
+    "scripts/autodrive.py": "777a017920def88e1caad604eb5a03452192d8ec0de9b13adb2ef92f6d10817a",
+    "src/san_astra/policy.py": "31202f84d94f9bbe36de23df2cf7f58acb19c4bc96ae8c5b295cb0b08a1d5ae5"
+  },
+  "measured_video_duration_seconds": 2.5,
+  "measured_duration_source": "MP4 container duration reported by FFmpeg",
+  "duration_note": "Stop after a whole burst crosses the configured stored-frame target, with a decision safety cap. Live count is buffered, so full recording can exceed the target. Git replay contains up to its first60 real seconds with no padding; actual frame count and duration are measured.",
+  "video_sha256": "e482b5b0cf031b72b0df97963be7dba00067a6ca38e3e71969a32e5c71a89bf8",
+  "status": "failed"
+}
