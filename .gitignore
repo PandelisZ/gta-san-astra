@@ -5,6 +5,7 @@ __pycache__/
 .runtime/
 runs/
 native/astra-bridge
+native/astra-daemon
 native/test-frame.png
 *.iso
 *.bin
