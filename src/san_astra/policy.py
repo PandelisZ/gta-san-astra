@@ -35,6 +35,8 @@ def _transient_connection_failure(error: PolicyError) -> bool:
         "refusal", "model refused", "invalid_request", "model_not_found",
     )):
         return False
+    if str(error) == "Codex policy request timed out":
+        return True  # No controller input was applied; retry the same observation on a fresh thread.
     if not isinstance(details, dict):
         return False
     info = details.get("codexErrorInfo", {})

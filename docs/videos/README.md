@@ -11,3 +11,4 @@ Lossless masters and every decoded PNG remain under ignored `.runtime/` and `run
 | Video | Observed outcome |
 | --- | --- |
 | [Block attempt 03](block-attempt-03.mp4) | Two right turns, curb/pole recovery, and traffic yielding. No completed block loop. |
+| [Minute attempt 04](minute-attempt-04.mp4) | Full minute with wall/curb collisions and autonomous recovery. Loop not completed. |

@@ -1,0 +1,25 @@
+{
+  "name": "minute-attempt-04",
+  "video_frames": 3597,
+  "nominal_fps": 59.94,
+  "duration_seconds": 60.010010010010014,
+  "outcome": "Failed block loop; wall/curb collisions and recovery. Entire clip preserved, not a clean driving claim.",
+  "parts": [
+    {
+      "run": "minute-attempt-04",
+      "frames": 1080
+    },
+    {
+      "run": "minute-attempt-04-continuation and minute-attempt-04-right",
+      "frames": 2530
+    }
+  ],
+  "continuity": "Same emulator state throughout both parts. Paused for model timeout recovery; no reset or replayed controls. Right-hand traffic instruction added on user request during continuation.",
+  "autonomy": "Astra low/Fast chose every control phase from screenshots. Only recording, timing and reset are scripted.",
+  "video_sha256": "00ddc2e00429521631a7128a7151fe6899389cf032ed47f25f246a566259b801",
+  "timing": "First60seconds of actual continuous simulation footage, no padding or speed change; duration quantized to video frames.",
+  "logic_sha256_at_start": {
+    "scripts/autodrive.py": "2a78e4e300b71324cdcc51fb4dc1b001563554e0e538ee617762d3d22ca51395",
+    "src/san_astra/policy.py": "93131fc02187d5d98f5759e04b84dcae088374532d2850125a228c7cb9506f12"
+  }
+}
