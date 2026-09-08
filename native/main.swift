@@ -4,24 +4,41 @@ import ScreenCaptureKit
 import Foundation
 import ImageIO
 import UniformTypeIdentifiers
+import Darwin
 
 struct BridgeError: Error, CustomStringConvertible { let description: String; init(_ message: String) { description = message } }
 func output(_ value: [String: Any]) { let data = try! JSONSerialization.data(withJSONObject: value, options: [.sortedKeys]); print(String(data: data, encoding: .utf8)!) }
 let application = NSApplication.shared
 let argv = Array(CommandLine.arguments.dropFirst())
 func option(_ name: String) -> String? { guard let i = argv.firstIndex(of: name), i + 1 < argv.count else { return nil }; return argv[i + 1] }
-func emulator() throws -> NSRunningApplication {
+struct EmulatorTarget {
+    let processIdentifier: pid_t
+    let application: NSRunningApplication?
+    var localizedName: String? { application?.localizedName }
+    var isActive: Bool { application?.isActive ?? false }
+    func activate(options: NSApplication.ActivationOptions) throws -> Bool {
+        guard let application else { throw BridgeError("PCSX2 PID \(processIdentifier) is running but macOS application metadata is unavailable for focus; use --no-focus for PID-scoped input") }
+        return application.activate(options: options)
+    }
+}
+func emulator() throws -> EmulatorTarget {
     if let p = option("--pid") {
-        guard let pid = Int32(p), let app = NSRunningApplication(processIdentifier: pid), (app.bundleIdentifier ?? "").lowercased().contains("pcsx2") || (app.localizedName ?? "").lowercased().contains("pcsx2") else { throw BridgeError("--pid must identify a running PCSX2 application") }
-        return app
+        guard let pid = Int32(p), pid > 0 else { throw BridgeError("--pid must be a positive process ID") }
+        // Validate the live executable without requiring LaunchServices metadata.
+        // Same-bundle instances may temporarily lack NSRunningApplication objects.
+        // PROC_PIDPATHINFO_MAXSIZE is an expression macro unavailable to Swift.
+        var path = [CChar](repeating: 0, count: 4 * Int(MAXPATHLEN))
+        guard proc_pidpath(pid, &path, UInt32(path.count)) > 0 else { throw BridgeError("Could not read executable path for PID \(pid): \(String(cString: strerror(errno)))") }
+        guard URL(fileURLWithPath: String(cString: path)).lastPathComponent.lowercased() == "pcsx2" else { throw BridgeError("PID \(pid) executable is not PCSX2") }
+        return EmulatorTarget(processIdentifier: pid, application: NSRunningApplication(processIdentifier: pid))
     }
     let candidates = NSWorkspace.shared.runningApplications.filter { ($0.bundleIdentifier ?? "").lowercased().contains("pcsx2") || ($0.localizedName ?? "").lowercased().contains("pcsx2") }
     guard !candidates.isEmpty else { throw BridgeError("PCSX2 is not running. Launch the emulator first.") }
     guard candidates.count == 1 else { throw BridgeError("Multiple PCSX2 applications are running; specify --pid for this operation") }
     let app = candidates[0]
-    return app
+    return EmulatorTarget(processIdentifier: app.processIdentifier, application: app)
 }
-func windows(_ app: NSRunningApplication) -> [[String: Any]] {
+func windows(_ app: EmulatorTarget) -> [[String: Any]] {
     let list = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] ?? []
     return list.filter { ($0[kCGWindowOwnerPID as String] as? Int32) == app.processIdentifier && ($0[kCGWindowLayer as String] as? Int) == 0 }.compactMap { w in
         guard let id = w[kCGWindowNumber as String] as? UInt32, let bounds = w[kCGWindowBounds as String] as? [String: Any] else { return nil }
@@ -51,14 +68,84 @@ final class ActiveKeys: @unchecked Sendable {
     }
     func clear() { lock.lock(); defer { lock.unlock() }; finished = true; release(active, pid: pid); active = [] }
 }
+struct BurstSegment: Decodable { let keys: [String]; let frames: Int }
+struct BurstPlan {
+    let segments: [BurstSegment]
+    let codes: [[CGKeyCode]]
+    let fps: Double
+    var frames: Int { segments.reduce(0) { $0 + $1.frames } }
+    init() throws {
+        guard let raw = option("--segments"), let data = raw.data(using: .utf8),
+              let segments = try? JSONDecoder().decode([BurstSegment].self, from: data),
+              (1...6).contains(segments.count), segments.allSatisfy({ (1...120).contains($0.frames) }),
+              (1...120).contains(segments.reduce(0, { $0 + $1.frames })) else {
+            throw BridgeError("burst requires --segments JSON with 1..6 {keys:[string],frames:int} phases, each positive and total 1..120 frames")
+        }
+        guard let fps = Double(option("--fps") ?? "59.94"), fps.isFinite, (1...240).contains(fps) else { throw BridgeError("burst --fps must be finite and between 1 and 240") }
+        // Only controller bindings are allowed; emulator pause/step/save/load and
+        // operating-system shortcuts must never be held as gameplay controls.
+        let allowed = Set("w,a,s,d,i,j,k,l,q,e,1,2,3,4,up,down,left,right,enter,return,backspace,t,f,g,h".split(separator: ",").map(String.init))
+        self.codes = try segments.map { segment in
+            try segment.keys.map { name in
+                guard let code = keyMap[name.lowercased()], allowed.contains(name.lowercased()) else { throw BridgeError("burst key is unknown or not a controller binding: \(name)") }
+                return code
+            }
+        }
+        self.segments = segments; self.fps = fps
+    }
+}
+final class BurstSession: @unchecked Sendable {
+    let lock = NSLock()
+    let pid: pid_t
+    var held: [CGKeyCode] = []
+    var running = false
+    var finished = false
+    init(pid: pid_t) { self.pid = pid }
+    func togglePause() throws {
+        try event(49, down: true, pid: pid)
+        defer { try? event(49, down: false, pid: pid) }
+        usleep(10_000)
+    }
+    func start(_ keys: [CGKeyCode]) throws -> UInt64 {
+        lock.lock(); defer { lock.unlock() }
+        guard !finished else { throw BridgeError("Burst interrupted") }
+        for key in keys { held.append(key); try event(key, down: true, pid: pid) }
+        // Set before posting so cleanup also covers a partially issued toggle.
+        running = true
+        let started = DispatchTime.now().uptimeNanoseconds
+        try togglePause()
+        return started
+    }
+    func transition(_ keys: [CGKeyCode]) throws {
+        lock.lock(); defer { lock.unlock() }
+        guard !finished else { throw BridgeError("Burst interrupted") }
+        for key in held where !keys.contains(key) { try event(key, down: false, pid: pid) }
+        held = held.filter { keys.contains($0) }
+        for key in keys where !held.contains(key) { held.append(key); try event(key, down: true, pid: pid) }
+    }
+    func finish() {
+        lock.lock(); defer { lock.unlock() }
+        guard !finished else { return }
+        finished = true
+        if running {
+            try? togglePause()
+            running = false
+            // Give the pause event a bounded processing interval before releasing.
+            usleep(80_000)
+        }
+        release(held, pid: pid); held = []
+        try? event(49, down: false, pid: pid)
+    }
+}
 func run() async throws {
-    guard let command = argv.first else { throw BridgeError("Usage: astra-bridge status|windows|focus|capture|input|step|release [options]") }
+    guard let command = argv.first else { throw BridgeError("Usage: astra-bridge status|windows|focus|capture|input|step|burst|release [options]") }
+    let burstPlan = command == "burst" ? try BurstPlan() : nil
     let app = try emulator()
     switch command {
     case "status": output(["ok":true,"pid":app.processIdentifier,"app":app.localizedName ?? "PCSX2","screenRecording":CGPreflightScreenCaptureAccess(),"accessibility":AXIsProcessTrusted(),"windows":windows(app)])
     case "windows": output(["ok":true,"windows":windows(app)])
     case "focus":
-        let activated = app.activate(options: [.activateAllWindows])
+        let activated = try app.activate(options: [.activateAllWindows])
         output(["ok":activated,"pid":app.processIdentifier])
     case "capture":
         guard let path = option("--output") else { throw BridgeError("capture requires --output PATH") }
@@ -86,6 +173,29 @@ func run() async throws {
         CGImageDestinationAddImage(dest, image, nil)
         guard CGImageDestinationFinalize(dest) else { throw BridgeError("PNG write failed") }
         output(["ok":true,"pid":app.processIdentifier,"path":url.path,"windowId":window.windowID,"title":window.title ?? "","width":image.width,"height":image.height,"cropTop":cropTop,"timestamp":ISO8601DateFormatter().string(from:Date())])
+    case "burst":
+        guard AXIsProcessTrusted() else { throw BridgeError("Accessibility permission is required for burst input") }
+        guard let plan = burstPlan else { throw BridgeError("Missing burst plan") }
+        let burst = BurstSession(pid: app.processIdentifier)
+        signal(SIGINT, SIG_IGN); signal(SIGTERM, SIG_IGN)
+        let sources = [SIGINT, SIGTERM].map { sig -> DispatchSourceSignal in
+            let source = DispatchSource.makeSignalSource(signal: sig, queue: .global())
+            source.setEventHandler { burst.finish(); exit(128 + sig) }
+            source.resume(); return source
+        }
+        defer { burst.finish(); sources.forEach { $0.cancel() } }
+        let started = try burst.start(plan.codes[0])
+        var cumulativeFrames = 0
+        for (index, segment) in plan.segments.enumerated() {
+            if index > 0 { try burst.transition(plan.codes[index]) }
+            cumulativeFrames += segment.frames
+            let deadline = started + UInt64(Double(cumulativeFrames) / plan.fps * 1_000_000_000)
+            let now = DispatchTime.now().uptimeNanoseconds
+            if now < deadline { try await Task.sleep(nanoseconds: deadline - now) }
+        }
+        let runningElapsedMs = Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000
+        burst.finish()
+        output(["ok":true,"pid":app.processIdentifier,"frames":plan.frames,"requestedFrames":plan.frames,"fps":plan.fps,"requestedDurationMs":Double(plan.frames) / plan.fps * 1000,"runningElapsedMs":runningElapsedMs,"elapsedMs":Double(DispatchTime.now().uptimeNanoseconds - started) / 1_000_000,"segments":plan.segments.count,"timing":"Approximate wall-time burst; requested frames are not measured emulator frames","pauseToggleSent":true])
     case "input", "step":
         guard AXIsProcessTrusted() else { throw BridgeError("Accessibility permission is required for keyboard input. Enable your terminal/Codex app in System Settings > Privacy & Security > Accessibility.") }
         guard let names = option("--keys") else { throw BridgeError("input requires --keys comma-separated key names") }
@@ -100,7 +210,7 @@ func run() async throws {
         let active = ActiveKeys(pid: app.processIdentifier)
         let duration = Int(option("--duration-ms") ?? "100") ?? -1
         guard (0...10000).contains(duration) else { throw BridgeError("duration-ms must be an integer from 0 to 10000") }
-        if !argv.contains("--no-focus") && (argv.contains("--focus") || command == "step") { _ = app.activate(options:[.activateAllWindows]); try await Task.sleep(for:.milliseconds(100)) }
+        if !argv.contains("--no-focus") && (argv.contains("--focus") || command == "step") { _ = try app.activate(options:[.activateAllWindows]); try await Task.sleep(for:.milliseconds(100)) }
         // Defers release for normal exits/errors. Signal handlers release as well.
         signal(SIGINT, SIG_IGN); signal(SIGTERM, SIG_IGN)
         let sources = [SIGINT,SIGTERM].map { sig -> DispatchSourceSignal in

@@ -106,14 +106,14 @@ class Controller:
             args = (*args, "--pid", str(self.pid))
         # PID delivery does not need application activation. Avoid focus changes
         # during scoped input, including recording hotkeys and frame advance.
-        if "--pid" in args and args[0] in ("input", "step"):
+        if "--pid" in args and args[0] in ("input", "step", "burst"):
             args = tuple(arg for arg in args if arg not in ("--focus", "--no-focus"))
             args = (*args, "--no-focus")
         return args
 
     @contextmanager
     def actuation_lock(self, args):
-        if args and args[0] in ("input", "step", "focus"):
+        if args and args[0] in ("input", "step", "burst", "focus"):
             path = Path(os.environ.get("SAN_ASTRA_FOCUS_LOCK", str(Path.home() / ".san-astra/focus-input.lock")))
             with self._file_lock(path):
                 yield
@@ -246,6 +246,52 @@ class Controller:
         if self.frame_advance_binding().strip().lower() != "keyboard/n":
             raise ControlError("step requires FrameAdvance = Keyboard/N in the selected PCSX2 profile. Run setup, launch that profile, and pause emulation before stepping.")
         return self._execute(buttons, 150, throttle, brake, steer, handbrake, frames)
+
+    def burst(self, segments: list[dict], fps: float = 59.94):
+        """Run one complete timed plan, then observe after native pause cleanup."""
+        config = configparser.ConfigParser(interpolation=None, strict=False)
+        config.read(self.config_path)
+        if config.get("Hotkeys", "TogglePause", fallback="").strip().lower() != "keyboard/space":
+            raise ControlError("burst requires TogglePause = Keyboard/Space and an initially paused emulator")
+        if not isinstance(segments, list) or not 1 <= len(segments) <= 6:
+            raise ValueError("burst requires 1..6 control segments")
+        if isinstance(fps, bool) or not isinstance(fps, (int, float)) or not 10 <= fps <= 240:
+            raise ValueError("fps must be between 10 and 240")
+        native_segments = []
+        for segment in segments:
+            if not isinstance(segment, dict) or set(segment) != {"buttons", "frames"}:
+                raise ValueError("Each burst segment needs exactly buttons and frames")
+            buttons, frames = segment["buttons"], segment["frames"]
+            if type(frames) is not int or not 1 <= frames <= 120:
+                raise ValueError("Segment frames must be an integer from 1 to 120")
+            if not isinstance(buttons, list) or any(not isinstance(button, str) for button in buttons):
+                raise ValueError("buttons must be a list of button name strings")
+            if {"cross", "square"} <= set(buttons) or {"steer_left", "steer_right"} <= set(buttons):
+                raise ValueError("Burst segment contains conflicting controls")
+            unknown = set(buttons) - self.mapping.keys()
+            if unknown:
+                raise ValueError(f"Unknown buttons: {sorted(unknown)}")
+            unavailable = [button for button in buttons if not self.mapping[button]]
+            if unavailable:
+                raise ControlError(f"No keyboard binding configured for {unavailable} in {self.mapping_source}")
+            native_segments.append({"keys": list(dict.fromkeys(self.mapping[button].lower() for button in buttons)), "frames": frames})
+        total = sum(segment["frames"] for segment in native_segments)
+        if total > 120:
+            raise ValueError("Burst total must be 1..120 frames")
+        with self.lock():
+            started = time.monotonic()
+            event = {"type": "burst", "segments": segments, "native_segments": native_segments,
+                     "frames": total, "fps": fps, "nominal_duration_ms": round(total / fps * 1000, 3),
+                     "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames"}
+            try:
+                event["native"] = self.call("burst", "--segments", json.dumps(native_segments), "--fps", str(fps))
+            except BaseException as exc:
+                event["error"] = str(exc)
+                raise  # Native owns pause/key cleanup; never retry a timed plan.
+            finally:
+                event["elapsed_ms"] = round((time.monotonic() - started) * 1000, 2)
+                self.record(event)
+            return {"action": event, "observation": self._observe()}
 
     def _execute(self, buttons, duration_ms, throttle, brake, steer, handbrake, frames=None):
         if buttons is not None and (not isinstance(buttons, list) or any(not isinstance(button, str) for button in buttons)):

@@ -87,3 +87,24 @@ The user requested normal-speed gameplay bursts with pauses about every 30 frame
 Observed route remains incomplete: one right turn, pole collision and recovery, with the car still diagonal across the centerline toward the right lane at handback. The final screenshot records the exact handoff view. Source masters and every 1800+150 decoded PNG remain preserved.
 
 ![Part2 final paused scene](single-minute-03-part2-final.png)
+
+## Fresh normal-speed burst attempt 01
+
+Integrated shared main 1000d0c native/control/runner/wrapper, including speed-dependent steering guidance. This is a NEW trial, not a continuation of the 32.53-second partial: root's intervening neutral calibration advanced that prior game. Terminated only old PID 68968, restored unchanged `right-lane-junction` in sole new PID 76989. Initial black required 60 neutral redraw requests at 350 ms; visually matched the same position/landmarks at 18:26. Verified nominal scalar 1; one-time native focus before trial.
+
+Started `burst-minute-01`, driver 77281/wrapper 77270, fresh history, original start reference, low/fast screenshot-only. Burst mode uses 30 nominal-frame plans (~0.5s normal-speed gameplay) then pauses; 240-decision cap, 3597 actually stored-frame target. First five native running durations of 503–525 ms confirmed normal-speed bursts; actual frame count remains measured separately. No additional driving or policy changes outside model decisions.
+
+### User-directed interval change within burst trial
+
+User changed evaluation interval to 60 frames. Stopped first burst driver 77281 immediately after completed step 8. Nine actions budgeted 270 nominal frames; final recording contains 256 actual frames. Wrapper finalized capture; no reset/extra advancement. Resumed same PID 76989 as `burst-minute-01-part2`, driver 77718/wrapper77710, burst mode with 60 nominal-frame plans (~1 second), 3341 remaining actual-frame target. Inherited nine prior decisions, original start reference and exact same policy/goal. This explicit interval boundary belongs to one continuous game attempt; it must be disclosed when combining the recordings.
+
+
+### Burst trial stopped for requested half-speed inference mode
+
+User superseded pause-during-inference with a request for normal-speed actions and half-speed simulation while the model thinks. Stopped only driver 77718 at the completed step 12 boundary. Part2 finalized **806 actual frames from 780 nominal frame budgets**, 13 completed actions, 13.45 seconds. First part contains 256 actual frames; combined **1062 source frames, about 17.72 seconds**, not a minute. These were approximate timed bursts, so nominal budgets are not delivered-frame claims.
+
+Latest scene: player on foot beside the sedan and an attacker after a carjacking while waiting. Policy attempted vehicle entry using triangle, with zero turns completed. Final image confirms the interrupted state. Handed sole PID 76989 to root paused, capture off, no further gameplay or code changes. Both source masters and all 256+806 PNGs remain preserved.
+
+[First burst segment](../videos/burst-minute-01.mp4) · [60-frame continuation](../videos/burst-minute-01-part2.mp4) · [Decision and capture evidence](burst-minute-01-partial-evidence.json)
+
+![Final paused carjacking scene](burst-minute-01-part2-final.png)
