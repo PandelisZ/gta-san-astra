@@ -76,6 +76,9 @@ class Controller:
         self.default_frame_stride = frame_stride if frame_stride is not None else int(os.environ.get("SAN_ASTRA_FRAME_STRIDE", "60"))
         if isinstance(self.default_frame_stride, bool) or not isinstance(self.default_frame_stride, int) or not 1 <= self.default_frame_stride <= 120:
             raise ValueError("frame_stride must be an integer between 1 and 120")
+        self.frame_interval_ms = int(os.environ.get("SAN_ASTRA_FRAME_INTERVAL_MS", "90"))
+        if not 10 <= self.frame_interval_ms <= 1000:
+            raise ValueError("SAN_ASTRA_FRAME_INTERVAL_MS must be between 10 and 1000")
         self.bridge = Path(bridge or os.environ.get("SAN_ASTRA_BRIDGE", Path(__file__).resolve().parents[2] / "native/astra-bridge"))
         self.run_dir = Path(run_dir or os.environ.get("SAN_ASTRA_RUN_DIR", "runs"))
         self.window_id = window_id or (int(os.environ["SAN_ASTRA_WINDOW_ID"]) if os.environ.get("SAN_ASTRA_WINDOW_ID") else None)
@@ -279,7 +282,7 @@ class Controller:
                 else:
                     event.update(type="step", frames=frames)
                     event.pop("duration_ms")
-                    event["native"] = self.call("step", "--keys", ",".join(keys), "--frames", str(frames), "--frame-key", "n", "--frame-interval-ms", "90")
+                    event["native"] = self.call("step", "--keys", ",".join(keys), "--frames", str(frames), "--frame-key", "n", "--frame-interval-ms", str(self.frame_interval_ms))
             except BaseException as exc:
                 event["error"] = str(exc)
                 # A failed or interrupted bridge may leave remapped keys down.

@@ -292,6 +292,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
     started_at, started_clock = time.time(), time.monotonic()
     manifest = {"model": model, "reasoning_effort": reasoning_effort, "service_tier": service_tier, "goal": goal, "frame_stride": frame_stride,
                 "target_pid": getattr(controller, "pid", None),
+                "frame_interval_ms": getattr(controller, "frame_interval_ms", None),
                 "emulator_fps": emulator_fps, "steer_pulse_frames": steer_pulse_frames,
                 "control_plan": "model-selected sequential segments; legacy decisions use steering pulse fallback",
                 "steps_limit": steps, "scenario_state": scenario_state,

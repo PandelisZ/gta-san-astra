@@ -29,3 +29,14 @@ Recorder state verification: route emulog contains matched start/stop entries fo
 Root confirmed only PCSX2 PID69729 remained, then authorized one explicit-focus90ms neutral60 test. Focus returned success; foreground snapshots before and after both identify PCSX2 PID69729. The final result was **23 decoded frames and23 packets from60 pulses**, native elapsed6.495s. [Report](/Users/pz/w/oaihackathon/runs/calibration-wave02-single-focused90/baseline/report.json). Route emulog confirms the14:18:39 capture stopped and encoder thread stopped at2710.1042, with no later start at inspection.
 
 Removing other emulator processes and explicitly foregrounding the target did not restore1:1 delivery at90ms. This weakens a foreground/background-only explanation. No additional controls were issued after this bounded test, and no90ms one-pulse/one-frame guarantee is supported.
+
+## Invalid350ms attempt and source cost boundaries
+
+An authorized60-pulse350ms follow-up was interrupted by the existing Controller15-second native timeout; a complete burst requires at least21.6seconds. No60-pulse delivery ratio can be inferred. Cleanup and emulog confirm the14:19:19 capture stopped at2758.9622. [Failure report](/Users/pz/w/oaihackathon/runs/calibration-wave02-single-focused350/baseline/report.json). No retry was issued at this point.
+
+Keyboard down/up events enqueue CPU-thread InputManager callbacks (`DisplayWidget.cpp:274`, `QtHost.cpp:1252`); the source does not simply poll a10ms key level. Each frame-step pause waits for VU and GS (`VMManager.cpp:280–282`), while resume resets frame limiter/metrics and emits UI updates including display refocus (`MainWindow.cpp:2457–2478`). These are plausible per-step costs; none measures an actual250ms processing delay. The present evidence cannot distinguish slow pause/resume processing from missing OS event delivery conclusively.
+
+
+## Completed350ms retry
+
+After root adjusted the controller timeout to cover the requested pulse wall time, the authorized fresh350ms solo retry produced **60 decoded frames and60 packets for60 pulses**. Native elapsed was 22.374seconds. [Report](/Users/pz/w/oaihackathon/runs/calibration-wave02-single-focused350-retry/baseline/report.json). This validates1:1 neutral delivery for this single scene/run at350ms; it does not establish a lower safe interval or guarantee arbitrary driving/render loads. No further controls were issued.
