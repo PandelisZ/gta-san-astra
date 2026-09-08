@@ -1,5 +1,15 @@
 # GTA San Astra
 
+## Full development session: learning to drive
+
+Watch the end-to-end development session for GTA San Astra: building and iterating on the experiment to teach GPT-6 Astra to drive in *GTA: San Andreas*.
+
+https://github.com/user-attachments/assets/bd12540a-aba6-4bd0-ba82-dd2d999ba898
+
+This 55-second desktop timelapse includes all 332 saved screenshots from September 8, 2026, 10:25 a.m. to 4:38 p.m. Pacific. Screenshots were taken every five minutes initially, then every minute, and play back at six per second. It captures the development process across the session; driving outcomes are documented separately below.
+
+[Video and session details](https://github.com/PandelisZ/gta-san-astra/issues/2)
+
 **Give GPT-6 Astra a controller, a screenshot, and the next few frames.**
 
 GTA San Astra is a visual driving experiment inside the PlayStation 2 version of *Grand Theft Auto: San Andreas*. Astra looks at the game, chooses controls, and sees what happens next. A native macOS bridge turns those decisions into PCSX2 input. The current demo runs actions at normal speed and keeps the world moving at 50% speed while Astra decides. Earlier experiments paused during inference.
