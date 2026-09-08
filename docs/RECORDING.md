@@ -48,10 +48,12 @@ After this run, frame-key timing was increased to 10 ms held plus 90 ms settling
 
 ## Verified lossless archival
 
-Seven finalized captures were transcoded from FFV1 to lossless RGB H.264 MKV to make room for concurrent experiments. Every decoded RGB24 frame hash, PTS, DTS, dimension and sample aspect ratio was compared. All 12,587 frames matched; inferred frame-duration metadata differs by at most 1 ms, while presentation timestamps are identical. The original codec files were removed only after both source and archive SHA256 checks passed. Individual PNG frames remain preserved.
+Seven finalized captures were transcoded from FFV1 to lossless RGB H.264 MKV to make room for concurrent experiments. Every decoded RGB24 frame hash, PTS, DTS, dimension and sample aspect ratio was compared. All 12,587 frames matched; inferred frame-duration metadata differs by at most 1 ms, while presentation timestamps are identical. The original codec files were removed only after both source and archive SHA256 checks passed. Individual PNG exports can be regenerated from these archives.
 
 [Archive mappings](evidence/lossless-archives.json) record the original checksums and replacement paths. Historical run manifests retain their original capture paths and hashes; resolve those through this mapping. `scripts/archive_recordings.py` performs the verified transcode without deleting inputs.
 
 ## Interrupted attempts
 
 `attempt.py --bridge-transport cli` selects the serialized short-lived capture path. If a run fails after sending controls, preserve its recording and continue the same paused game using `--no-reset --resume-from runs/PRIOR-RUN --target-recorded-frames REMAINING`. The resume file supplies prior visual context only; it never replays controls. Subtract the finalized prior capture's actual frames from 3,597, and keep both capture parts. A partial control phase may have executed even if its following screenshot failed. Count native action evidence and inspect the fresh image before continuing. A continuation segment alone does not prove a complete minute or a completed route.
+
+Three redundant PNG exports (9,234 frames) were removed after comparing every RGB24 frame hash, dimension and sequence position against those verified archives. Every captured frame remains stored losslessly. [PNG archive mapping](evidence/png-archive-mapping.json) records the exact paths and counts; each old frame directory contains an `ARCHIVED.md` pointer. Model observation screenshots and published videos remain separate.
