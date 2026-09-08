@@ -101,6 +101,10 @@ def attempt(args) -> dict:
         raise ValueError("steps must be between 1 and 10000")
     if not 1 <= args.frame_stride <= 120:
         raise ValueError("frame stride must be between 1 and 120")
+    if args.mode not in ("stepped", "burst"):
+        raise ValueError("mode must be stepped or burst")
+    if args.mode == "burst" and args.bridge_transport != "cli":
+        raise ValueError("burst mode requires --bridge-transport cli")
     if not 1 <= args.target_recorded_frames <= 3597:
         raise ValueError("target recorded frames must be between 1 and 3597")
     if args.resume_from is not None and not args.no_reset:
@@ -132,7 +136,8 @@ def attempt(args) -> dict:
     manifest = {"name": args.name, "started_at": time.time(), "status": "preparing",
                 "goal": args.goal, "scenario": args.scenario, "reset": not args.no_reset,
                 "target_pid": target_pid, "profile": str(profile),
-                "steps_budget": args.steps, "frames_per_decision": args.frame_stride,
+                "steps_budget": args.steps, "frames_per_decision": args.frame_stride, "mode": args.mode,
+                "frame_budget_note": "Nominal wall-time frame budget; actual output comes from recording" if args.mode == "burst" else "Requested VSync budget",
                 "requested_vsync_budget": args.steps * args.frame_stride,
                 "nominal_seconds_budget": round(args.steps * args.frame_stride / 59.94, 3),
                 "target_recorded_frames": args.target_recorded_frames, "clip_seconds_limit": 60,
@@ -179,7 +184,7 @@ def attempt(args) -> dict:
         write_json(manifest_path, manifest)
         print(json.dumps({"status": "driving", "run": str(directory), "master": str(source)}), flush=True)
         command = [sys.executable, str(ROOT / "scripts/autodrive.py"), "--run-dir", str(directory),
-                   "--steps", str(args.steps), "--frame-stride", str(args.frame_stride), "--mode", "stepped",
+                   "--steps", str(args.steps), "--frame-stride", str(args.frame_stride), "--mode", args.mode,
                    "--model", "gpt-6-astra", "--reasoning-effort", "low", "--service-tier", "fast",
                    "--policy-transport", "app-server", "--bridge-transport", args.bridge_transport,
                    "--vision-max-edge", str(args.vision_max_edge), "--goal", args.goal,
@@ -267,6 +272,7 @@ def main():
     parser.add_argument("--no-reset", action="store_true", help="Caller already restored paused baseline and ensured recording is OFF")
     parser.add_argument("--steps", type=int, default=120, help="Decision safety cap; recording target is3597 stored frames")
     parser.add_argument("--frame-stride", type=int, default=60, help="Requested VSyncs per decision, 1..120 (default: 60)")
+    parser.add_argument("--mode", choices=("stepped", "burst"), default="stepped", help="Frame-advance requests or approximate normal-speed bursts followed by pause")
     parser.add_argument("--vision-max-edge", type=int, default=512)
     parser.add_argument("--bridge-transport", choices=("cli", "daemon"), default="daemon")
     parser.add_argument("--resume-from", type=Path, help="Continue visual context only; never replay controls")
