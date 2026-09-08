@@ -144,3 +144,19 @@ def test_inference_error_releases_previously_held_thinking_controls(tmp_path):
         run(world, tmp_path, decide)
     assert world.state == "paused"
     assert world.thinking_buttons == []
+
+
+def test_controller_passes_model_thinking_controls_to_native(tmp_path):
+    ini = tmp_path / "PCSX2.ini"
+    ini.write_text("[Hotkeys]\nToggleSlowMotion=Keyboard/Tab\nTogglePause=Keyboard/Space\n"
+                   "[Framerate]\nNominalScalar=1\nSlomoScalar=0.5\n")
+    controller = Controller(ini_path=ini, run_dir=tmp_path / "run")
+    calls = []
+    controller.call = lambda *args: calls.append(args) or {"ok": True}
+    controller._observe = lambda: {"image_path": "/frame.png"}
+    result = controller.burst([{"buttons": [], "frames": 60}], continuous=True, thinking_buttons=["r1"])
+    assert len(calls) == 1
+    assert calls[0][0] == "burst"
+    assert "--continuous" in calls[0]
+    assert calls[0][calls[0].index("--thinking-keys") + 1] == '["e"]'
+    assert result["action"]["thinking_buttons"] == ["r1"]
