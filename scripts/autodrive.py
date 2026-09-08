@@ -25,7 +25,7 @@ DISABLED_FEATURES = (
 
 def validate_decision(value: object) -> dict:
     required = {"buttons", "rationale", "scene", "stop"}
-    if not isinstance(value, dict) or not required <= set(value) or set(value) - required - {"segments", "route_note", "dynamics_note"}:
+    if not isinstance(value, dict) or not required <= set(value) or set(value) - required - {"segments", "route_note", "dynamics_note", "thinking_buttons"}:
         raise ValueError("Decision needs buttons, rationale, scene, stop, and optional segments/route_note/dynamics_note")
     buttons = value["buttons"]
     if not isinstance(buttons, list) or any(not isinstance(b, str) or b not in BUTTONS for b in buttons):
@@ -44,6 +44,10 @@ def validate_decision(value: object) -> dict:
         raise ValueError("route_note must be a short nonempty string of at most 400 characters")
     if "dynamics_note" in value and (not isinstance(value["dynamics_note"], str) or not 1 <= len(value["dynamics_note"].strip()) <= 400):
         raise ValueError("dynamics_note must be a short nonempty string of at most 400 characters")
+    if "thinking_buttons" in value:
+        validate_decision({"buttons": value["thinking_buttons"], "rationale": "thinking", "scene": value["scene"], "stop": False})
+        if {"cross", "square"} <= set(value["thinking_buttons"]):
+            raise ValueError("Thinking controls cannot accelerate and brake simultaneously")
     segments = value.get("segments")
     if segments is not None:
         if not isinstance(segments, list) or not 1 <= len(segments) <= 6:
@@ -118,7 +122,7 @@ def build_command(model: str, images: list[Path], output: Path, cwd: Path, *,
                "--cd", str(cwd.resolve()), "-m", model]
     for feature in DISABLED_FEATURES:
         command.extend(["--disable", feature])
-    for image in images[-3:]:
+    for image in images[-4:]:
         command.extend(["--image", str(image.resolve())])
     return command + ["-"]
 
@@ -131,9 +135,13 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
               "during inference. Controls are held briefly, then released, and the vehicle coasts during inference. "
               "Do not assume the world stopped at the screenshot. Favor simple conservative controls. ")
     if mode == "flow":
-        timing = ("The world runs at 50% speed while you decide, with controls released. "
-                  "Your screenshot becomes stale as the car coasts and other actors move. "
-                  "Actions run at normal 100% speed; no fast-forward. Plan for inference-time drift. ")
+        timing = ("The world runs at 50% speed while you decide, holding the thinking_buttons from your prior decision. "
+                  "Your screenshot becomes stale while those controls remain active and other actors move. "
+                  "Actions run at normal 100% speed; no fast-forward. Plan for inference-time motion. "
+                  "Choose thinking_buttons explicitly for the interval AFTER this action while the NEXT decision runs. "
+                  "Empty means release/coast, not braking. Held steering, throttle or reverse may continue for several "
+                  "game seconds, so forecast their entire trajectory and leave a stable controllable state. "
+                  "No thinking controls are automatically chosen or shortened for you. ")
     if mode == "burst":
         timing = ("The emulator is paused while you decide. It resumes at normal speed for one short timed plan, "
                   "then pauses before the next screenshot. Segment frames express nominal wall-time at the supplied FPS; "
@@ -176,7 +184,9 @@ def make_prompt(goal: str, history: list[dict], image_count: int, mode: str = "s
         "when the next emulated frame advances. Stay on roads, "
         "Drive on the RIGHT side of the road: stay right of the centerline, turn into the right-hand "
         "lane of the destination road, and return to that lane after recovery. Do not cruise in oncoming "
-        "lanes or treat the sidewalk as a lane. Avoid collisions and pedestrians, and drive conservatively. "
+        "lanes or treat the sidewalk as a lane. Right-lane driving still requires clearance from the curb "
+        "and poles for the full vehicle width and swept front corner; hugging the curb is not lane centering. "
+        "Avoid collisions and pedestrians, and drive conservatively. "
         "For this game evaluation, a right turn after a red-light stop is allowed when the entire "
         "visible crossing and destination lane are clear of traffic and pedestrians. Yield to "
         "actual conflicts; do not wait solely for a signal color when a verified right turn is clear. "
@@ -343,7 +353,8 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
     def record(event):
         with log.open("a") as handle:
             handle.write(json.dumps(event) + "\n")
-    def add_observation(observation):
+    def add_observation(observation, phase="observation"):
+        observed_at = time.time() if phase not in ("reference", "resumed") else None
         raw = Path(observation["image_path"])
         raw_images.append(raw)
         if isinstance(observation.get("capture_ms"), (int, float)):
@@ -354,9 +365,11 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                                      quality=vision_quality, colormode=vision_colormode)
         else:
             metadata = {"source_image_path": str(raw), "image_path": str(raw), "processing_ms": 0}
+        metadata.update(observation_phase=phase, observed_at_unix=observed_at)
         prepared.append(metadata)
         images.append(Path(metadata["image_path"]))
-        del images[:-2], raw_images[:-2], prepared[:-2]
+        retained = 3 if mode == "flow" else 2
+        del images[:-retained], raw_images[:-retained], prepared[:-retained]
         record({"type": "model_frame", **metadata})
     flow_started = False
     try:
@@ -365,7 +378,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
             flow_started = True
         reference_metadata = None
         if start_reference is not None:
-            add_observation({"image_path": str(start_reference)})
+            add_observation({"image_path": str(start_reference)}, "reference")
             reference_metadata = prepared[-1]
             images.clear()
             raw_images.clear()
@@ -373,8 +386,8 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
         if resume_history:
             record({"type": "resume_context", "resume_from": str(resume_from), "decisions": resume_history})
         if resume_image is not None:
-            add_observation({"image_path": str(resume_image)})
-        add_observation(controller.observe())
+            add_observation({"image_path": str(resume_image)}, "resumed")
+        add_observation(controller.observe(), "initial")
         if recording_master is not None:
             from recording import count_frames
             recorded_frames = count_frames(recording_master)
@@ -385,14 +398,16 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
             current_stride = (min(frame_stride, max(min(15, frame_stride), target_recorded_frames - recorded_frames))
                               if target_recorded_frames is not None else frame_stride)
             selected = list(prepared)
-            image_labels = ["previous", "current"][-len(selected):]
+            motion_labels = (["before previous inference", "after previous inference, before action", "after action, current"]
+                             if mode == "flow" and actions_completed else ["previous", "current"])
+            image_labels = motion_labels[-len(selected):]
             if reference_metadata is not None:
                 # The same initial file may also be the first current observation.
                 selected = [item for item in selected
                             if Path(item["source_image_path"]).resolve() != start_reference]
                 if len(selected) == 2 and Path(selected[0]["source_image_path"]).resolve() == Path(selected[1]["source_image_path"]).resolve():
                     selected = selected[-1:]
-                image_labels = ["previous", "current"][-len(selected):] if selected else []
+                image_labels = motion_labels[-len(selected):] if selected else []
                 selected.insert(0, reference_metadata)
                 image_labels.insert(0, "baseline reference" if len(selected) > 1 else "baseline reference and current")
             selected_images = [Path(item["image_path"]) for item in selected]
@@ -405,11 +420,26 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                                 f" Each action runs at normal speed for approximately {current_stride / emulator_fps:.3f} wall seconds, a budget of {current_stride} nominal frames at {emulator_fps} FPS, then pauses. Actual delivered frames are measured from the recording, not guaranteed by this budget.")
             if mode == "flow":
                 duration_context = (f"Each action runs at 100% speed for {current_stride} nominal frames. "
-                    "While you decide, the world CONTINUES at 50% speed with all controls released. "
-                    "The current screenshot therefore ages during inference; the car coasts and traffic moves. "
+                    "While you decide, the world CONTINUES at 50% speed under prior thinking_buttons. "
+                    "The current screenshot therefore ages during inference; prior controls and traffic remain active. "
                     "Account for several seconds of scene drift. End each action with a stable trajectory and "
-                    "enough clearance for the subsequent coasting interval. Do not assume a paused scene. "
+                    "enough clearance for the subsequent thinking-control interval. Do not assume a paused scene. "
                     "Your chosen segments must total the requested frame budget. ")
+                prior_thinking = history[-1].get("thinking_buttons", []) if history else []
+                duration_context += f"Controls currently held during THIS inference: {json.dumps(prior_thinking)}. "
+                if latencies:
+                    recent_ms = median(latencies[-3:])
+                    duration_context += (f"Recent inference median is {recent_ms / 1000:.2f} wall seconds, "
+                        f"about {recent_ms / 2000:.2f} game seconds at half speed, in ADDITION to the action. "
+                        "Future latency can vary. ")
+                samples = [(label, item.get("observed_at_unix")) for label, item in zip(image_labels, selected)
+                           if item.get("observed_at_unix") is not None]
+                if len(samples) >= 2:
+                    durations = [f"{samples[i - 1][0]} to {samples[i][0]}: {samples[i][1] - samples[i - 1][1]:.2f} wall seconds"
+                                 for i in range(1, len(samples))]
+                    duration_context += ("Observed image intervals: " + "; ".join(durations) + ". "
+                        "The first pair separates motion during inference; the last pair brackets the action. "
+                        "Do not attribute all displacement to the short action or treat released controls as braking. ")
             decision_started = time.time()
             decision, latency = decision_fn(model, selected_images, history,
                 goal + image_context + (duration_context +
@@ -430,7 +460,7 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                      "decision_latency_ms": latency, "decision_started_at": decision_started,
                      "inference_world_speed": 0.5 if mode == "flow" else None, "frame_stride": current_stride,
                      "recorded_frames_before": recorded_frames if recording_master else None,
-                     "nominal_observations_per_game_second": emulator_fps / current_stride if mode in ("stepped", "burst", "flow") else None,
+                     "nominal_observations_per_game_second": emulator_fps / current_stride if mode in ("stepped", "burst") else None,
                      "mode": mode, "action_plan": segments, "images": [item["source_image_path"] for item in selected],
                      "model_images": [str(p) for p in selected_images], "model_frame_metadata": selected,
                      "image_labels": image_labels}
@@ -446,6 +476,10 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                 if target_recorded_frames is not None and recorded_frames >= target_recorded_frames:
                     outcome = "recording_target_reached"
                     break
+            if mode == "flow":
+                # This frame audits drift while the last decision was running. It is
+                # supplied on the NEXT decision, never used for a hidden second policy.
+                add_observation(controller.observe(), "before_action")
             actions_requested += 1
             action_started = time.monotonic()
             if mode == "stepped":
@@ -455,13 +489,13 @@ def run(controller, *, steps: int, goal: str, model: str, directory: Path,
                     frames_completed += segment["frames"]
             elif mode in ("burst", "flow"):
                 frames_requested += current_stride
-                result = controller.burst(segments=segments, fps=emulator_fps, **({"continuous": True} if mode == "flow" else {}))
+                result = controller.burst(segments=segments, fps=emulator_fps, **({"continuous": True, "thinking_buttons": decision.get("thinking_buttons", [])} if mode == "flow" else {}))
                 frames_completed += current_stride
             else:
                 result = controller.action(buttons=decision["buttons"], duration_ms=hold_ms)
             action_latencies.append((time.monotonic() - action_started) * 1000)
             actions_completed += 1
-            add_observation(result["observation"])
+            add_observation(result["observation"], "after_action")
             if recording_master is not None:
                 time.sleep(0.15)
                 recorded_frames = max(recorded_frames, count_frames(recording_master))

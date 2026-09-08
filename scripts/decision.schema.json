@@ -9,7 +9,8 @@
     "stop",
     "segments",
     "route_note",
-    "dynamics_note"
+    "dynamics_note",
+    "thinking_buttons"
   ],
   "properties": {
     "buttons": {
@@ -136,6 +137,41 @@
       "minLength": 1,
       "maxLength": 400,
       "description": "Visual motion memory: observed forward/reverse/standstill or uncertainty, last input duration and observed displacement relative to fixed road features, prediction error, and resulting control expectation. Never claim a requested stop or heading correction happened without image evidence."
+    },
+    "thinking_buttons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "cross",
+          "square",
+          "triangle",
+          "circle",
+          "left",
+          "right",
+          "up",
+          "down",
+          "l1",
+          "r1",
+          "l2",
+          "r2",
+          "start",
+          "select",
+          "steer_left",
+          "steer_right",
+          "move_forward",
+          "move_backward",
+          "l_up",
+          "l_down",
+          "l3",
+          "r3",
+          "look_up",
+          "look_down",
+          "look_left",
+          "look_right"
+        ]
+      },
+      "description": "Flow mode only: controls to hold at half speed while the NEXT decision is running. Empty releases all controls. These may remain held for several seconds of uncertain model latency; forecast their whole trajectory. Empty in other modes or when stopping."
     }
   }
 }

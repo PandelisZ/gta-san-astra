@@ -18,6 +18,8 @@ class FakeWorld:
     def __init__(self):
         self.state = "paused"
         self.events = []
+        self.frames = 0
+        self.thinking_buttons = []
 
     def start_flow(self):
         assert self.state == "paused"
@@ -26,11 +28,13 @@ class FakeWorld:
 
     def observe(self):
         assert self.state == "half_speed"
-        return {"image_path": "/frame.png"}
+        self.frames += 1
+        return {"image_path": f"/frame{self.frames}.png"}
 
-    def burst(self, segments, fps, continuous):
+    def burst(self, segments, fps, continuous, thinking_buttons):
         assert self.state == "half_speed" and continuous
         self.events.append("normal_action")
+        self.thinking_buttons = thinking_buttons
         return {"observation": self.observe()}
 
     def stop_flow(self):
@@ -40,6 +44,7 @@ class FakeWorld:
 
     def release(self):
         self.events.append("release")
+        self.thinking_buttons = []
 
 
 def run(world, tmp_path, decider):
@@ -93,3 +98,49 @@ def test_invalid_speed_config_cannot_unpause(tmp_path):
     with pytest.raises(ControlError, match="NominalScalar=1"):
         controller.start_flow()
     assert calls == []
+
+
+def test_phase_images_keep_reference_and_separate_inference_from_action(tmp_path):
+    world = FakeWorld()
+    reference = tmp_path / "reference.png"
+    reference.write_bytes(b"fixture")
+    calls = []
+    def decide(*args):
+        calls.append(args)
+        if len(calls) == 2:
+            assert world.thinking_buttons == ["r1"]
+            assert args[1] == [reference, Path("/frame1.png"), Path("/frame2.png"), Path("/frame3.png")]
+            assert "before previous inference" in args[3]
+            assert "after previous inference, before action" in args[3]
+            assert "Recent inference median" in args[3]
+        return {"buttons": [], "segments": [{"buttons": [], "frames": 60}], "thinking_buttons": ["r1"],
+                "rationale": "Clear", "scene": "driving", "stop": len(calls) == 2}, 7000
+    autodrive.run(world, steps=2, goal="Drive", model="gpt-6-astra", directory=tmp_path,
+                  mode="flow", frame_stride=60, decision_fn=decide, start_reference=reference)
+    assert world.thinking_buttons == []
+    command = autodrive.build_command("gpt-6-astra", calls[-1][1], tmp_path / "out", tmp_path)
+    assert command.count("--image") == 4
+    assert str(reference) in command
+
+
+@pytest.mark.parametrize("buttons", [["cross", "square"], ["steer_left", "steer_right"], ["invalid"], "r1"])
+def test_rejects_invalid_thinking_controls(buttons):
+    with pytest.raises(ValueError):
+        autodrive.validate_decision({"buttons": [], "rationale": "Clear", "scene": "driving",
+                                    "stop": False, "thinking_buttons": buttons})
+
+
+def test_inference_error_releases_previously_held_thinking_controls(tmp_path):
+    world = FakeWorld()
+    calls = []
+    def decide(*args):
+        calls.append(1)
+        if len(calls) == 2:
+            assert world.thinking_buttons == ["r1"]
+            raise RuntimeError("second inference failed")
+        return {"buttons": [], "segments": [{"buttons": [], "frames": 60}], "thinking_buttons": ["r1"],
+                "rationale": "Clear", "scene": "driving", "stop": False}, 7000
+    with pytest.raises(RuntimeError, match="second inference failed"):
+        run(world, tmp_path, decide)
+    assert world.state == "paused"
+    assert world.thinking_buttons == []

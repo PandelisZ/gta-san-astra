@@ -247,7 +247,7 @@ class Controller:
             raise ControlError("step requires FrameAdvance = Keyboard/N in the selected PCSX2 profile. Run setup, launch that profile, and pause emulation before stepping.")
         return self._execute(buttons, 150, throttle, brake, steer, handbrake, frames)
 
-    def burst(self, segments: list[dict], fps: float = 59.94, continuous: bool = False):
+    def burst(self, segments: list[dict], fps: float = 59.94, continuous: bool = False, thinking_buttons: list[str] | None = None):
         """Run a timed plan; finish paused, or at half speed in continuous mode."""
         config = configparser.ConfigParser(interpolation=None, strict=False)
         config.read(self.config_path)
@@ -259,13 +259,7 @@ class Controller:
             raise ValueError("burst requires 1..6 control segments")
         if isinstance(fps, bool) or not isinstance(fps, (int, float)) or not 10 <= fps <= 240:
             raise ValueError("fps must be between 10 and 240")
-        native_segments = []
-        for segment in segments:
-            if not isinstance(segment, dict) or set(segment) != {"buttons", "frames"}:
-                raise ValueError("Each burst segment needs exactly buttons and frames")
-            buttons, frames = segment["buttons"], segment["frames"]
-            if type(frames) is not int or not 1 <= frames <= 120:
-                raise ValueError("Segment frames must be an integer from 1 to 120")
+        def mapped_buttons(buttons):
             if not isinstance(buttons, list) or any(not isinstance(button, str) for button in buttons):
                 raise ValueError("buttons must be a list of button name strings")
             if {"cross", "square"} <= set(buttons) or {"steer_left", "steer_right"} <= set(buttons):
@@ -276,18 +270,31 @@ class Controller:
             unavailable = [button for button in buttons if not self.mapping[button]]
             if unavailable:
                 raise ControlError(f"No keyboard binding configured for {unavailable} in {self.mapping_source}")
-            native_segments.append({"keys": list(dict.fromkeys(self.mapping[button].lower() for button in buttons)), "frames": frames})
+            return list(dict.fromkeys(self.mapping[button].lower() for button in buttons))
+        thinking_buttons = [] if thinking_buttons is None else thinking_buttons
+        thinking_keys = mapped_buttons(thinking_buttons)
+        if thinking_buttons and not continuous:
+            raise ValueError("Thinking controls require continuous flow mode")
+        native_segments = []
+        for segment in segments:
+            if not isinstance(segment, dict) or set(segment) != {"buttons", "frames"}:
+                raise ValueError("Each burst segment needs exactly buttons and frames")
+            frames = segment["frames"]
+            if type(frames) is not int or not 1 <= frames <= 120:
+                raise ValueError("Segment frames must be an integer from 1 to 120")
+            native_segments.append({"keys": mapped_buttons(segment["buttons"]), "frames": frames})
         total = sum(segment["frames"] for segment in native_segments)
         if total > 120:
             raise ValueError("Burst total must be 1..120 frames")
         with self.lock():
             started = time.monotonic()
             event = {"type": "burst", "segments": segments, "native_segments": native_segments,
+                     "thinking_buttons": thinking_buttons, "thinking_keys": thinking_keys,
                      "frames": total, "fps": fps, "nominal_duration_ms": round(total / fps * 1000, 3),
                      "timing_note": "Wall-time budget at nominal FPS, not measured delivered frames"}
             try:
                 event["native"] = self.call("burst", "--segments", json.dumps(native_segments), "--fps", str(fps),
-                                            *(("--continuous",) if continuous else ()))
+                                            *(("--continuous", "--thinking-keys", json.dumps(thinking_keys)) if continuous else ()))
             except BaseException as exc:
                 event["error"] = str(exc)
                 raise  # Native owns pause/key cleanup; never retry a timed plan.
