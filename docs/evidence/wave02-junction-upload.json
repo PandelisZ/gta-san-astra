@@ -1,0 +1,25 @@
+{
+  "trial": "stream-junction-minute-02",
+  "source_video": "/Users/pz/.codex/worktrees/9143/oaihackathon/docs/videos/stream-junction-minute-02.mp4",
+  "attachment_url": "https://github.com/user-attachments/assets/ce89c0a6-ea37-432a-8c56-662ffddefa19",
+  "issue_comment_url": "https://github.com/PandelisZ/gta-san-astra/issues/1#issuecomment-5591934682",
+  "duration_seconds": 60.01,
+  "frames": 3597,
+  "bytes": 18925863,
+  "sha256": "ca7c294a7a6f0de78a7054c30655730ba6dc4bfba5640974a67067ea4b36ff95",
+  "full_recording_duration_seconds": 60.19,
+  "driver_exit_code": 0,
+  "decisions": 79,
+  "outcome": "One completed right turn; second underway. Block loop and landmark return incomplete. Sampled review does not establish collision-free driving.",
+  "verification": {
+    "wrapper_status": "completed",
+    "source_sha256_matches_sidecar": true,
+    "persisted_issue_comment": true,
+    "public_attachment": {
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_range": "bytes 0-0/18925863"
+    }
+  },
+  "uploaded_at": "2026-09-08T21:13:35.646625+00:00"
+}

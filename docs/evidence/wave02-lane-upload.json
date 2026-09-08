@@ -1,0 +1,25 @@
+{
+  "trial": "stream-lane-minute-02",
+  "source_video": "/Users/pz/.codex/worktrees/7cd5/oaihackathon/docs/videos/stream-lane-minute-02.mp4",
+  "attachment_url": "https://github.com/user-attachments/assets/b0ccfef0-d235-4a07-8a98-0814c78eefb0",
+  "issue_comment_url": "https://github.com/PandelisZ/gta-san-astra/issues/1#issuecomment-5591952600",
+  "duration_seconds": 60.01,
+  "frames": 3597,
+  "bytes": 18922994,
+  "sha256": "c3cdd57ed2a045715f5b4f8dc67c3d84dc71b83d8645ba0ff9fe2dbc45158383",
+  "full_recording_duration_seconds": 60.19,
+  "driver_exit_code": 0,
+  "decisions": 83,
+  "outcome": "One completed right turn; second underway. Block loop and landmark return incomplete. No collision-free claim.",
+  "verification": {
+    "wrapper_status": "completed",
+    "source_sha256_matches_sidecar": true,
+    "persisted_issue_comment": true,
+    "public_attachment": {
+      "status": 206,
+      "content_type": "video/mp4",
+      "content_range": "bytes 0-0/18922994"
+    }
+  },
+  "uploaded_at": "2026-09-08T21:14:07.615979+00:00"
+}

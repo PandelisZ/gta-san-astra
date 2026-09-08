@@ -36,6 +36,14 @@ https://github.com/user-attachments/assets/e121dd83-1fbb-4ebd-b3b9-c692ec157c35
 
 [Route upload provenance](docs/evidence/wave02-route-upload.json) · [Run review](docs/streams/route.md)
 
+**Parallel junction attempt 02 — 60.01 seconds, one right turn completed and a second underway, incomplete loop.**
+
+https://github.com/user-attachments/assets/ce89c0a6-ea37-432a-8c56-662ffddefa19
+
+**Parallel lane attempt 02 — 60.01 seconds, one right turn completed and a second underway, incomplete loop.**
+
+https://github.com/user-attachments/assets/b0ccfef0-d235-4a07-8a98-0814c78eefb0
+
 The MP4s and metadata also remain versioned under [docs/videos](docs/videos). [Upload provenance](docs/evidence/video-uploads.json) records attachment URLs and checksums.
 
 
