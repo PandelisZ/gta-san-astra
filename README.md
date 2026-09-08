@@ -126,6 +126,10 @@ uv run san-astra --frame-stride 10 step --throttle  # request every tenth frame
 
 Any stride from 1 to 120 is supported; the driving runner defaults to 60. `step --frames N` overrides it for one action. The autonomous runner fixes the total stride throughout a run, across all model-selected phases. The older four-field decision format remains supported: only that fallback uses `--steer-pulse-frames` (12 by default; 0 holds steering throughout).
 
+The current single-game experiment uses `--frame-stride 30` for roughly half a simulated second between decisions. This increases opportunities to correct a turn, but approximately doubles policy calls per simulated minute compared with 60-frame decisions. Driving improvement is still being evaluated.
+
+Set `SAN_ASTRA_FRAME_INTERVAL_MS=350` for the pulse spacing validated in the current setup. Faster 90 ms and 180 ms spacing produced fewer recorded frames than requested, even with one foreground emulator. The 350 ms neutral check recorded 60 frames from 60 requests; recorded increments during driving remain the relevant verification. See [calibration evidence](docs/streams/calibration-wave02.md).
+
 At NTSC 59.94 VSyncs/second, strides 1/5/10 nominally yield 59.94/11.99/5.99 observations per **game second**. Wall-clock cadence includes model and bridge latency. Requested VSyncs are not independent proof of delivered frames, and consecutive screenshots may contain the same rendered game image.
 
 ### Start an Astra run
