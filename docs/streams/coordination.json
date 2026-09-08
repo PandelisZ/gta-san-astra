@@ -1,5 +1,5 @@
 {
-  "status": "burst-minute-01-part2 is live in sole emulator 76989, driver 77718. Continued the same game with 60-frame normal-speed bursts after the user requested the interval change. Full block return remains unproven.",
+  "status": "Flow demo is being restored in sole emulator 79892 by route task. New mode runs 100% during actions and 50% during inference. Prior burst partial finalized at1062frames; fullblock remains unproven.",
   "streams": [
     {
       "name": "lane",
@@ -35,11 +35,11 @@
       "name": "route",
       "worktree": "/Users/pz/.codex/worktrees/4ed4/oaihackathon",
       "profile": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2",
-      "pid": 76989,
+      "pid": 79892,
       "task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
       "neutral_probe_master": "/Users/pz/.codex/worktrees/4ed4/oaihackathon/.runtime/stream-route/pcsx2/videos/Grand Theft Auto - San Andreas_SLUS-20946_20260908133507.mkv",
       "neutral_probe_actual_frames": 0,
-      "process_state": "normal-speedburstdriveractive"
+      "process_state": "restoring flow demo baseline"
     }
   ],
   "qualification": "Warm-daemon stop for junction returned a stale application-identity error; fresh CLI finalized its0-frame capture. Use CLI fallback for next wave. No root driving controls; all probe controls neutral.",
@@ -80,12 +80,14 @@
   "execution_mode": "single",
   "active_task_id": "01a082b3-1c6f-7460-b6e5-f403458982fe",
   "timing": {
-    "mode": "burst",
+    "mode": "flow",
     "frame_stride": 60,
     "nominal_fps": 59.94,
     "nominal_burst_seconds": 1.001001001001001,
-    "evidence": "../evidence/burst-neutral-check.json",
-    "qualification": "Approximatewalltime. Neutralcheck30recordedframes/0.596sectotal andvisuallypaused; actualdrivingframecountsmonitored."
+    "evidence": "../evidence/flow-speed-check.json",
+    "qualification": "Live OSD verified50%,100%,50%. Full wall-clock window recording preserves timing; native GS master preserves emulator frames.",
+    "inference_speed": 0.5,
+    "action_speed": 1.0
   },
   "active_baseline": "right-lane-junction",
   "interrupted_attempt": {
@@ -102,13 +104,15 @@
     "state_sha256": "d77ae12e068c4b62880a9f538a43caf548040b44a4eac87946b206e40622d83f",
     "note": "Opaque F1backup only, notloaded; no frameadvance during capture. Original right-lane-junction still route reference."
   },
-  "active_run": "burst-minute-01-part2",
-  "driver_pid": 77718,
-  "active_continuation": {
-    "prior_run": "burst-minute-01",
-    "prior_recorded_frames": 256,
-    "prior_decisions": 9,
-    "remaining_target_recorded_frames": 3341,
-    "same_game": true
+  "active_run": "flow-minute-01",
+  "driver_pid": null,
+  "previous_burst_partial": {
+    "runs": [
+      "burst-minute-01",
+      "burst-minute-01-part2"
+    ],
+    "recorded_frames": 1062,
+    "completed_turns": 0,
+    "end_state": "Carjacked; player on foot. Separate from fresh flow demo."
   }
 }
